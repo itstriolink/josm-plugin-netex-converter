@@ -1,2 +1,2 @@
-# JOSM Plugin with NeTEx-Export
+# JOSM Plugin NeTEx-Export
 
