@@ -1,0 +1,330 @@
+/* 
+ * Copyright (C) 2020 Labian Gashi
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ */
+package org.openstreetmap.josm.plugins.netex_converter.exporter;
+
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
+import com.netex.model.*;
+import com.netex.model.PublicationDeliveryStructure.DataObjects;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Collection;
+
+import jaxb.CustomMarshaller;
+import net.opengis.gml._3.AbstractRingPropertyType;
+import net.opengis.gml._3.DirectPositionType;
+import net.opengis.gml._3.LinearRingType;
+import net.opengis.gml._3.PolygonType;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.plugins.netex_converter.util.OSMHelper;
+
+/**
+ *
+ * @author Labian Gashi
+ */
+public class NeTExExporter {
+
+    private final ObjectFactory neTExFactory;
+    private final net.opengis.gml._3.ObjectFactory gmlFactory;
+    private final CustomMarshaller customMarshaller;
+    private final NeTExParser netexParser;
+
+    private int numberOfStations;
+
+    public NeTExExporter() {
+        neTExFactory = new ObjectFactory();
+        gmlFactory = new net.opengis.gml._3.ObjectFactory();
+        customMarshaller = new CustomMarshaller(PublicationDeliveryStructure.class);
+        netexParser = new NeTExParser();
+    }
+
+    public void exportToNeTEx(File neTExFile) {
+        Collection<OsmPrimitive> primitives = MainApplication.getLayerManager().getEditDataSet().allNonDeletedPrimitives();
+
+        for (OsmPrimitive primitive : primitives) {
+            if (primitive instanceof Node) {
+                Node node = (Node) primitive;
+
+                if (OSMHelper.isTrainStation(node)) {
+                    numberOfStations++;
+
+                    PublicationDeliveryStructure publicationDelivery = netexParser.createPublicationDeliveryObject(node);
+                    customMarshaller.marshal(neTExFactory.createPublicationDelivery(publicationDelivery), neTExFile);
+                }
+            }
+        }
+
+        //exportComplexStationSample(neTExFile);
+        //openXMLFile(netexFile);
+    }
+
+    public void exportComplexStationSample(File neTExFile) {
+        CustomMarshaller customMarshaller = new CustomMarshaller(PublicationDeliveryStructure.class);
+
+        PathJunction bordsteinabsenkung = new PathJunction()
+                .withId("ch:1:PathJunction:8590129:C:dropped_kerb")
+                .withLocation(new LocationStructure()
+                        .withLatitude(BigDecimal.valueOf(46.96675449))
+                        .withLongitude(BigDecimal.valueOf(7.46420677))
+                        .withAltitude(BigDecimal.valueOf(549)))
+                .withTypes(new TypeOfPointRefs_RelStructure()
+                        .withTypeOfPointRef(new TypeOfPointRefStructure()
+                                .withRef("ch:1:TypeOfPoint:dropped_kerb")));
+
+        CrossingEquipment fussgaengerstreifen = new CrossingEquipment()
+                .withId("ch:1:CrossingEquipment:fussg�ngerstreifen")
+                .withCrossingType(CrossingTypeEnumeration.ROAD_CROSSING)
+                .withZebraCrossing(true)
+                .withPedestrianLights(true)
+                .withAcousticDeviceSensors(false)
+                .withAcousticCrossingAids(false)
+                .withTactileGuidanceStrips(false)
+                .withVisualGuidanceBands(false)
+                .withDroppedKerb(true);
+
+        Quay quay_3_4 = new Quay()
+                .withPublicCode("3/4")
+                .withPolygon(new PolygonType())
+                .withQuayType(QuayTypeEnumeration.RAIL_PLATFORM)
+                .withAccessibilityAssessment(new AccessibilityAssessment()
+                        .withLimitations(new AccessibilityLimitations_RelStructure()
+                                .withAccessibilityLimitation(new AccessibilityLimitation()
+                                        .withWheelchairAccess(LimitationStatusEnumeration.TRUE)
+                                        .withLiftFreeAccess(LimitationStatusEnumeration.FALSE))));
+
+        Quay platform_2 = new Quay()
+                .withPublicCode("3")
+                .withPolygon(new PolygonType()
+                        .withId("org:osm:way:391450917")
+                        .withExterior(new AbstractRingPropertyType().withAbstractRing(
+                                gmlFactory.createLinearRing(new LinearRingType().withPosOrPointProperty(Arrays.asList(
+                                        new DirectPositionType().withValue(46.9665522, 7.4642906),
+                                        new DirectPositionType().withValue(46.9665603, 7.4649245),
+                                        new DirectPositionType().withValue(46.9665399, 7.4649250),
+                                        new DirectPositionType().withValue(46.9665318, 7.4642911))))))
+                        .withInterior(new AbstractRingPropertyType())
+                        .withInterior(new AbstractRingPropertyType()));
+
+        AccessibilityAssessment accessibilityAssessment = new AccessibilityAssessment()
+                .withLimitations(new AccessibilityLimitations_RelStructure()
+                        .withAccessibilityLimitation(new AccessibilityLimitation()));
+
+        TicketingEquipment billetautomat_bernmobil = new TicketingEquipment()
+                .withId("ch:1:TicketingEquipment:billetautomat_bernmobil")
+                .withTicketMachines(true)
+                .withNumberOfMachines(BigInteger.valueOf(2))
+                .withHeightOfMachineInterface(BigDecimal.valueOf(1.3))
+                .withInductionLoops(false);
+
+        EquipmentPlace billetautomat_XY = new EquipmentPlace()
+                .withId("ch:1:EquipmentPlace:billetautomat_XY")
+                .withCentroid(new SimplePoint_VersionStructure()
+                        .withLocation(new LocationStructure()
+                                .withLatitude(BigDecimal.valueOf(46.96675449))
+                                .withLongitude(BigDecimal.valueOf(7.46420677))
+                                .withAltitude(BigDecimal.valueOf(549))))
+                .withPlaceEquipments(new Equipments_RelStructure().withEquipmentRefOrEquipment(
+                        neTExFactory.createTicketingEquipmentRef(new TicketingEquipmentRefStructure()
+                                .withRef(billetautomat_bernmobil.getId()))));
+
+        TicketingEquipment billetschalter_bls = new TicketingEquipment()
+                .withId("ch:1:TicketingEquipment:billetschalter_bls")
+                .withTicketMachines(false)
+                .withTicketOffice(false)
+                .withTicketCounter(true)
+                .withLowCounterAccess(true)
+                .withInductionLoops(false);
+
+        EquipmentPlace billetschalter_XY = new EquipmentPlace()
+                .withId("ch:1:EquipmentPlace:billetschalter_XY")
+                .withCentroid(new SimplePoint_VersionStructure()
+                        .withLocation(new LocationStructure()
+                                .withLatitude(BigDecimal.valueOf(46.96675449))
+                                .withLongitude(BigDecimal.valueOf(7.46420677))
+                                .withAltitude(BigDecimal.valueOf(549))))
+                .withPlaceEquipments(new Equipments_RelStructure().withEquipmentRefOrEquipment(
+                        neTExFactory.createTicketingEquipmentRef(new TicketingEquipmentRefStructure()
+                                .withRef(billetschalter_bls.getId()))));
+
+        AssistanceService ein_ausstiegshilfe = new AssistanceService()
+                .withAssistanceFacilityList(Arrays.asList(AssistanceFacilityEnumeration.BOARDING_ASSISTANCE, AssistanceFacilityEnumeration.WHEECHAIR_ASSISTANCE))
+                .withAssistanceAvailability(AssistanceAvailabilityEnumeration.AVAILABLE_IF_BOOKED);
+
+        WaitingRoomEquipment wartesaal = new WaitingRoomEquipment()
+                .withSeats(BigInteger.valueOf(8))
+                .withStepFree(true);
+
+        ShelterEquipment unterstand = new ShelterEquipment()
+                .withSeats(BigInteger.valueOf(6))
+                .withStepFree(true);
+
+        PassengerInformationEquipment audio_info_point = new PassengerInformationEquipment()
+                .withId("ch:1:PassengerInformationEquipment:S�V_abfahrten_dynamisch")
+                .withPassengerInformationFacilityList(PassengerInformationFacilityEnumeration.STOP_ANNOUNCEMENTS)
+                .withAccessibilityInfoFacilityList(Arrays.asList(
+                        AccessibilityInfoFacilityEnumeration.AUDIO_INFORMATION,
+                        AccessibilityInfoFacilityEnumeration.DISPLAYS_FOR_VISUALLY_IMPAIRED));
+
+        StaircaseEquipment treppe_S_P0 = new StaircaseEquipment()
+                .withId("ch:1:StaircaseEquipment:S_P0")
+                .withDescription(new MultilingualString().withValue("Top: Overpass, Bottom: Max-D�twyler-Platz"))
+                .withHandrailType(HandrailEnumeration.BOTH_SIDES)
+                .withTopEnd(new StairEndStructure().withTexturedSurface(true))
+                .withBottomEnd(new StairEndStructure().withTexturedSurface(true));
+
+        Level level_1 = new Level();
+        Level level_2 = new Level();
+
+        AccessSpace ueberfuehrung = new AccessSpace()
+                .withId("ch:1:AccessSpace:8516161:�berf�hrung")
+                .withDescription(new MultilingualString().withValue("�berf�hrung"))
+                .withCentroid(new SimplePoint_VersionStructure()
+                        .withLocation(new LocationStructure()
+                                .withLatitude(BigDecimal.valueOf(46.96675449))
+                                .withLongitude(BigDecimal.valueOf(7.46420677))
+                                .withAltitude(BigDecimal.valueOf(549))))
+                .withAccessibilityAssessment(new AccessibilityAssessment()
+                        .withLimitations(new AccessibilityLimitations_RelStructure()
+                                .withAccessibilityLimitation(new AccessibilityLimitation()
+                                        .withWheelchairAccess(LimitationStatusEnumeration.TRUE)
+                                        .withLiftFreeAccess(LimitationStatusEnumeration.FALSE))))
+                .withCovered(CoveredEnumeration.MIXED)
+                .withLevelRef(new LevelRefStructure().withRef(level_1.getId()))
+                .withAccessSpaceType(AccessSpaceTypeEnumeration.OVERPASS);
+
+        PathJunction treppe_bottom = new PathJunction()
+                .withId("ch:1:PathJunction:8516161:S_P0:top")
+                .withLocation(new LocationStructure()
+                        .withLatitude(BigDecimal.valueOf(46.96675449))
+                        .withLongitude(BigDecimal.valueOf(7.46420677))
+                        .withAltitude(BigDecimal.valueOf(549)))
+                .withTypes(new TypeOfPointRefs_RelStructure()
+                        .withTypeOfPointRef(new TypeOfPointRefStructure()
+                                .withRef("ch:1:TypeOfPoint:floor_change_endpoint")))
+                .withParentZoneRef(new ZoneRefStructure().withRef(ueberfuehrung.getId()));
+
+        PathJunction treppe_top = new PathJunction();
+
+        SitePathLink treppe_link = new SitePathLink()
+                .withId("ch:1:SitePathLink:treppe")
+                .withFrom(new PathLinkEndStructure()
+                        .withPlaceRef(new PlaceRefStructure()
+                                .withRef(treppe_bottom.getId()))
+                        .withLevelRef(new LevelRefStructure()
+                                .withRef(level_1.getId())))
+                .withTo(new PathLinkEndStructure()
+                        .withPlaceRef(new PlaceRefStructure()
+                                .withRef(treppe_top.getId()))
+                        .withLevelRef(new LevelRefStructure()
+                                .withRef(level_2.getId())))
+                .withAccessibilityAssessment(new AccessibilityAssessment()
+                        .withLimitations(new AccessibilityLimitations_RelStructure()
+                                .withAccessibilityLimitation(new AccessibilityLimitation()
+                                        .withStepFreeAccess(LimitationStatusEnumeration.FALSE)
+                                        .withWheelchairAccess(LimitationStatusEnumeration.FALSE))))
+                .withAccessFeatureType(AccessFeatureEnumeration.STAIRS)
+                .withLevelRef(new LevelRefStructure().withRef(level_1.getId()))
+                .withPlaceEquipments(new PlaceEquipments_RelStructure()
+                        .withInstalledEquipmentRefOrInstalledEquipment(neTExFactory.createEquipmentRef(
+                                new StaircaseEquipmentRefStructure()
+                                        .withRef(treppe_S_P0.getId()))));
+
+        SitePathLink fussweg_abschnitt = new SitePathLink();
+
+        StopPlaceEntrance eingang = new StopPlaceEntrance()
+                .withId("ch:1:StopPlaceEntrance:8507000:haupteingang")
+                .withCentroid(new SimplePoint_VersionStructure()
+                        .withLocation(new LocationStructure()
+                                .withLatitude(BigDecimal.valueOf(46.96675449))
+                                .withLongitude(BigDecimal.valueOf(7.46420677))
+                                .withAltitude(BigDecimal.valueOf(549))))
+                .withEntranceType(EntranceEnumeration.OPENING)
+                .withDroppedKerbOutside(true)
+                .withAllAreasWheelchairAccessible(true);
+
+        StopPlace wankdorf_bahnhof = new StopPlace()
+                .withId("ch:1:StopPlace:8516161")
+                .withPrivateCode(new PrivateCodeStructure().withValue("8516161"))
+                .withCentroid(new SimplePoint_VersionStructure()
+                        .withLocation(new LocationStructure()
+                                .withLatitude(BigDecimal.valueOf(46.96675449))
+                                .withLongitude(BigDecimal.valueOf(7.46420677))
+                                .withAltitude(BigDecimal.valueOf(549))))
+                .withAccessibilityAssessment(new AccessibilityAssessment()
+                        .withLimitations(new AccessibilityLimitations_RelStructure()
+                                .withAccessibilityLimitation(new AccessibilityLimitation()
+                                        .withWheelchairAccess(LimitationStatusEnumeration.TRUE)
+                                        .withLiftFreeAccess(LimitationStatusEnumeration.FALSE))))
+                .withStopPlaceType(StopTypeEnumeration.RAIL_STATION)
+                .withQuays(new Quays_RelStructure().
+                        withQuayRefOrQuay(Arrays.asList(
+                                quay_3_4,
+                                platform_2)))
+                .withPathLinks(new SitePathLinks_RelStructure().withPathLinkRefOrSitePathLink(Arrays.asList(treppe_link)))
+                .withPathJunctions(new PathJunctions_RelStructure()
+                        .withPathJunctionRefOrPathJunction(Arrays.asList(
+                                bordsteinabsenkung,
+                                treppe_bottom,
+                                treppe_top)));
+
+        ResourceFrame resourceFrame = new ResourceFrame().withId("ch:1:ResourceFrame");
+        SiteFrame siteFrame = new SiteFrame()
+                .withId("ch:1:SiteFrame")
+                .withStopPlaces(new StopPlacesInFrame_RelStructure()
+                        .withStopPlace(Arrays.asList(wankdorf_bahnhof)));
+
+        CompositeFrame compositeFrame = new CompositeFrame()
+                .withId("ch:1:CompositeFrame")
+                .withFrames(new Frames_RelStructure().withCommonFrame(Arrays.asList(
+                        neTExFactory.createResourceFrame(resourceFrame),
+                        neTExFactory.createSiteFrame(siteFrame))));
+
+        PublicationDeliveryStructure publicationDelivery = new PublicationDeliveryStructure()
+                .withDescription(new MultilingualString()
+                        .withValue("Description...")
+                        .withLang("en"))
+                .withPublicationTimestamp(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
+                .withParticipantRef("participantRef")
+                .withDataObjects(new DataObjects()
+                        .withCompositeFrameOrCommonFrame(Arrays.asList(
+                                neTExFactory.createCompositeFrame(compositeFrame))));
+
+        customMarshaller.marshal(neTExFactory.createPublicationDelivery(publicationDelivery), neTExFile);
+    }
+
+    public static boolean openXMLFile(final File file) {
+        if (!Desktop.isDesktopSupported()) {
+            return false;
+        }
+
+        Desktop desktop = Desktop.getDesktop();
+
+        if (!desktop.isSupported(Desktop.Action.EDIT)) {
+            return false;
+        }
+
+        try {
+            desktop.edit(file);
+        } catch (IOException e) {
+            e.printStackTrace(System.out);
+            return false;
+        }
+
+        return true;
+    }
+
+}
