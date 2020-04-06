@@ -21,10 +21,10 @@ import org.junit.Test;
 public class ExporterTest {
     
     @Test
-    public void testSample(){
+    public void testSample() {
         int a = 2;
         int b = 2;
-        
+
         assertEquals(a, b);
         assertSame(a, b);
     }
