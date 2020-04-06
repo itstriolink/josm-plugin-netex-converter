@@ -186,7 +186,7 @@
 			\vfill
 			{\huge \bf \@title \par}
 			\vfill 
-			{\Large Projekt Arbeit 1\par}
+			{\Large Projekt Arbeit 2\par}
 			\bigskip
 			{\Large \authornames \par}
 			\vfill
