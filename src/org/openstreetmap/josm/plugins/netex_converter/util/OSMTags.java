@@ -53,9 +53,9 @@ public final class OSMTags {
     public static final String NAME_TAG = "name";
     public static final String HIGHWAY_TAG = "highway";
     public static final String AMENITY_TAG = "amenity";
-    public static final String BUS_STATION_TAG_VALUE = "bus_station";
 
     public static final String BUS_STOP_TAG_VALUE = "bus_stop";
+    public static final String BUS_STATION_TAG_VALUE = "bus_station";
     public static final String TYPE_TAG = "type";
     public static final String PUBLIC_TRANSPORT_TAG = "public_transport";
     public static final String STOP_AREA_TAG_VALUE = "stop_area";
@@ -63,6 +63,9 @@ public final class OSMTags {
     public static final String PLATFORM_ROLE = "platform";
     public static final String PLATFORM_TAG_VALUE = "platform";
     public static final String SERVICE_TAG = "service";
+    public static final String FOOTWAY_TAG_VALUE = "footway";
+    public static final String STEPS_TAG_VALUE = "steps";
+    public static final String ELEVATOR_TAG_VALUE = "elevator";
 
     public static final String CITY_NETWORK_TAG_VALUE_OLD = "city";
     public static final String CITY_NETWORK_TAG_VALUE = "urban";
@@ -71,4 +74,11 @@ public final class OSMTags {
     public static final String REGIONAL_NETWORK_TAG_VALUE = "regional";
     public static final String LONG_DISTANCE_NETWORK_TAG_VALUE = "long_distance";
     public static final String HIGH_SPEED_NETWORK_TAG_VALUE = "high_speed";
+    
+    public static final String REL_TAG = "rel";
+    public static final String REF_TAG = "ref";
+    public static final String ELE_TAG = "ele";
+    public static final String LEVEL_TAG = "level";
+    public static final String UIC_REF_TAG = "uic_ref";
+    public static final String WHEELCHAIR_TAG = "wheelchair";
 }

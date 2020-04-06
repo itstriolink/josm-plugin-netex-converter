@@ -9,7 +9,7 @@
  */
 package org.openstreetmap.josm.plugins.netex_converter;
 
-import org.openstreetmap.josm.plugins.netex_converter.ui.SaveAsNeTExDialog;
+import org.openstreetmap.josm.plugins.netex_converter.ui.ExportToNeTExDialog;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
@@ -32,7 +32,7 @@ public class NeTExConverterAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        SaveAsNeTExDialog dialog = new SaveAsNeTExDialog();
+        ExportToNeTExDialog dialog = new ExportToNeTExDialog();
         dialog.setTitle(tr("Save as NeTEx"));
     }
 }

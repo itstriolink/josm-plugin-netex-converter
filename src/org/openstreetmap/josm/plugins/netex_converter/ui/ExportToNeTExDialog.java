@@ -9,7 +9,9 @@
  */
 package org.openstreetmap.josm.plugins.netex_converter.ui;
 
+import java.awt.Cursor;
 import java.io.File;
+import javafx.concurrent.Task;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
@@ -20,12 +22,16 @@ import org.openstreetmap.josm.plugins.netex_converter.exporter.NeTExExporter;
  *
  * @author labian
  */
-public class SaveAsNeTExDialog extends javax.swing.JFrame {
-    
-    private final NeTExExporter neTExExporter;
+public class ExportToNeTExDialog extends javax.swing.JFrame
+{
 
-    public SaveAsNeTExDialog() {
-        neTExExporter = new NeTExExporter();
+    private final String NETEX_FILE_NAME = "NeTEx.xml";
+
+    private NeTExExporter neTExExporter;
+    private JProgressBar netexProgressBar;
+
+    public ExportToNeTExDialog()
+    {
         initComponents();
         buildGUI();
     }
@@ -37,7 +43,8 @@ public class SaveAsNeTExDialog extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents()
+    {
 
         mainFileChooser = new javax.swing.JFileChooser();
 
@@ -62,13 +69,15 @@ public class SaveAsNeTExDialog extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void buildGUI() {
+    private void buildGUI()
+    {
         loadFileChooser(mainFileChooser);
     }
 
-    private void loadFileChooser(JFileChooser chooser) {
+    private void loadFileChooser(JFileChooser chooser)
+    {
         chooser.setDialogType(JFileChooser.SAVE_DIALOG);
-        chooser.setSelectedFile(new File("netex.xml"));
+        chooser.setSelectedFile(new File(NETEX_FILE_NAME));
         chooser.setDialogTitle("Save as NeTEx");
         chooser.setMultiSelectionEnabled(false);
 
@@ -78,31 +87,57 @@ public class SaveAsNeTExDialog extends javax.swing.JFrame {
         File file = null;
         int selectedOption = JOptionPane.NO_OPTION;
 
-        do {
+        do
+        {
             int returnVal = chooser.showSaveDialog(null);
 
-            if (returnVal != JFileChooser.APPROVE_OPTION) {
+            if (returnVal != JFileChooser.APPROVE_OPTION)
+            {
                 return;
             }
 
             file = chooser.getSelectedFile();
 
-            if (!file.getName().toLowerCase().endsWith(".xml")) {
+            if (!file.getName().toLowerCase().endsWith(".xml"))
+            {
                 file = new File(file.getParentFile(), file.getName() + ".xml");
             }
 
-            if (file.exists()) {
+            if (file.exists())
+            {
                 selectedOption = JOptionPane.showConfirmDialog(
                         null, "This file already exists, overwrite it?");
 
-                if (selectedOption == JOptionPane.CANCEL_OPTION) {
+                if (selectedOption == JOptionPane.CANCEL_OPTION)
+                {
                     return;
                 }
             }
-        } while (file.exists() && selectedOption == JOptionPane.NO_OPTION);
-        
-        JProgressBar netexExportProgressBar = new JProgressBar(0, 100);
+        }
+        while (file.exists() && selectedOption == JOptionPane.NO_OPTION);
+
+        initiateProgressBar();
+
+        neTExExporter = new NeTExExporter();
+
         neTExExporter.exportToNeTEx(file);
+
+        setCursor(null);
+    }
+
+    private void initiateProgressBar()
+    {
+        netexProgressBar = new JProgressBar(0, 100);
+        netexProgressBar.setValue(0);
+        netexProgressBar.setStringPainted(true);
+
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+    }
+
+    private void taskDone()
+    {
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
