@@ -14,11 +14,11 @@ import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
+public class NeTExConverterPlugin extends Plugin {
 
-public class NeTExConverterPlugin extends Plugin{
-	public NeTExConverterPlugin(final PluginInformation info) {
-		super(info);
-		MainMenu.addAfter(MainApplication.getMenu().fileMenu, new NeTExConverterAction(), false, MainApplication.getMenu().gpxExport);
-		//new Preferences(getPluginInformation().name);
-	}
+    public NeTExConverterPlugin(final PluginInformation info) {
+        super(info);
+        MainMenu.addAfter(MainApplication.getMenu().fileMenu, new NeTExConverterAction(), false, MainApplication.getMenu().gpxExport);
+        //new Preferences(getPluginInformation().name);
+    }
 }

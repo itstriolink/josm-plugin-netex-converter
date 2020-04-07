@@ -16,34 +16,29 @@ import com.netex.model.PathJunction;
  *
  * @author Labian Gashi
  */
-public class Elevator
-{
+public class Elevator {
+
     private PathJunction pathJunction;
     private EquipmentPlace equipmentPlace;
-    
-    public Elevator(PathJunction pathJunction, EquipmentPlace equipmentPlace)
-    {
+
+    public Elevator(PathJunction pathJunction, EquipmentPlace equipmentPlace) {
         this.pathJunction = pathJunction;
         this.equipmentPlace = equipmentPlace;
     }
 
-    public PathJunction getPathJunction()
-    {
+    public PathJunction getPathJunction() {
         return pathJunction;
     }
 
-    public void setPathJunction(PathJunction pathJunction)
-    {
+    public void setPathJunction(PathJunction pathJunction) {
         this.pathJunction = pathJunction;
     }
 
-    public EquipmentPlace getEquipmentPlace()
-    {
+    public EquipmentPlace getEquipmentPlace() {
         return equipmentPlace;
     }
 
-    public void setEquipmentPlace(EquipmentPlace equipmentPlace)
-    {
+    public void setEquipmentPlace(EquipmentPlace equipmentPlace) {
         this.equipmentPlace = equipmentPlace;
     }
 }

@@ -18,47 +18,39 @@ import java.util.List;
  *
  * @author Labian Gashi
  */
-public class Steps
-{
+public class Steps {
 
     private List<PathJunction> pathJunctions;
     private EquipmentPlace equipmentPlace;
     private SitePathLink sitePathLink;
 
-    public Steps(List<PathJunction> pathJunctions, EquipmentPlace equipmentPlace, SitePathLink sitePathLink)
-    {
+    public Steps(List<PathJunction> pathJunctions, EquipmentPlace equipmentPlace, SitePathLink sitePathLink) {
         this.pathJunctions = pathJunctions;
         this.equipmentPlace = equipmentPlace;
         this.sitePathLink = sitePathLink;
     }
 
-    public List<PathJunction> getPathJunctions()
-    {
+    public List<PathJunction> getPathJunctions() {
         return pathJunctions;
     }
 
-    public void setPathJunction(List<PathJunction> pathJunctions)
-    {
+    public void setPathJunction(List<PathJunction> pathJunctions) {
         this.pathJunctions = pathJunctions;
     }
 
-    public EquipmentPlace getEquipmentPlace()
-    {
+    public EquipmentPlace getEquipmentPlace() {
         return equipmentPlace;
     }
 
-    public void setEquipmentPlace(EquipmentPlace equipmentPlace)
-    {
+    public void setEquipmentPlace(EquipmentPlace equipmentPlace) {
         this.equipmentPlace = equipmentPlace;
     }
 
-    public SitePathLink getSitePathLink()
-    {
+    public SitePathLink getSitePathLink() {
         return sitePathLink;
     }
 
-    public void setSitePathLink(SitePathLink sitePathLink)
-    {
+    public void setSitePathLink(SitePathLink sitePathLink) {
         this.sitePathLink = sitePathLink;
     }
 }

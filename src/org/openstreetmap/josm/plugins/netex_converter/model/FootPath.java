@@ -17,35 +17,29 @@ import java.util.List;
  *
  * @author Labian Gashi
  */
-public class FootPath
-{
+public class FootPath {
 
     private List<PathJunction> pathJunctions;
     private SitePathLink sitePathLink;
 
-    public FootPath(List<PathJunction> pathJunctions, SitePathLink sitePathLink)
-    {
+    public FootPath(List<PathJunction> pathJunctions, SitePathLink sitePathLink) {
         this.pathJunctions = pathJunctions;
         this.sitePathLink = sitePathLink;
     }
 
-    public List<PathJunction> getPathJunctions()
-    {
+    public List<PathJunction> getPathJunctions() {
         return pathJunctions;
     }
 
-    public void setPathJunctions(List<PathJunction> pathJunctions)
-    {
+    public void setPathJunctions(List<PathJunction> pathJunctions) {
         this.pathJunctions = pathJunctions;
     }
 
-    public SitePathLink getSitePathLink()
-    {
+    public SitePathLink getSitePathLink() {
         return sitePathLink;
     }
 
-    public void setSitePathLink(SitePathLink sitePathLink)
-    {
+    public void setSitePathLink(SitePathLink sitePathLink) {
         this.sitePathLink = sitePathLink;
     }
 }

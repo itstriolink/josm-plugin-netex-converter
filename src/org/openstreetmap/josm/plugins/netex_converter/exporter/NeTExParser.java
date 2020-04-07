@@ -70,8 +70,7 @@ import org.openstreetmap.josm.plugins.netex_converter.util.OSMTags;
  *
  * @author Labian Gashi
  */
-public class NeTExParser
-{
+public class NeTExParser {
 
     private final ObjectFactory neTExFactory;
 
@@ -81,23 +80,19 @@ public class NeTExParser
     private final Level level_1 = new Level();
     private final Level level_2 = new Level();
 
-    public NeTExParser()
-    {
+    public NeTExParser() {
         neTExFactory = new ObjectFactory();
     }
 
-    public StopPlace createStopPlace(Node node, StopTypeEnumeration stopType)
-    {
+    public StopPlace createStopPlace(Node node, StopTypeEnumeration stopType) {
         return createStopPlace(node, stopType, null);
     }
 
-    public StopPlace createStopPlace(Node node, StopTypeEnumeration stopType, ArrayList<PathLink> pathLinks)
-    {
+    public StopPlace createStopPlace(Node node, StopTypeEnumeration stopType, ArrayList<PathLink> pathLinks) {
         return createStopPlace(node, stopType, pathLinks, null);
     }
 
-    public StopPlace createStopPlace(Node node, StopTypeEnumeration stopType, ArrayList<PathLink> pathLinks, ArrayList<PathJunction> pathJunctions)
-    {
+    public StopPlace createStopPlace(Node node, StopTypeEnumeration stopType, ArrayList<PathLink> pathLinks, ArrayList<PathJunction> pathJunctions) {
         TagMap keys = node.getKeys();
         LatLon coordinates = node.getCoor();
 
@@ -106,34 +101,30 @@ public class NeTExParser
 
         String nodeName = node.getName();
 
-        String uic_ref = "";
-        if (keys.containsKey(OSMTags.UIC_REF_TAG))
-        {
-            uic_ref = keys.get(OSMTags.UIC_REF_TAG);
-        }
+        String uic_ref = OSMHelper.getUicRef(node);
 
         BigDecimal altitude = null;
 
-        if (keys.containsKey(OSMTags.ELE_TAG))
-        {
-            try
-            {
+        if (keys.containsKey(OSMTags.ELE_TAG)) {
+            try {
                 altitude = new BigDecimal(keys.get(OSMTags.ELE_TAG));
             }
-            catch (NumberFormatException nfe)
-            {
+            catch (NumberFormatException nfe) {
 
             }
+        }
+        
+        if (uic_ref == null || uic_ref.trim().isEmpty())
+        {
+            //log warning...
         }
 
         LimitationStatusEnumeration wheelchairAccess = LimitationStatusEnumeration.UNKNOWN;
 
-        if (keys.containsKey(OSMTags.WHEELCHAIR_TAG))
-        {
+        if (keys.containsKey(OSMTags.WHEELCHAIR_TAG)) {
             String wheelchairTagAccess = keys.get(OSMTags.WHEELCHAIR_TAG);
 
-            switch (wheelchairTagAccess.toLowerCase())
-            {
+            switch (wheelchairTagAccess.toLowerCase()) {
                 case "yes":
                     wheelchairAccess = LimitationStatusEnumeration.TRUE;
                     break;
@@ -151,7 +142,7 @@ public class NeTExParser
         }
 
         return new StopPlace()
-                .withId(String.format("ch:1:StopPlace:%s", uic_ref))
+                .withId(String.format("ch:1:StopPlace:%s", uic_ref != null && !uic_ref.trim().isEmpty() ? uic_ref : node.getId()))
                 .withName(new MultilingualString()
                         .withValue(nodeName))
                 .withPrivateCode(new PrivateCodeStructure().withValue(String.format("org:osm:node:%s", node.getId())))
@@ -170,8 +161,7 @@ public class NeTExParser
 //                .withPathJunctions(new PathJunctions_RelStructure().withPathJunctionRefOrPathJunction(pathJunctions));
     }
 
-    public Elevator createElevator(Node node)
-    {
+    public Elevator createElevator(Node node) {
         long nodeId = node.getId();
         LatLon coordinates = node.getCoor();
 
@@ -197,8 +187,7 @@ public class NeTExParser
         return new Elevator(pathJunction, equipmentPlace);
     }
 
-    public FootPath createFootPath(Way way)
-    {
+    public FootPath createFootPath(Way way) {
         long wayId = way.getId();
         ArrayList<PathJunction> pathJunctions = new ArrayList<>();
 
@@ -208,8 +197,7 @@ public class NeTExParser
 
         List<Node> nodes = Arrays.asList(way.firstNode(), way.lastNode());
 
-        for (Node node : nodes)
-        {
+        for (Node node : nodes) {
             LatLon coordinates = node.getCoor();
             long nodeId = node.getId();
 
@@ -224,13 +212,11 @@ public class NeTExParser
 
             pathJunctions.add(pathJunction);
 
-            if (start)
-            {
+            if (start) {
                 fromId = pathJunction.getId();
                 start = false;
             }
-            else
-            {
+            else {
                 toId = pathJunction.getId();
             }
         }
@@ -239,8 +225,7 @@ public class NeTExParser
 
         Level currentLevel = null;
 
-        switch (level != null ? level : "")
-        {
+        switch (level != null ? level : "") {
             case "-2":
                 currentLevel = level_minus_2;
                 break;
@@ -278,8 +263,7 @@ public class NeTExParser
         return new FootPath(pathJunctions, sitePathLink);
     }
 
-    public Steps createSteps(Way way)
-    {
+    public Steps createSteps(Way way) {
         long wayId = way.getId();
         ArrayList<PathJunction> pathJunctions = new ArrayList<>();
 
@@ -290,8 +274,7 @@ public class NeTExParser
 
         List<Node> nodes = Arrays.asList(way.firstNode(), way.lastNode());
 
-        for (Node node : nodes)
-        {
+        for (Node node : nodes) {
             LatLon coordinates = node.getCoor();
             long nodeId = node.getId();
 
@@ -307,13 +290,11 @@ public class NeTExParser
 
             pathJunctions.add(pathJunction);
 
-            if (start)
-            {
+            if (start) {
                 fromId = pathJunction.getId();
                 start = false;
             }
-            else
-            {
+            else {
                 toId = pathJunction.getId();
             }
         }
@@ -354,8 +335,7 @@ public class NeTExParser
         return new Steps(pathJunctions, equipmentPlace, sitePathLink);
     }
 
-    public CompositeFrame createCompositeFrame(ResourceFrame resourceFrame, SiteFrame siteFrame)
-    {
+    public CompositeFrame createCompositeFrame(ResourceFrame resourceFrame, SiteFrame siteFrame) {
         return new CompositeFrame()
                 .withId("ch:1:CompositeFrame")
                 .withFrames(new Frames_RelStructure().withCommonFrame(Arrays.asList(
@@ -363,21 +343,18 @@ public class NeTExParser
                         neTExFactory.createSiteFrame(siteFrame))));
     }
 
-    public SiteFrame createSiteFrame(ArrayList<StopPlace> stopPlaces)
-    {
+    public SiteFrame createSiteFrame(ArrayList<StopPlace> stopPlaces) {
         return new SiteFrame()
                 .withId("ch:1:SiteFrame")
                 .withStopPlaces(new StopPlacesInFrame_RelStructure()
                         .withStopPlace(stopPlaces));
     }
 
-    public ResourceFrame createResourceFrame()
-    {
+    public ResourceFrame createResourceFrame() {
         return new ResourceFrame().withId("ch:1:ResourceFrame");
     }
 
-    public PublicationDeliveryStructure createPublicationDeliveryStsructure(CompositeFrame compositeFrame)
-    {
+    public PublicationDeliveryStructure createPublicationDeliveryStsructure(CompositeFrame compositeFrame) {
         return new PublicationDeliveryStructure()
                 .withDescription(new MultilingualString()
                         .withValue("OSM to NeTEx")
@@ -389,8 +366,7 @@ public class NeTExParser
                                 neTExFactory.createCompositeFrame(compositeFrame))));
     }
 
-    public Quay createPlatform(Node node)
-    {
+    public Quay createPlatform(Node node) {
         long nodeId = node.getId();
 
         LatLon coordinates = node.getCoor();
@@ -399,20 +375,16 @@ public class NeTExParser
 
         QuayTypeEnumeration quayTypeEnumeration;
 
-        if (OSMHelper.isBusStation(node, false))
-        {
+        if (OSMHelper.isBusStation(node, false)) {
             quayTypeEnumeration = QuayTypeEnumeration.BUS_PLATFORM;
         }
-        else if (OSMHelper.isBusStop(node, false))
-        {
+        else if (OSMHelper.isBusStop(node, false)) {
             quayTypeEnumeration = QuayTypeEnumeration.BUS_STOP;
         }
-        else if (OSMHelper.isTrainStation(node, false))
-        {
+        else if (OSMHelper.isTrainStation(node, false)) {
             quayTypeEnumeration = QuayTypeEnumeration.RAIL_PLATFORM;
         }
-        else
-        {
+        else {
             quayTypeEnumeration = QuayTypeEnumeration.OTHER;
         }
 
