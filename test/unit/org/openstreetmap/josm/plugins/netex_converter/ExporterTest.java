@@ -78,8 +78,7 @@ import net.opengis.gml._3.AbstractRingPropertyType;
 import net.opengis.gml._3.DirectPositionType;
 import net.opengis.gml._3.LinearRingType;
 import net.opengis.gml._3.PolygonType;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -88,8 +87,14 @@ import org.junit.Test;
  */
 public class ExporterTest {
 
-    private static ObjectFactory neTExFactory = new ObjectFactory();
-    private static net.opengis.gml._3.ObjectFactory gmlFactory = new net.opengis.gml._3.ObjectFactory();
+    private static ObjectFactory neTExFactory;
+    private static net.opengis.gml._3.ObjectFactory gmlFactory;
+
+    @Before
+    public void setUp() {
+        neTExFactory = new ObjectFactory();
+        gmlFactory = new net.opengis.gml._3.ObjectFactory();
+    }
 
     @Test
     public void exportComplexStationTest() throws JAXBException {

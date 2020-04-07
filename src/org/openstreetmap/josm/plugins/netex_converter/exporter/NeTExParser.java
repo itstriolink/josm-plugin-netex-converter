@@ -27,7 +27,6 @@ import com.netex.model.LocationStructure;
 import com.netex.model.MultilingualString;
 import com.netex.model.ObjectFactory;
 import com.netex.model.PathJunction;
-import com.netex.model.PathJunctions_RelStructure;
 import com.netex.model.PathLink;
 import com.netex.model.PathLinkEndStructure;
 import com.netex.model.PlaceRefStructure;
@@ -41,15 +40,12 @@ import com.netex.model.ResourceFrame;
 import com.netex.model.SimplePoint_VersionStructure;
 import com.netex.model.SiteFrame;
 import com.netex.model.SitePathLink;
-import com.netex.model.SitePathLinks_RelStructure;
 import com.netex.model.StaircaseEquipment;
-import com.netex.model.StaircaseEquipmentRefStructure;
 import com.netex.model.StopPlace;
 import com.netex.model.StopPlacesInFrame_RelStructure;
 import com.netex.model.StopTypeEnumeration;
 import com.netex.model.TypeOfPointRefStructure;
 import com.netex.model.TypeOfPointRefs_RelStructure;
-import com.netex.model.ZoneRefStructure;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -113,9 +109,8 @@ public class NeTExParser {
 
             }
         }
-        
-        if (uic_ref == null || uic_ref.trim().isEmpty())
-        {
+
+        if (uic_ref == null || uic_ref.trim().isEmpty()) {
             //log warning...
         }
 

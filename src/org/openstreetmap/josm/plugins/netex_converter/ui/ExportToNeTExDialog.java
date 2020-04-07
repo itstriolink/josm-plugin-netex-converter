@@ -11,7 +11,6 @@ package org.openstreetmap.josm.plugins.netex_converter.ui;
 
 import java.awt.Cursor;
 import java.io.File;
-import javafx.concurrent.Task;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
@@ -22,16 +21,14 @@ import org.openstreetmap.josm.plugins.netex_converter.exporter.NeTExExporter;
  *
  * @author labian
  */
-public class ExportToNeTExDialog extends javax.swing.JFrame
-{
+public class ExportToNeTExDialog extends javax.swing.JFrame {
 
     private final String NETEX_FILE_NAME = "NeTEx.xml";
 
     private NeTExExporter neTExExporter;
     private JProgressBar netexProgressBar;
 
-    public ExportToNeTExDialog()
-    {
+    public ExportToNeTExDialog() {
         initComponents();
         buildGUI();
     }
@@ -69,13 +66,11 @@ public class ExportToNeTExDialog extends javax.swing.JFrame
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void buildGUI()
-    {
+    private void buildGUI() {
         loadFileChooser(mainFileChooser);
     }
 
-    private void loadFileChooser(JFileChooser chooser)
-    {
+    private void loadFileChooser(JFileChooser chooser) {
         chooser.setDialogType(JFileChooser.SAVE_DIALOG);
         chooser.setSelectedFile(new File(NETEX_FILE_NAME));
         chooser.setDialogTitle("Save as NeTEx");
@@ -87,29 +82,24 @@ public class ExportToNeTExDialog extends javax.swing.JFrame
         File file = null;
         int selectedOption = JOptionPane.NO_OPTION;
 
-        do
-        {
+        do {
             int returnVal = chooser.showSaveDialog(null);
 
-            if (returnVal != JFileChooser.APPROVE_OPTION)
-            {
+            if (returnVal != JFileChooser.APPROVE_OPTION) {
                 return;
             }
 
             file = chooser.getSelectedFile();
 
-            if (!file.getName().toLowerCase().endsWith(".xml"))
-            {
+            if (!file.getName().toLowerCase().endsWith(".xml")) {
                 file = new File(file.getParentFile(), file.getName() + ".xml");
             }
 
-            if (file.exists())
-            {
+            if (file.exists()) {
                 selectedOption = JOptionPane.showConfirmDialog(
                         null, "This file already exists, overwrite it?");
 
-                if (selectedOption == JOptionPane.CANCEL_OPTION)
-                {
+                if (selectedOption == JOptionPane.CANCEL_OPTION) {
                     return;
                 }
             }
@@ -125,8 +115,7 @@ public class ExportToNeTExDialog extends javax.swing.JFrame
         setCursor(null);
     }
 
-    private void initiateProgressBar()
-    {
+    private void initiateProgressBar() {
         netexProgressBar = new JProgressBar(0, 100);
         netexProgressBar.setValue(0);
         netexProgressBar.setStringPainted(true);
@@ -135,8 +124,7 @@ public class ExportToNeTExDialog extends javax.swing.JFrame
 
     }
 
-    private void taskDone()
-    {
+    private void taskDone() {
 
     }
 

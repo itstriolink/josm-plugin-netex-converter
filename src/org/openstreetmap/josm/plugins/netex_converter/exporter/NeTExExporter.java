@@ -13,36 +13,21 @@ import org.apache.log4j.Logger;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 import com.netex.model.*;
-import com.netex.model.PublicationDeliveryStructure.DataObjects;
-import com.netex.validation.NeTExValidator;
 import java.awt.Point;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Predicate;
 import javax.swing.JOptionPane;
-import javax.xml.transform.stream.StreamSource;
 
 import jaxb.CustomMarshaller;
-import net.opengis.gml._3.AbstractRingPropertyType;
-import net.opengis.gml._3.DirectPositionType;
-import net.opengis.gml._3.LinearRingType;
-import net.opengis.gml._3.PolygonType;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -52,19 +37,14 @@ import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.netex_converter.util.OSMHelper;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import org.locationtech.jts.geom.Geometry;
-import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.BBox;
-import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
-import org.openstreetmap.josm.data.osm.TagMap;
 import org.openstreetmap.josm.gui.MapView;
 import static org.openstreetmap.josm.gui.NavigatableComponent.PROP_SNAP_DISTANCE;
 import org.openstreetmap.josm.plugins.netex_converter.model.Elevator;
 import org.openstreetmap.josm.plugins.netex_converter.model.FootPath;
 import org.openstreetmap.josm.plugins.netex_converter.model.Steps;
 import org.openstreetmap.josm.plugins.netex_converter.util.OSMTags;
-import org.xml.sax.SAXException;
 
 /**
  *
