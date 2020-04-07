@@ -13,8 +13,8 @@ import java.awt.Cursor;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JProgressBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.netex_converter.exporter.NeTExExporter;
 
 /**
@@ -23,10 +23,9 @@ import org.openstreetmap.josm.plugins.netex_converter.exporter.NeTExExporter;
  */
 public class ExportToNeTExDialog extends javax.swing.JFrame {
 
-    private final String NETEX_FILE_NAME = "NeTEx.xml";
+    private final static String NETEX_FILE_NAME = "NeTEx.xml";
 
     private NeTExExporter neTExExporter;
-    private JProgressBar netexProgressBar;
 
     public ExportToNeTExDialog() {
         initComponents();
@@ -106,26 +105,17 @@ public class ExportToNeTExDialog extends javax.swing.JFrame {
         }
         while (file.exists() && selectedOption == JOptionPane.NO_OPTION);
 
-        initiateProgressBar();
-
+        MainApplication.getMap().mapView.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         neTExExporter = new NeTExExporter();
 
-        neTExExporter.exportToNeTEx(file);
+        try {
 
-        setCursor(null);
-    }
+            neTExExporter.exportToNeTEx(file);
+        }
+        finally {
 
-    private void initiateProgressBar() {
-        netexProgressBar = new JProgressBar(0, 100);
-        netexProgressBar.setValue(0);
-        netexProgressBar.setStringPainted(true);
-
-        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-
-    }
-
-    private void taskDone() {
-
+            MainApplication.getMap().mapView.setCursor(Cursor.getDefaultCursor());
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

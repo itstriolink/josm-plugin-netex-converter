@@ -52,11 +52,12 @@ import org.openstreetmap.josm.plugins.netex_converter.util.OSMTags;
  */
 public class NeTExExporter {
 
-    private final static Logger LOGGER = Logger.getLogger(NeTExExporter.class);
     private final NeTExParser neTExParser;
     private final ObjectFactory neTExFactory;
     private final CustomMarshaller customMarshaller;
-    private final net.opengis.gml._3.ObjectFactory gmlFactory;
+
+    private final static Logger LOGGER = Logger.getLogger(NeTExExporter.class);
+
     private final HashMap<Node, StopPlace> stopPlaces;
     private final HashMap<Node, Quay> quays;
     private final HashMap<Node, Elevator> elevators;
@@ -68,25 +69,31 @@ public class NeTExExporter {
     public NeTExExporter() {
         neTExParser = new NeTExParser();
         neTExFactory = new ObjectFactory();
-        gmlFactory = new net.opengis.gml._3.ObjectFactory();
         customMarshaller = new CustomMarshaller(PublicationDeliveryStructure.class);
+
+        ds = MainApplication.getLayerManager().getEditDataSet();
+
         stopPlaces = new HashMap<>();
         quays = new HashMap<>();
         elevators = new HashMap<>();
         steps = new HashMap<>();
         footPaths = new HashMap<>();
-        ds = MainApplication.getLayerManager().getActiveDataSet();
     }
 
     public void exportToNeTEx(File neTExFile) {
+
         Collection<OsmPrimitive> primitives = null;
 
         if (ds == null) {
             JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("No data has been loaded into JOSM"));
             return;
         }
+        else if (ds.isEmpty()) {
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("No primitives have been found in the currently loaded data"));
+            return;
+        }
         else {
-            primitives = ds.allNonDeletedPrimitives();
+            primitives = ds.allPrimitives();
         }
 
         for (OsmPrimitive primitive : primitives) {
@@ -108,9 +115,6 @@ public class NeTExExporter {
                 }
                 else if (OSMHelper.isElevator(node)) {
                     elevators.put(node, neTExParser.createElevator(node));
-                }
-                else {
-
                 }
 
             }
@@ -134,17 +138,25 @@ public class NeTExExporter {
             }
         }
 
+        if (stopPlaces.isEmpty()) {
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("File has not been exported because no stop places have been found in the currently loaded data."));
+            return;
+        }
+
         for (HashMap.Entry<Node, StopPlace> stopEntry : stopPlaces.entrySet()) {
             StopPlace stopPlace = stopEntry.getValue();
+
             boolean childrenAvailable = false;
+            long stopPlaceNodeId = stopEntry.getKey().getId();
 
             Quays_RelStructure currentQuays = new Quays_RelStructure();
 
             for (HashMap.Entry<Node, Quay> quayEntry : quays.entrySet()) {
-                String quayUicRef = OSMHelper.getUicRef(quayEntry.getKey());
-                String stopUicRef = OSMHelper.getUicRef(stopEntry.getKey());
 
-                String nodeRef = quayEntry.getKey().getKeys().containsKey(OSMTags.REF_TAG) ? quayEntry.getKey().getKeys().get(OSMTags.REF_TAG) : null;
+                String stopUicRef = OSMHelper.getUicRef(stopEntry.getKey());
+                String quayUicRef = OSMHelper.getUicRef(quayEntry.getKey());
+
+                String nodeRef = OSMHelper.getRef(quayEntry.getKey());
 
                 if (quayUicRef != null && !quayUicRef.trim().isEmpty() && stopUicRef != null && !stopUicRef.trim().isEmpty()) {
                     if (quayUicRef.equals(stopUicRef)) {
@@ -155,9 +167,15 @@ public class NeTExExporter {
                     }
                 }
                 else {
-                    /*Point point = MainApplication.getMap().mapView.getPoint(entry.getValue().getCoor());
-                    Node nearestNode = MainApplication.getMap().mapView.getNearestNode(point, OsmPrimitive::isTagged, false);
-                    ... */
+                    LatLon coord = quayEntry.getKey().getCoor();
+                    Node closestStopPlace = findNearestMatchingStopPlace(coord, stopPlaceNodeId);
+
+                    if (closestStopPlace != null) {
+                        currentQuays.withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
+                                .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, nodeRef))
+                                .withPublicCode(nodeRef)));
+                        childrenAvailable = true;
+                    }
                 }
             }
 
@@ -222,11 +240,6 @@ public class NeTExExporter {
             }
         }
 
-        if (stopPlaces.isEmpty()) {
-            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("File has not been exported because no stop places have been found in the currently loaded data."));
-            return;
-        }
-
         ArrayList<StopPlace> stopPlacesAsList = new ArrayList<>(stopPlaces.values());
 
         ResourceFrame resourceFrame = neTExParser.createResourceFrame();
@@ -237,16 +250,8 @@ public class NeTExExporter {
         PublicationDeliveryStructure publicationDeliveryStructure = neTExParser.createPublicationDeliveryStsructure(compositeFrame);
 
         customMarshaller.marshal(neTExFactory.createPublicationDelivery(publicationDeliveryStructure), neTExFile);
-    }
 
-    public List<Node> getAllNearestNodes(Point p, Predicate<OsmPrimitive> predicate) {
-        List<Node> nearestList = new ArrayList<>();
-
-        for (List<Node> nlist : getNearestNodesImpl(p, predicate).values()) {
-            nearestList.addAll(nlist);
-        }
-
-        return nearestList;
+        JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("NeTEx export has finished successfully."));
     }
 
     private Node findNearestStopPlace(LatLon coord) {
@@ -274,7 +279,8 @@ public class NeTExExporter {
         Map<Double, List<Node>> dist_nodes = getNearestNodesImpl(p, OsmPrimitive::isTagged);
         Double[] distances = dist_nodes.keySet().toArray(new Double[0]);
         Arrays.sort(distances);
-        Integer distanceIndex = -1;
+
+        int distanceIndex = -1;
 
         while (++distanceIndex < distances.length) {
             List<Node> nodes = dist_nodes.get(distances[distanceIndex]);
@@ -291,9 +297,10 @@ public class NeTExExporter {
 
     private Map<Double, List<Node>> getNearestNodesImpl(Point p, Predicate<OsmPrimitive> predicate) {
         Map<Double, List<Node>> nearestMap = new TreeMap<>();
-        MapView mapView = MainApplication.getMap().mapView;
 
         if (ds != null) {
+            MapView mapView = MainApplication.getMap().mapView;
+
             double dist, snapDistanceSq = PROP_SNAP_DISTANCE.get();
             snapDistanceSq *= snapDistanceSq;
 

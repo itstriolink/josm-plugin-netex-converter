@@ -194,6 +194,22 @@ public final class OSMHelper {
         }
     }
 
+    public static String getRef(OsmPrimitive primitive) {
+        if (primitive != null) {
+            TagMap keys = primitive.getKeys();
+
+            if (keys.containsKey(OSMTags.REF_TAG)) {
+                return keys.get(OSMTags.REF_TAG);
+            }
+            else {
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
+    }
+
     public static String getLevel(OsmPrimitive primitive) {
         if (primitive != null) {
             TagMap keys = primitive.getKeys();
