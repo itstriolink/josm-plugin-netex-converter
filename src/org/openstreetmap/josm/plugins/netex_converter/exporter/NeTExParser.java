@@ -36,6 +36,7 @@ import com.netex.model.PrivateCodeStructure;
 import com.netex.model.PublicationDeliveryStructure;
 import com.netex.model.Quay;
 import com.netex.model.QuayTypeEnumeration;
+import com.netex.model.RampEquipment;
 import com.netex.model.ResourceFrame;
 import com.netex.model.SimplePoint_VersionStructure;
 import com.netex.model.SiteFrame;
@@ -52,8 +53,13 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import net.opengis.gml._3.AbstractRingPropertyType;
+import net.opengis.gml._3.DirectPositionListType;
+import net.opengis.gml._3.LinearRingType;
+import net.opengis.gml._3.PolygonType;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.TagMap;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.netex_converter.model.Elevator;
@@ -61,6 +67,7 @@ import org.openstreetmap.josm.plugins.netex_converter.model.FootPath;
 import org.openstreetmap.josm.plugins.netex_converter.model.Steps;
 import org.openstreetmap.josm.plugins.netex_converter.util.OSMHelper;
 import org.openstreetmap.josm.plugins.netex_converter.util.OSMTags;
+import org.openstreetmap.josm.tools.Pair;
 
 /**
  *
@@ -69,6 +76,7 @@ import org.openstreetmap.josm.plugins.netex_converter.util.OSMTags;
 public class NeTExParser {
 
     private final ObjectFactory neTExFactory;
+    private static final net.opengis.gml._3.ObjectFactory gmlFactory = new net.opengis.gml._3.ObjectFactory();
 
     private final Level level_minus_2 = new Level();
     private final Level level_minus_1 = new Level();
@@ -114,27 +122,7 @@ public class NeTExParser {
             //log warning...
         }
 
-        LimitationStatusEnumeration wheelchairAccess = LimitationStatusEnumeration.UNKNOWN;
-
-        if (keys.containsKey(OSMTags.WHEELCHAIR_TAG)) {
-            String wheelchairTagAccess = keys.get(OSMTags.WHEELCHAIR_TAG);
-
-            switch (wheelchairTagAccess.toLowerCase()) {
-                case "yes":
-                    wheelchairAccess = LimitationStatusEnumeration.TRUE;
-                    break;
-                case "limited":
-                    wheelchairAccess = LimitationStatusEnumeration.PARTIAL;
-                    break;
-                case "no":
-                    wheelchairAccess = LimitationStatusEnumeration.FALSE;
-                    break;
-                default:
-                    wheelchairAccess = LimitationStatusEnumeration.UNKNOWN;
-                    break;
-
-            }
-        }
+        LimitationStatusEnumeration wheelchairAccess = OSMHelper.getWheelchairLimitation(node);
 
         return new StopPlace()
                 .withId(String.format("ch:1:StopPlace:%s", uic_ref != null && !uic_ref.trim().isEmpty() ? uic_ref : node.getId()))
@@ -154,6 +142,55 @@ public class NeTExParser {
                 .withStopPlaceType(stopType);
 //                .withPathLinks(new SitePathLinks_RelStructure().withPathLinkRefOrSitePathLink(pathLinks))
 //                .withPathJunctions(new PathJunctions_RelStructure().withPathJunctionRefOrPathJunction(pathJunctions));
+    }
+
+    public Quay createQuay(OsmPrimitive primitive) {
+        long primitiveId = primitive.getId();
+
+        QuayTypeEnumeration quayTypeEnumeration = OSMHelper.getQuayTypeEnumeration(primitive);
+
+        if (primitive instanceof Node) {
+            Node node = (Node) primitive;
+
+            LatLon coordinates = node.getCoor();
+            double lat = coordinates.lat();
+            double lon = coordinates.lon();
+
+            TagMap keys = node.getKeys();
+
+            return new Quay()
+                    .withPrivateCode(new PrivateCodeStructure().withValue(String.format("org:osm:node:%s", primitiveId)))
+                    .withCentroid(new SimplePoint_VersionStructure()
+                            .withLocation(new LocationStructure()
+                                    .withLatitude(BigDecimal.valueOf(lat))
+                                    .withLongitude(BigDecimal.valueOf(lon))))
+                    .withQuayType(quayTypeEnumeration);
+        }
+        else if (primitive instanceof Way) {
+            Way way = (Way) primitive;
+
+            TagMap keys = way.getKeys();
+
+            LinearRingType linearRing = new LinearRingType();
+
+            for (Node node : way.getNodes()) {
+                LatLon coord = node.getCoor();
+
+                linearRing.withPosOrPointProperty(Arrays.asList(new DirectPositionListType().withValue(coord.lat(), coord.lon())));
+            }
+
+            return new Quay()
+                    .withPrivateCode(new PrivateCodeStructure().withValue(String.format("org:osm:way:%s", primitiveId)))
+                    .withPolygon(new PolygonType()
+                            .withId(String.format("org:osm:way:%s", primitiveId))
+                            .withExterior(new AbstractRingPropertyType()
+                                    .withAbstractRing(gmlFactory.createLinearRing(linearRing))))
+                    .withQuayType(quayTypeEnumeration);
+
+        }
+        else {
+            return new Quay();
+        }
     }
 
     public Elevator createElevator(Node node) {
@@ -243,19 +280,65 @@ public class NeTExParser {
 
         String levelId = currentLevel != null ? currentLevel.getId() : null;
 
-        SitePathLink sitePathLink = new SitePathLink()
-                .withId(String.format("ch:1:SitePathLink:%s", wayId))
-                .withFrom(new PathLinkEndStructure()
-                        .withPlaceRef(new PlaceRefStructure().
-                                withRef(fromId)))
-                .withTo(new PathLinkEndStructure()
-                        .withPlaceRef(new PlaceRefStructure()
-                                .withRef(toId)))
-                .withAccessFeatureType(AccessFeatureEnumeration.FOOTPATH)
-                .withLevelRef(new LevelRefStructure()
-                        .withRef(levelId));
+        LimitationStatusEnumeration wheelchairAccess = OSMHelper.getWheelchairLimitation(way);
 
-        return new FootPath(pathJunctions, sitePathLink);
+        SitePathLink sitePathLink = null;
+        EquipmentPlace equipmentPlace = null;
+
+        boolean isRamp = OSMHelper.isRamp(way);
+
+        if (isRamp) {
+            equipmentPlace = new EquipmentPlace()
+                    .withId(String.format("ch:1:EquipmentPlace:%s", wayId))
+                    .withMembers(new PointRefs_RelStructure()
+                            .withPointRef(Arrays.asList(
+                                    neTExFactory.createPointRef(
+                                            new PointRefStructure().withRef(fromId)),
+                                    neTExFactory.createPointRef(new PointRefStructure().withRef(toId)))))
+                    .withPlaceEquipments(new Equipments_RelStructure()
+                            .withEquipmentRefOrEquipment(neTExFactory.createRampEquipment(new RampEquipment()
+                                    .withId(String.format("ch:1:RampEquipment:%s", way.getId())))));
+
+            sitePathLink = new SitePathLink()
+                    .withId(String.format("ch:1:SitePathLink:%s", wayId))
+                    .withFrom(new PathLinkEndStructure()
+                            .withPlaceRef(new PlaceRefStructure().
+                                    withRef(fromId)))
+                    .withTo(new PathLinkEndStructure()
+                            .withPlaceRef(new PlaceRefStructure()
+                                    .withRef(toId)))
+                    .withLevelRef(new LevelRefStructure()
+                            .withRef(levelId))
+                    .withAccessibilityAssessment(new AccessibilityAssessment()
+                            .withLimitations(new AccessibilityLimitations_RelStructure()
+                                    .withAccessibilityLimitation(new AccessibilityLimitation()
+                                            .withStepFreeAccess(LimitationStatusEnumeration.FALSE)
+                                            .withWheelchairAccess(wheelchairAccess))))
+                    .withAccessFeatureType(AccessFeatureEnumeration.RAMP)
+                    .withEquipmentPlaces(new EquipmentPlaces_RelStructure()
+                            .withEquipmentPlaceRefOrEquipmentPlace(new EquipmentPlaceRefStructure()
+                                    .withRef(equipmentPlace.getId())));
+        }
+        else {
+            sitePathLink = new SitePathLink()
+                    .withId(String.format("ch:1:SitePathLink:%s", wayId))
+                    .withFrom(new PathLinkEndStructure()
+                            .withPlaceRef(new PlaceRefStructure().
+                                    withRef(fromId)))
+                    .withTo(new PathLinkEndStructure()
+                            .withPlaceRef(new PlaceRefStructure()
+                                    .withRef(toId)))
+                    .withAccessFeatureType(AccessFeatureEnumeration.FOOTPATH)
+                    .withLevelRef(new LevelRefStructure()
+                            .withRef(levelId));
+        }
+
+        if (isRamp) {
+            return new FootPath(pathJunctions, equipmentPlace, sitePathLink);
+        }
+        else {
+            return new FootPath(pathJunctions, sitePathLink);
+        }
     }
 
     public Steps createSteps(Way way) {
@@ -305,6 +388,8 @@ public class NeTExParser {
                         .withEquipmentRefOrEquipment(neTExFactory.createStaircaseEquipment(new StaircaseEquipment()
                                 .withId(String.format("ch:1:StaircaseEquipment:%s", way.getId())))));
 
+        LimitationStatusEnumeration wheelchairAccess = OSMHelper.getWheelchairLimitation(way);
+
         SitePathLink sitePathLink = new SitePathLink()
                 .withId(String.format("ch:1:SitePathLink:%s", wayId))
                 .withFrom(new PathLinkEndStructure()
@@ -320,8 +405,8 @@ public class NeTExParser {
                 .withAccessibilityAssessment(new AccessibilityAssessment()
                         .withLimitations(new AccessibilityLimitations_RelStructure()
                                 .withAccessibilityLimitation(new AccessibilityLimitation()
-                                        .withStepFreeAccess(LimitationStatusEnumeration.UNKNOWN)
-                                        .withWheelchairAccess(LimitationStatusEnumeration.UNKNOWN))))
+                                        .withStepFreeAccess(LimitationStatusEnumeration.FALSE)
+                                        .withWheelchairAccess(wheelchairAccess))))
                 .withAccessFeatureType(AccessFeatureEnumeration.STAIRS)
                 .withEquipmentPlaces(new EquipmentPlaces_RelStructure()
                         .withEquipmentPlaceRefOrEquipmentPlace(new EquipmentPlaceRefStructure()
@@ -359,38 +444,5 @@ public class NeTExParser {
                 .withDataObjects(new PublicationDeliveryStructure.DataObjects()
                         .withCompositeFrameOrCommonFrame(Arrays.asList(
                                 neTExFactory.createCompositeFrame(compositeFrame))));
-    }
-
-    public Quay createPlatform(Node node) {
-        long nodeId = node.getId();
-
-        LatLon coordinates = node.getCoor();
-        double lat = coordinates.lat();
-        double lon = coordinates.lon();
-
-        QuayTypeEnumeration quayTypeEnumeration;
-
-        if (OSMHelper.isBusStation(node, false)) {
-            quayTypeEnumeration = QuayTypeEnumeration.BUS_PLATFORM;
-        }
-        else if (OSMHelper.isBusStop(node, false)) {
-            quayTypeEnumeration = QuayTypeEnumeration.BUS_STOP;
-        }
-        else if (OSMHelper.isTrainStation(node, false)) {
-            quayTypeEnumeration = QuayTypeEnumeration.RAIL_PLATFORM;
-        }
-        else {
-            quayTypeEnumeration = QuayTypeEnumeration.OTHER;
-        }
-
-        TagMap keys = node.getKeys();
-
-        return new Quay()
-                .withPrivateCode(new PrivateCodeStructure().withValue(String.format("org:osm:node:%s", nodeId)))
-                .withCentroid(new SimplePoint_VersionStructure()
-                        .withLocation(new LocationStructure()
-                                .withLatitude(BigDecimal.valueOf(lat))
-                                .withLongitude(BigDecimal.valueOf(lon))))
-                .withQuayType(quayTypeEnumeration);
     }
 }

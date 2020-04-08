@@ -67,6 +67,7 @@ public final class OSMTags {
     public static final String FOOTWAY_TAG_VALUE = "footway";
     public static final String STEPS_TAG_VALUE = "steps";
     public static final String ELEVATOR_TAG_VALUE = "elevator";
+    public static final String RAMP_TAG = "ramp";
 
     public static final String CITY_NETWORK_TAG_VALUE_OLD = "city";
     public static final String CITY_NETWORK_TAG_VALUE = "urban";
@@ -81,4 +82,5 @@ public final class OSMTags {
     public static final String LEVEL_TAG = "level";
     public static final String UIC_REF_TAG = "uic_ref";
     public static final String WHEELCHAIR_TAG = "wheelchair";
+    public static final String INCLINE_TAG = "incline";
 }

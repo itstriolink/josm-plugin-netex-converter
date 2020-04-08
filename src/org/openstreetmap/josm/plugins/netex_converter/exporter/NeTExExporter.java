@@ -44,7 +44,6 @@ import static org.openstreetmap.josm.gui.NavigatableComponent.PROP_SNAP_DISTANCE
 import org.openstreetmap.josm.plugins.netex_converter.model.Elevator;
 import org.openstreetmap.josm.plugins.netex_converter.model.FootPath;
 import org.openstreetmap.josm.plugins.netex_converter.model.Steps;
-import org.openstreetmap.josm.plugins.netex_converter.util.OSMTags;
 
 /**
  *
@@ -59,7 +58,7 @@ public class NeTExExporter {
     private final static Logger LOGGER = Logger.getLogger(NeTExExporter.class);
 
     private final HashMap<Node, StopPlace> stopPlaces;
-    private final HashMap<Node, Quay> quays;
+    private final HashMap<OsmPrimitive, Quay> quays;
     private final HashMap<Node, Elevator> elevators;
     private final HashMap<Way, Steps> steps;
     private final HashMap<Way, FootPath> footPaths;
@@ -101,7 +100,6 @@ public class NeTExExporter {
                 Node node = (Node) primitive;
 
                 if (OSMHelper.isTrainStation(node)) {
-
                     stopPlaces.put(node, neTExParser.createStopPlace(node, StopTypeEnumeration.RAIL_STATION));
                 }
                 else if (OSMHelper.isBusStation(node)) {
@@ -111,7 +109,7 @@ public class NeTExExporter {
                     stopPlaces.put(node, neTExParser.createStopPlace(node, StopTypeEnumeration.ONSTREET_BUS));
                 }
                 else if (OSMHelper.isPlatform(node)) {
-                    quays.put(node, neTExParser.createPlatform(node));
+                    quays.put(node, neTExParser.createQuay(node));
                 }
                 else if (OSMHelper.isElevator(node)) {
                     elevators.put(node, neTExParser.createElevator(node));
@@ -120,6 +118,7 @@ public class NeTExExporter {
             }
             else if (primitive instanceof Way) {
                 Way way = (Way) primitive;
+
                 if (OSMHelper.isSteps(way)) {
                     steps.put(way, neTExParser.createSteps(way));
                 }
@@ -127,10 +126,11 @@ public class NeTExExporter {
                     footPaths.put(way, neTExParser.createFootPath(way));
                 }
                 else if (OSMHelper.isPlatform(way)) {
-
+                    quays.put(way, neTExParser.createQuay(way));
                 }
             }
             else if (primitive instanceof Relation) {
+                Relation relation = (Relation) primitive;
 
             }
             else {
@@ -151,7 +151,7 @@ public class NeTExExporter {
 
             Quays_RelStructure currentQuays = new Quays_RelStructure();
 
-            for (HashMap.Entry<Node, Quay> quayEntry : quays.entrySet()) {
+            for (HashMap.Entry<OsmPrimitive, Quay> quayEntry : quays.entrySet()) {
 
                 String stopUicRef = OSMHelper.getUicRef(stopEntry.getKey());
                 String quayUicRef = OSMHelper.getUicRef(quayEntry.getKey());
@@ -167,7 +167,15 @@ public class NeTExExporter {
                     }
                 }
                 else {
-                    LatLon coord = quayEntry.getKey().getCoor();
+                    LatLon coord = null;
+
+                    if (quayEntry.getKey() instanceof Node) {
+                        coord = ((Node) quayEntry.getKey()).getCoor();
+                    }
+                    else {
+                        coord = ((Way) quayEntry.getKey()).firstNode().getCoor();
+                    }
+
                     Node closestStopPlace = findNearestMatchingStopPlace(coord, stopPlaceNodeId);
 
                     if (closestStopPlace != null) {
@@ -195,10 +203,13 @@ public class NeTExExporter {
             for (HashMap.Entry<Node, Elevator> elevatorEntry : elevators.entrySet()) {
                 LatLon coord = elevatorEntry.getKey().getCoor();
                 Node closestStopPlace = findNearestMatchingStopPlace(coord, stopPlaceNodeId);
+                Node closestQuay = findNearestQuay(coord);
 
                 if (closestStopPlace != null) {
                     currentEquipmentPlaces.withEquipmentPlaceRefOrEquipmentPlace(Arrays.asList(elevatorEntry.getValue().getEquipmentPlace()));
-                    currentPathJunctions.withPathJunctionRefOrPathJunction(Arrays.asList(elevatorEntry.getValue().getPathJunction()));
+                    currentPathJunctions.withPathJunctionRefOrPathJunction(Arrays.asList(elevatorEntry.getValue().getPathJunction()
+                            .withParentZoneRef(new ZoneRefStructure()
+                                    .withRef(quays.containsKey(closestQuay) ? quays.get(closestQuay).getId() : null))));
 
                     childrenAvailable = true;
                 }
@@ -227,7 +238,9 @@ public class NeTExExporter {
                     for (PathJunction pathJunction : footPathEntry.getValue().getPathJunctions()) {
                         currentPathJunctions.withPathJunctionRefOrPathJunction(Arrays.asList(pathJunction));
                     }
+                    currentEquipmentPlaces.withEquipmentPlaceRefOrEquipmentPlace(Arrays.asList(footPathEntry.getValue().getEquipmentPlace()));
                     currentPathLinks.withPathLinkRefOrSitePathLink(Arrays.asList(footPathEntry.getValue().getSitePathLink()));
+
                     childrenAvailable = true;
                 }
             }
@@ -287,6 +300,27 @@ public class NeTExExporter {
 
             for (Node node : nodes) {
                 if (node.getId() == matchingId && (OSMHelper.isBusStation(node) || OSMHelper.isBusStop(node) || OSMHelper.isTrainStation(node))) {
+                    return node;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private Node findNearestQuay(LatLon coord) {
+        Point p = MainApplication.getMap().mapView.getPoint(coord);
+        Map<Double, List<Node>> dist_nodes = getNearestNodesImpl(p, OsmPrimitive::isTagged);
+        Double[] distances = dist_nodes.keySet().toArray(new Double[0]);
+        Arrays.sort(distances);
+
+        int distanceIndex = -1;
+
+        while (++distanceIndex < distances.length) {
+            List<Node> nodes = dist_nodes.get(distances[distanceIndex]);
+
+            for (Node node : nodes) {
+                if (OSMHelper.isPlatform(node)) {
                     return node;
                 }
             }

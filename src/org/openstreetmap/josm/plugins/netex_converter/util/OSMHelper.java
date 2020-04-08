@@ -9,6 +9,8 @@
  */
 package org.openstreetmap.josm.plugins.netex_converter.util;
 
+import com.netex.model.LimitationStatusEnumeration;
+import com.netex.model.QuayTypeEnumeration;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -178,6 +180,18 @@ public final class OSMHelper {
         }
     }
 
+    public static boolean isRamp(Way way) {
+        if (way != null) {
+            TagMap keys = way.getKeys();
+
+            return (keys.containsKey(OSMTags.RAMP_TAG) && keys.get(OSMTags.RAMP_TAG).equals(OSMTags.YES_TAG_VALUE))
+                    || keys.containsKey(OSMTags.INCLINE_TAG);
+        }
+        else {
+            return false;
+        }
+    }
+
     public static String getUicRef(OsmPrimitive primitive) {
         if (primitive != null) {
             TagMap keys = primitive.getKeys();
@@ -226,4 +240,55 @@ public final class OSMHelper {
         }
     }
 
+    public static LimitationStatusEnumeration getWheelchairLimitation(OsmPrimitive primitive) {
+        LimitationStatusEnumeration wheelChairLimitation = LimitationStatusEnumeration.FALSE;
+
+        if (primitive != null) {
+            TagMap keys = primitive.getKeys();
+
+            if (keys.containsKey(OSMTags.WHEELCHAIR_TAG)) {
+                String wheelchairTagAccess = keys.get(OSMTags.WHEELCHAIR_TAG);
+
+                switch (wheelchairTagAccess.toLowerCase()) {
+                    case "yes":
+                        wheelChairLimitation = LimitationStatusEnumeration.TRUE;
+                        break;
+                    case "limited":
+                        wheelChairLimitation = LimitationStatusEnumeration.PARTIAL;
+                        break;
+                    default:
+                        wheelChairLimitation = LimitationStatusEnumeration.FALSE;
+                        break;
+                }
+            }
+
+            return wheelChairLimitation;
+        }
+        else {
+            return wheelChairLimitation;
+        }
+    }
+
+    public static QuayTypeEnumeration getQuayTypeEnumeration(OsmPrimitive primitive) {
+        QuayTypeEnumeration quayTypeEnumeration = QuayTypeEnumeration.OTHER;
+
+        if (primitive instanceof Node) {
+            Node node = (Node) primitive;
+
+            if (OSMHelper.isBusStation(node, false)) {
+                quayTypeEnumeration = QuayTypeEnumeration.BUS_PLATFORM;
+            }
+            else if (OSMHelper.isBusStop(node, false)) {
+                quayTypeEnumeration = QuayTypeEnumeration.BUS_STOP;
+            }
+            else if (OSMHelper.isTrainStation(node, false)) {
+                quayTypeEnumeration = QuayTypeEnumeration.RAIL_PLATFORM;
+            }
+            else {
+                quayTypeEnumeration = QuayTypeEnumeration.OTHER;
+            }
+        }
+
+        return quayTypeEnumeration;
+    }
 }

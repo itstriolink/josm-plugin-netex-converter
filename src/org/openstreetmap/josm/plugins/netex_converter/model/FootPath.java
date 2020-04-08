@@ -9,6 +9,7 @@
  */
 package org.openstreetmap.josm.plugins.netex_converter.model;
 
+import com.netex.model.EquipmentPlace;
 import com.netex.model.PathJunction;
 import com.netex.model.SitePathLink;
 import java.util.List;
@@ -21,9 +22,16 @@ public class FootPath {
 
     private List<PathJunction> pathJunctions;
     private SitePathLink sitePathLink;
+    private EquipmentPlace equipmentPlace;
 
     public FootPath(List<PathJunction> pathJunctions, SitePathLink sitePathLink) {
         this.pathJunctions = pathJunctions;
+        this.sitePathLink = sitePathLink;
+    }
+
+    public FootPath(List<PathJunction> pathJunctions, EquipmentPlace equipmentPlace, SitePathLink sitePathLink) {
+        this.pathJunctions = pathJunctions;
+        this.equipmentPlace = equipmentPlace;
         this.sitePathLink = sitePathLink;
     }
 
@@ -33,6 +41,14 @@ public class FootPath {
 
     public void setPathJunctions(List<PathJunction> pathJunctions) {
         this.pathJunctions = pathJunctions;
+    }
+
+    public EquipmentPlace getEquipmentPlace() {
+        return equipmentPlace;
+    }
+
+    public void setEquipmentPlace(EquipmentPlace equipmentPlace) {
+        this.equipmentPlace = equipmentPlace;
     }
 
     public SitePathLink getSitePathLink() {
