@@ -132,6 +132,11 @@ public class NeTExExporter {
             else if (primitive instanceof Relation) {
                 Relation relation = (Relation) primitive;
 
+                if (relation.isMultipolygon()) {
+                    if (OSMHelper.isPlatform(relation)) {
+                        quays.put(relation, neTExParser.createQuay(relation));
+                    }
+                }
             }
             else {
                 LOGGER.warn(tr("The OSM primitive type could not be determined."));
@@ -156,32 +161,46 @@ public class NeTExExporter {
                 String stopUicRef = OSMHelper.getUicRef(stopEntry.getKey());
                 String quayUicRef = OSMHelper.getUicRef(quayEntry.getKey());
 
-                String nodeRef = OSMHelper.getRef(quayEntry.getKey());
+                String quayRef = OSMHelper.getRef(quayEntry.getKey());
 
                 if (quayUicRef != null && !quayUicRef.trim().isEmpty() && stopUicRef != null && !stopUicRef.trim().isEmpty()) {
                     if (quayUicRef.equals(stopUicRef)) {
                         currentQuays.withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
-                                .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, nodeRef))
-                                .withPublicCode(nodeRef)));
+                                .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
+                                .withPublicCode(quayRef)));
                         childrenAvailable = true;
                     }
                 }
                 else {
                     LatLon coord = null;
+                    boolean isRelation = false;
 
                     if (quayEntry.getKey() instanceof Node) {
                         coord = ((Node) quayEntry.getKey()).getCoor();
                     }
-                    else {
+                    else if (quayEntry.getKey() instanceof Way) {
                         coord = ((Way) quayEntry.getKey()).firstNode().getCoor();
                     }
+                    else {
+                        isRelation = true;
+                        coord = ((Relation) quayEntry.getKey()).firstMember().getWay().firstNode().getCoor();
+                    }
 
-                    Node closestStopPlace = findNearestMatchingStopPlace(coord, stopPlaceNodeId);
+                    Node closestStopPlace = null;
+
+                    if (isRelation) {
+                        closestStopPlace = findNearestMatchingTrainStation(coord, stopPlaceNodeId);
+                    }
+                    else {
+                        closestStopPlace = findNearestMatchingStopPlace(coord, stopPlaceNodeId);
+                    }
 
                     if (closestStopPlace != null) {
+                        quayUicRef = OSMHelper.getUicRef(closestStopPlace);
+
                         currentQuays.withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
-                                .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, nodeRef))
-                                .withPublicCode(nodeRef)));
+                                .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
+                                .withPublicCode(quayRef)));
                         childrenAvailable = true;
                     }
                 }
@@ -220,11 +239,19 @@ public class NeTExExporter {
                 Node closestStopPlace = findNearestMatchingStopPlace(coord, stopPlaceNodeId);
 
                 if (closestStopPlace != null) {
+                    Node closestQuay = findNearestQuay(coord);
+
                     for (PathJunction pathJunction : stepsEntry.getValue().getPathJunctions()) {
-                        currentPathJunctions.withPathJunctionRefOrPathJunction(Arrays.asList(pathJunction));
+                        currentPathJunctions.withPathJunctionRefOrPathJunction(Arrays.asList(pathJunction
+                                .withParentZoneRef(new ZoneRefStructure()
+                                        .withRef(quays.containsKey(closestQuay) ? quays.get(closestQuay).getId() : null))));
                     }
-                    currentPathLinks.withPathLinkRefOrSitePathLink(Arrays.asList(stepsEntry.getValue().getSitePathLink()));
+
                     currentEquipmentPlaces.withEquipmentPlaceRefOrEquipmentPlace(Arrays.asList(stepsEntry.getValue().getEquipmentPlace()));
+
+                    for (SitePathLink sitePathLink : stepsEntry.getValue().getSitePathLinks()) {
+                        currentPathLinks.withPathLinkRefOrSitePathLink(Arrays.asList(sitePathLink));
+                    }
 
                     childrenAvailable = true;
                 }
@@ -235,11 +262,20 @@ public class NeTExExporter {
                 Node closestStopPlace = findNearestMatchingStopPlace(coord, stopPlaceNodeId);
 
                 if (closestStopPlace != null) {
+
+                    Node closestQuay = findNearestQuay(coord);
+
                     for (PathJunction pathJunction : footPathEntry.getValue().getPathJunctions()) {
-                        currentPathJunctions.withPathJunctionRefOrPathJunction(Arrays.asList(pathJunction));
+                        currentPathJunctions.withPathJunctionRefOrPathJunction(Arrays.asList(pathJunction
+                                .withParentZoneRef(new ZoneRefStructure()
+                                        .withRef(quays.containsKey(closestQuay) ? quays.get(closestQuay).getId() : null))));
                     }
+
                     currentEquipmentPlaces.withEquipmentPlaceRefOrEquipmentPlace(Arrays.asList(footPathEntry.getValue().getEquipmentPlace()));
-                    currentPathLinks.withPathLinkRefOrSitePathLink(Arrays.asList(footPathEntry.getValue().getSitePathLink()));
+
+                    for (SitePathLink sitePathLink : footPathEntry.getValue().getSitePathLinks()) {
+                        currentPathLinks.withPathLinkRefOrSitePathLink(Arrays.asList(sitePathLink));
+                    }
 
                     childrenAvailable = true;
                 }
@@ -308,6 +344,27 @@ public class NeTExExporter {
         return null;
     }
 
+    private Node findNearestMatchingTrainStation(LatLon coord, long matchingId) {
+        Point p = MainApplication.getMap().mapView.getPoint(coord);
+        Map<Double, List<Node>> dist_nodes = getNearestNodesImpl(p, OsmPrimitive::isTagged, 100);
+        Double[] distances = dist_nodes.keySet().toArray(new Double[0]);
+        Arrays.sort(distances);
+
+        int distanceIndex = -1;
+
+        while (++distanceIndex < distances.length) {
+            List<Node> nodes = dist_nodes.get(distances[distanceIndex]);
+
+            for (Node node : nodes) {
+                if (node.getId() == matchingId && OSMHelper.isTrainStation(node)) {
+                    return node;
+                }
+            }
+        }
+
+        return null;
+    }
+
     private Node findNearestQuay(LatLon coord) {
         Point p = MainApplication.getMap().mapView.getPoint(coord);
         Map<Double, List<Node>> dist_nodes = getNearestNodesImpl(p, OsmPrimitive::isTagged);
@@ -335,10 +392,30 @@ public class NeTExExporter {
         if (ds != null) {
             MapView mapView = MainApplication.getMap().mapView;
 
-            double dist, snapDistanceSq = PROP_SNAP_DISTANCE.get();
+            double dist, snapDistanceSq = PROP_SNAP_DISTANCE.get();;
             snapDistanceSq *= snapDistanceSq;
 
             for (Node n : ds.searchNodes(getBBox(p, PROP_SNAP_DISTANCE.get()))) {
+                if (predicate.test(n)
+                        && (dist = mapView.getPoint2D(n).distanceSq(p)) < snapDistanceSq) {
+                    nearestMap.computeIfAbsent(dist, k -> new LinkedList<>()).add(n);
+                }
+            }
+        }
+
+        return nearestMap;
+    }
+
+    private Map<Double, List<Node>> getNearestNodesImpl(Point p, Predicate<OsmPrimitive> predicate, int snapDistanceSq) {
+        Map<Double, List<Node>> nearestMap = new TreeMap<>();
+
+        if (ds != null) {
+            MapView mapView = MainApplication.getMap().mapView;
+
+            double dist = snapDistanceSq;
+            snapDistanceSq *= snapDistanceSq;
+
+            for (Node n : ds.searchNodes(getBBox(p, snapDistanceSq))) {
                 if (predicate.test(n)
                         && (dist = mapView.getPoint2D(n).distanceSq(p)) < snapDistanceSq) {
                     nearestMap.computeIfAbsent(dist, k -> new LinkedList<>()).add(n);

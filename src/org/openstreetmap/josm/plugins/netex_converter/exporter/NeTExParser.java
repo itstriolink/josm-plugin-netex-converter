@@ -60,6 +60,8 @@ import net.opengis.gml._3.PolygonType;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.TagMap;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.netex_converter.model.Elevator;
@@ -78,11 +80,15 @@ public class NeTExParser {
     private final ObjectFactory neTExFactory;
     private static final net.opengis.gml._3.ObjectFactory gmlFactory = new net.opengis.gml._3.ObjectFactory();
 
+    private final Level level_minus_4 = new Level();
+    private final Level level_minus_3 = new Level();
     private final Level level_minus_2 = new Level();
     private final Level level_minus_1 = new Level();
     private final Level level_0 = new Level();
     private final Level level_1 = new Level();
     private final Level level_2 = new Level();
+    private final Level level_3 = new Level();
+    private final Level level_4 = new Level();
 
     public NeTExParser() {
         neTExFactory = new ObjectFactory();
@@ -147,6 +153,8 @@ public class NeTExParser {
     public Quay createQuay(OsmPrimitive primitive) {
         long primitiveId = primitive.getId();
 
+        TagMap keys = primitive.getKeys();
+
         QuayTypeEnumeration quayTypeEnumeration = OSMHelper.getQuayTypeEnumeration(primitive);
 
         if (primitive instanceof Node) {
@@ -155,8 +163,6 @@ public class NeTExParser {
             LatLon coordinates = node.getCoor();
             double lat = coordinates.lat();
             double lon = coordinates.lon();
-
-            TagMap keys = node.getKeys();
 
             return new Quay()
                     .withPrivateCode(new PrivateCodeStructure().withValue(String.format("org:osm:node:%s", primitiveId)))
@@ -168,8 +174,6 @@ public class NeTExParser {
         }
         else if (primitive instanceof Way) {
             Way way = (Way) primitive;
-
-            TagMap keys = way.getKeys();
 
             LinearRingType linearRing = new LinearRingType();
 
@@ -188,6 +192,61 @@ public class NeTExParser {
                     .withQuayType(quayTypeEnumeration);
 
         }
+        else if (primitive instanceof Relation) {
+            Relation relation = (Relation) primitive;
+
+            Quay quay = new Quay()
+                    .withPrivateCode(new PrivateCodeStructure().withValue(String.format("org:osm:relation:%s", primitiveId)))
+                    .withQuayType(quayTypeEnumeration);
+
+            PolygonType polygonType = new PolygonType()
+                    .withId(String.format("org:osm:way:%s", primitiveId));
+
+            for (RelationMember relationMember : relation.getMembers()) {
+                String role = relationMember.getRole();
+
+                if (role != null && !role.isEmpty()) {
+                    switch (role) {
+                        case OSMHelper.INNER_ROLE:
+                            LinearRingType linearRingInterior = new LinearRingType();
+
+                            if (relationMember.getMember() instanceof Way) {
+                                Way relationWay = relationMember.getWay();
+
+                                for (Node node : relationWay.getNodes()) {
+                                    LatLon coord = node.getCoor();
+
+                                    linearRingInterior.withPosOrPointProperty(Arrays.asList(new DirectPositionListType().withValue(coord.lat(), coord.lon())));
+                                }
+
+                                polygonType.withInterior(new AbstractRingPropertyType()
+                                        .withAbstractRing(gmlFactory.createLinearRing(linearRingInterior)));
+                            }
+                            break;
+                        case OSMHelper.OUTER_ROLE:
+                            LinearRingType linearRingExterior = new LinearRingType();
+
+                            if (relationMember.getMember() instanceof Way) {
+                                Way relationWay = relationMember.getWay();
+
+                                for (Node node : relationWay.getNodes()) {
+                                    LatLon coord = node.getCoor();
+
+                                    linearRingExterior.withPosOrPointProperty(Arrays.asList(new DirectPositionListType().withValue(coord.lat(), coord.lon())));
+                                }
+
+                                polygonType.withExterior(new AbstractRingPropertyType()
+                                        .withAbstractRing(gmlFactory.createLinearRing(linearRingExterior)));
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            return quay.withPolygon(polygonType);
+        }
         else {
             return new Quay();
         }
@@ -205,7 +264,6 @@ public class NeTExParser {
                 .withTypes(new TypeOfPointRefs_RelStructure()
                         .withTypeOfPointRef(new TypeOfPointRefStructure()
                                 .withRef("ch:1:TypeOfPoint:floor_change_endpoint")));
-        /* missing quay parentZoneRef() */
 
         EquipmentPlace equipmentPlace = new EquipmentPlace()
                 .withId(String.format("ch:1:EquipmentPlace:%s", nodeId))
@@ -221,68 +279,57 @@ public class NeTExParser {
 
     public FootPath createFootPath(Way way) {
         long wayId = way.getId();
-        ArrayList<PathJunction> pathJunctions = new ArrayList<>();
 
-        String fromId = null;
-        String toId = null;
-        boolean start = true;
+        List<PathJunction> pathJunctions = new ArrayList<>();
+        List<SitePathLink> sitePathLinks = new ArrayList<>();
 
-        List<Node> nodes = Arrays.asList(way.firstNode(), way.lastNode());
+        List<Node> nodes = way.getNodes();
+
+        String level = OSMHelper.getLevel(way);
+        Level fromLevel = null;
+        Level toLevel = null;
+
+        String[] levels = level != null ? level.split(";") : new String[0];
+
+        String incline = OSMHelper.getIncline(way);
+
+        if (levels.length == 2) {
+            fromLevel = getLevelObject(levels[0]);
+            toLevel = getLevelObject(levels[1]);
+        }
+        else if (incline != null && !incline.isEmpty() && level != null && !level.isEmpty()) {
+            if (incline.equals(OSMTags.DOWN_TAG_VALUE)) {
+                fromLevel = getLevelObject(Integer.toString((Integer.parseInt(level) + 1)));
+                toLevel = getLevelObject(level);
+            }
+            else if (incline.equals(OSMTags.UP_TAG_VALUE)) {
+                fromLevel = getLevelObject(Integer.toString((Integer.parseInt(level) - 1)));
+                toLevel = getLevelObject(level);
+            }
+        }
 
         for (Node node : nodes) {
             LatLon coordinates = node.getCoor();
             long nodeId = node.getId();
 
-            PathJunction pathJunction = new PathJunction()
+            String ref = "artificial_waypoint";
+
+            if (node.equals(way.firstNode()) || node.equals(way.lastNode())) {
+                ref = "floor_change_endpoint";
+            }
+
+            pathJunctions.add(new PathJunction()
                     .withId(String.format("ch:1:PathJunction:%s", nodeId))
                     .withLocation(new LocationStructure()
                             .withLatitude(BigDecimal.valueOf(coordinates.lat()))
                             .withLongitude(BigDecimal.valueOf(coordinates.lon())))
                     .withTypes(new TypeOfPointRefs_RelStructure()
                             .withTypeOfPointRef(new TypeOfPointRefStructure()
-                                    .withRef("ch:1:TypeOfPoint:artificial_waypoint")));
-
-            pathJunctions.add(pathJunction);
-
-            if (start) {
-                fromId = pathJunction.getId();
-                start = false;
-            }
-            else {
-                toId = pathJunction.getId();
-            }
+                                    .withRef(String.format("ch:1:TypeOfPoint:%s", ref)))));
         }
-
-        String level = OSMHelper.getLevel(way);
-
-        Level currentLevel = null;
-
-        switch (level != null ? level : "") {
-            case "-2":
-                currentLevel = level_minus_2;
-                break;
-            case "-1":
-                currentLevel = level_minus_1;
-                break;
-            case "0":
-                currentLevel = level_0;
-                break;
-            case "1":
-                currentLevel = level_1;
-                break;
-            case "2":
-                currentLevel = level_2;
-                break;
-            default:
-                currentLevel = null;
-                break;
-        }
-
-        String levelId = currentLevel != null ? currentLevel.getId() : null;
 
         LimitationStatusEnumeration wheelchairAccess = OSMHelper.getWheelchairLimitation(way);
-
-        SitePathLink sitePathLink = null;
+        
         EquipmentPlace equipmentPlace = null;
 
         boolean isRamp = OSMHelper.isRamp(way);
@@ -290,129 +337,189 @@ public class NeTExParser {
         if (isRamp) {
             equipmentPlace = new EquipmentPlace()
                     .withId(String.format("ch:1:EquipmentPlace:%s", wayId))
-                    .withMembers(new PointRefs_RelStructure()
-                            .withPointRef(Arrays.asList(
-                                    neTExFactory.createPointRef(
-                                            new PointRefStructure().withRef(fromId)),
-                                    neTExFactory.createPointRef(new PointRefStructure().withRef(toId)))))
                     .withPlaceEquipments(new Equipments_RelStructure()
                             .withEquipmentRefOrEquipment(neTExFactory.createRampEquipment(new RampEquipment()
                                     .withId(String.format("ch:1:RampEquipment:%s", way.getId())))));
 
-            sitePathLink = new SitePathLink()
-                    .withId(String.format("ch:1:SitePathLink:%s", wayId))
-                    .withFrom(new PathLinkEndStructure()
-                            .withPlaceRef(new PlaceRefStructure().
-                                    withRef(fromId)))
-                    .withTo(new PathLinkEndStructure()
-                            .withPlaceRef(new PlaceRefStructure()
-                                    .withRef(toId)))
-                    .withLevelRef(new LevelRefStructure()
-                            .withRef(levelId))
-                    .withAccessibilityAssessment(new AccessibilityAssessment()
-                            .withLimitations(new AccessibilityLimitations_RelStructure()
-                                    .withAccessibilityLimitation(new AccessibilityLimitation()
-                                            .withStepFreeAccess(LimitationStatusEnumeration.FALSE)
-                                            .withWheelchairAccess(wheelchairAccess))))
-                    .withAccessFeatureType(AccessFeatureEnumeration.RAMP)
-                    .withEquipmentPlaces(new EquipmentPlaces_RelStructure()
-                            .withEquipmentPlaceRefOrEquipmentPlace(new EquipmentPlaceRefStructure()
-                                    .withRef(equipmentPlace.getId())));
+            PointRefs_RelStructure pointRefs = new PointRefs_RelStructure();
+
+            for (PathJunction pathJunction : pathJunctions) {
+                pointRefs.withPointRef(Arrays.asList(
+                        neTExFactory.createPointRef(new PointRefStructure()
+                                .withRef(pathJunction.getId()))));
+            }
+
+            equipmentPlace.withMembers(pointRefs);
+
+            for (int i = 0; i < pathJunctions.size() - 1; i++) {
+
+                PathJunction firstJunction = pathJunctions.get(i);
+                PathJunction secondJunction = pathJunctions.get(i + 1);
+
+                SitePathLink sitePathLink = new SitePathLink()
+                        .withId(String.format("ch:1:SitePathLink:%s", wayId))
+                        .withFrom(new PathLinkEndStructure()
+                                .withPlaceRef(new PlaceRefStructure().
+                                        withRef(firstJunction.getId())))
+                        .withTo(new PathLinkEndStructure()
+                                .withPlaceRef(new PlaceRefStructure()
+                                        .withRef(secondJunction.getId())))
+                        .withAccessibilityAssessment(new AccessibilityAssessment()
+                                .withLimitations(new AccessibilityLimitations_RelStructure()
+                                        .withAccessibilityLimitation(new AccessibilityLimitation()
+                                                .withStepFreeAccess(LimitationStatusEnumeration.FALSE)
+                                                .withWheelchairAccess(wheelchairAccess))))
+                        .withAccessFeatureType(AccessFeatureEnumeration.RAMP)
+                        .withEquipmentPlaces(new EquipmentPlaces_RelStructure()
+                                .withEquipmentPlaceRefOrEquipmentPlace(new EquipmentPlaceRefStructure()
+                                        .withRef(equipmentPlace.getId())));
+
+                if (i == 0) {
+                    sitePathLink.withLevelRef(new LevelRefStructure()
+                            .withRef(fromLevel != null ? fromLevel.getId() : null));
+                }
+                else if (i == pathJunctions.size() - 2) {
+                    sitePathLink.withLevelRef(new LevelRefStructure()
+                            .withRef(toLevel != null ? toLevel.getId() : null));
+                }
+
+                sitePathLinks.add(sitePathLink);
+            }
         }
+
         else {
-            sitePathLink = new SitePathLink()
-                    .withId(String.format("ch:1:SitePathLink:%s", wayId))
-                    .withFrom(new PathLinkEndStructure()
-                            .withPlaceRef(new PlaceRefStructure().
-                                    withRef(fromId)))
-                    .withTo(new PathLinkEndStructure()
-                            .withPlaceRef(new PlaceRefStructure()
-                                    .withRef(toId)))
-                    .withAccessFeatureType(AccessFeatureEnumeration.FOOTPATH)
-                    .withLevelRef(new LevelRefStructure()
-                            .withRef(levelId));
+            for (int i = 0; i < pathJunctions.size() - 1; i++) {
+
+                PathJunction firstJunction = pathJunctions.get(i);
+                PathJunction secondJunction = pathJunctions.get(i + 1);
+
+                sitePathLinks.add(new SitePathLink()
+                        .withId(String.format("ch:1:SitePathLink:%s", wayId))
+                        .withFrom(new PathLinkEndStructure()
+                                .withPlaceRef(new PlaceRefStructure().
+                                        withRef(firstJunction.getId())))
+                        .withTo(new PathLinkEndStructure()
+                                .withPlaceRef(new PlaceRefStructure()
+                                        .withRef(secondJunction.getId())))
+                        .withAccessFeatureType(AccessFeatureEnumeration.FOOTPATH));
+            }
         }
 
         if (isRamp) {
-            return new FootPath(pathJunctions, equipmentPlace, sitePathLink);
+            return new FootPath(pathJunctions, equipmentPlace, sitePathLinks);
         }
+
         else {
-            return new FootPath(pathJunctions, sitePathLink);
+            return new FootPath(pathJunctions, sitePathLinks);
         }
     }
 
     public Steps createSteps(Way way) {
         long wayId = way.getId();
-        ArrayList<PathJunction> pathJunctions = new ArrayList<>();
 
-        String fromId = null;
-        String toId = null;
+        List<PathJunction> pathJunctions = new ArrayList<>();
+        List<SitePathLink> sitePathLinks = new ArrayList<>();
 
-        boolean start = true;
+        LimitationStatusEnumeration wheelchairAccess = OSMHelper.getWheelchairLimitation(way);
 
-        List<Node> nodes = Arrays.asList(way.firstNode(), way.lastNode());
+        List<Node> nodes = way.getNodes();
+
+        String level = OSMHelper.getLevel(way);
+        Level fromLevel = null;
+        Level toLevel = null;
+
+        String[] levels = level != null ? level.split(";") : new String[0];
+
+        String incline = OSMHelper.getIncline(way);
+
+        if (levels.length == 2) {
+            fromLevel = getLevelObject(levels[0]);
+            toLevel = getLevelObject(levels[1]);
+        }
+        else if (incline != null && !incline.isEmpty() && level != null && !level.isEmpty()) {
+            if (incline.equals(OSMTags.DOWN_TAG_VALUE)) {
+                fromLevel = getLevelObject(Integer.toString((Integer.parseInt(level) + 1)));
+                toLevel = getLevelObject(level);
+            }
+            else if (incline.equals(OSMTags.UP_TAG_VALUE)) {
+                fromLevel = getLevelObject(Integer.toString((Integer.parseInt(level) - 1)));
+                toLevel = getLevelObject(level);
+            }
+        }
 
         for (Node node : nodes) {
             LatLon coordinates = node.getCoor();
             long nodeId = node.getId();
 
-            PathJunction pathJunction = new PathJunction()
+            String ref = "artificial_waypoint";
+
+            if (node.equals(way.firstNode()) || node.equals(way.lastNode())) {
+                ref = "floor_change_endpoint";
+            }
+
+            pathJunctions.add(new PathJunction()
                     .withId(String.format("ch:1:PathJunction:%s", nodeId))
                     .withLocation(new LocationStructure()
                             .withLatitude(BigDecimal.valueOf(coordinates.lat()))
                             .withLongitude(BigDecimal.valueOf(coordinates.lon())))
                     .withTypes(new TypeOfPointRefs_RelStructure()
                             .withTypeOfPointRef(new TypeOfPointRefStructure()
-                                    .withRef("ch:1:TypeOfPoint:floor_change_endpoint")));
-            /* missing quay */
+                                    .withRef(String.format("ch:1:TypeOfPoint:%s", ref)))));
 
-            pathJunctions.add(pathJunction);
-
-            if (start) {
-                fromId = pathJunction.getId();
-                start = false;
-            }
-            else {
-                toId = pathJunction.getId();
-            }
         }
 
         EquipmentPlace equipmentPlace = new EquipmentPlace()
                 .withId(String.format("ch:1:EquipmentPlace:%s", wayId))
-                .withMembers(new PointRefs_RelStructure()
-                        .withPointRef(Arrays.asList(
-                                neTExFactory.createPointRef(
-                                        new PointRefStructure().withRef(fromId)),
-                                neTExFactory.createPointRef(new PointRefStructure().withRef(toId)))))
                 .withPlaceEquipments(new Equipments_RelStructure()
                         .withEquipmentRefOrEquipment(neTExFactory.createStaircaseEquipment(new StaircaseEquipment()
                                 .withId(String.format("ch:1:StaircaseEquipment:%s", way.getId())))));
 
-        LimitationStatusEnumeration wheelchairAccess = OSMHelper.getWheelchairLimitation(way);
+        PointRefs_RelStructure pointRefs = new PointRefs_RelStructure();
 
-        SitePathLink sitePathLink = new SitePathLink()
-                .withId(String.format("ch:1:SitePathLink:%s", wayId))
-                .withFrom(new PathLinkEndStructure()
-                        .withPlaceRef(new PlaceRefStructure().
-                                withRef(fromId))
-                        .withLevelRef(new LevelRefStructure()
-                                .withRef(/*fromLevel*/level_minus_1.getId())))
-                .withTo(new PathLinkEndStructure()
-                        .withPlaceRef(new PlaceRefStructure()
-                                .withRef(toId))
-                        .withLevelRef(new LevelRefStructure()
-                                .withRef(/*endLevel*/level_0.getId())))
-                .withAccessibilityAssessment(new AccessibilityAssessment()
-                        .withLimitations(new AccessibilityLimitations_RelStructure()
-                                .withAccessibilityLimitation(new AccessibilityLimitation()
-                                        .withStepFreeAccess(LimitationStatusEnumeration.FALSE)
-                                        .withWheelchairAccess(wheelchairAccess))))
-                .withAccessFeatureType(AccessFeatureEnumeration.STAIRS)
-                .withEquipmentPlaces(new EquipmentPlaces_RelStructure()
-                        .withEquipmentPlaceRefOrEquipmentPlace(new EquipmentPlaceRefStructure()
-                                .withRef(equipmentPlace.getId())));
+        for (PathJunction pathJunction : pathJunctions) {
+            pointRefs.withPointRef(Arrays.asList(
+                    neTExFactory.createPointRef(new PointRefStructure()
+                            .withRef(pathJunction.getId()))));
+        }
 
-        return new Steps(pathJunctions, equipmentPlace, sitePathLink);
+        equipmentPlace.withMembers(pointRefs);
+
+        for (int i = 0; i < pathJunctions.size() - 1; i++) {
+
+            PathJunction firstJunction = pathJunctions.get(i);
+            PathJunction secondJunction = pathJunctions.get(i + 1);
+
+            SitePathLink sitePathLink = new SitePathLink()
+                    .withId(String.format("ch:1:SitePathLink:%s", wayId))
+                    .withFrom(new PathLinkEndStructure()
+                            .withPlaceRef(new PlaceRefStructure().
+                                    withRef(firstJunction.getId())))
+                    .withTo(new PathLinkEndStructure()
+                            .withPlaceRef(new PlaceRefStructure()
+                                    .withRef(secondJunction.getId())))
+                    .withAccessibilityAssessment(new AccessibilityAssessment()
+                            .withLimitations(new AccessibilityLimitations_RelStructure()
+                                    .withAccessibilityLimitation(new AccessibilityLimitation()
+                                            .withStepFreeAccess(LimitationStatusEnumeration.FALSE)
+                                            .withWheelchairAccess(wheelchairAccess))))
+                    .withAccessFeatureType(AccessFeatureEnumeration.STAIRS)
+                    .withEquipmentPlaces(new EquipmentPlaces_RelStructure()
+                            .withEquipmentPlaceRefOrEquipmentPlace(new EquipmentPlaceRefStructure()
+                                    .withRef(equipmentPlace.getId())));
+
+            if (i == 0) {
+                sitePathLink.withLevelRef(new LevelRefStructure()
+                        .withRef(fromLevel != null ? fromLevel.getId() : null));
+            }
+            else if (i == pathJunctions.size() - 2) {
+                sitePathLink.withLevelRef(new LevelRefStructure()
+                        .withRef(toLevel != null ? toLevel.getId() : null));
+            }
+
+            sitePathLinks.add(sitePathLink);
+        }
+
+        return new Steps(pathJunctions, equipmentPlace, sitePathLinks);
     }
 
     public CompositeFrame createCompositeFrame(ResourceFrame resourceFrame, SiteFrame siteFrame) {
@@ -444,5 +551,42 @@ public class NeTExParser {
                 .withDataObjects(new PublicationDeliveryStructure.DataObjects()
                         .withCompositeFrameOrCommonFrame(Arrays.asList(
                                 neTExFactory.createCompositeFrame(compositeFrame))));
+    }
+
+    public Level getLevelObject(String level) {
+        Level levelObject = null;
+
+        switch (level != null ? level : "") {
+            case "-4":
+                levelObject = level_minus_4;
+                break;
+            case "-3":
+                levelObject = level_minus_3;
+                break;
+            case "-2":
+                levelObject = level_minus_2;
+                break;
+            case "-1":
+                levelObject = level_minus_1;
+                break;
+            case "0":
+                levelObject = level_0;
+                break;
+            case "1":
+                levelObject = level_1;
+                break;
+            case "2":
+                levelObject = level_2;
+                break;
+            case "3":
+                levelObject = level_3;
+            case "4":
+                levelObject = level_4;
+            default:
+                levelObject = null;
+                break;
+        }
+
+        return levelObject;
     }
 }

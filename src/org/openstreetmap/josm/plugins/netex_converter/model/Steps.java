@@ -22,12 +22,12 @@ public class Steps {
 
     private List<PathJunction> pathJunctions;
     private EquipmentPlace equipmentPlace;
-    private SitePathLink sitePathLink;
+    private List<SitePathLink> sitePathLinks;
 
-    public Steps(List<PathJunction> pathJunctions, EquipmentPlace equipmentPlace, SitePathLink sitePathLink) {
+    public Steps(List<PathJunction> pathJunctions, EquipmentPlace equipmentPlace, List<SitePathLink> sitePathLinks) {
         this.pathJunctions = pathJunctions;
         this.equipmentPlace = equipmentPlace;
-        this.sitePathLink = sitePathLink;
+        this.sitePathLinks = sitePathLinks;
     }
 
     public List<PathJunction> getPathJunctions() {
@@ -46,11 +46,11 @@ public class Steps {
         this.equipmentPlace = equipmentPlace;
     }
 
-    public SitePathLink getSitePathLink() {
-        return sitePathLink;
+    public List<SitePathLink> getSitePathLinks() {
+        return sitePathLinks;
     }
 
-    public void setSitePathLink(SitePathLink sitePathLink) {
-        this.sitePathLink = sitePathLink;
+    public void setSitePathLinks(List<SitePathLink> sitePathLinks) {
+        this.sitePathLinks = sitePathLinks;
     }
 }

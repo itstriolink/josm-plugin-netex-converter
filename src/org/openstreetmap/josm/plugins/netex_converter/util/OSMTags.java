@@ -83,4 +83,7 @@ public final class OSMTags {
     public static final String UIC_REF_TAG = "uic_ref";
     public static final String WHEELCHAIR_TAG = "wheelchair";
     public static final String INCLINE_TAG = "incline";
+    
+    public static final String DOWN_TAG_VALUE = "down";
+    public static final String UP_TAG_VALUE = "up";
 }

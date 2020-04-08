@@ -21,18 +21,18 @@ import java.util.List;
 public class FootPath {
 
     private List<PathJunction> pathJunctions;
-    private SitePathLink sitePathLink;
     private EquipmentPlace equipmentPlace;
+    private List<SitePathLink> sitePathLinks;
 
-    public FootPath(List<PathJunction> pathJunctions, SitePathLink sitePathLink) {
+    public FootPath(List<PathJunction> pathJunctions, List<SitePathLink> sitePathLinks) {
         this.pathJunctions = pathJunctions;
-        this.sitePathLink = sitePathLink;
+        this.sitePathLinks = sitePathLinks;
     }
 
-    public FootPath(List<PathJunction> pathJunctions, EquipmentPlace equipmentPlace, SitePathLink sitePathLink) {
+    public FootPath(List<PathJunction> pathJunctions, EquipmentPlace equipmentPlace, List<SitePathLink> sitePathLinks) {
         this.pathJunctions = pathJunctions;
         this.equipmentPlace = equipmentPlace;
-        this.sitePathLink = sitePathLink;
+        this.sitePathLinks = sitePathLinks;
     }
 
     public List<PathJunction> getPathJunctions() {
@@ -51,11 +51,11 @@ public class FootPath {
         this.equipmentPlace = equipmentPlace;
     }
 
-    public SitePathLink getSitePathLink() {
-        return sitePathLink;
+    public List<SitePathLink> getSitePathLinks() {
+        return sitePathLinks;
     }
 
-    public void setSitePathLink(SitePathLink sitePathLink) {
-        this.sitePathLink = sitePathLink;
+    public void setSitePathLink(List<SitePathLink> sitePathLinks) {
+        this.sitePathLinks = sitePathLinks;
     }
 }
