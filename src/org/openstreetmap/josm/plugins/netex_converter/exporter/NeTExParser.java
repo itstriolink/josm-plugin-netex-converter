@@ -69,7 +69,6 @@ import org.openstreetmap.josm.plugins.netex_converter.model.FootPath;
 import org.openstreetmap.josm.plugins.netex_converter.model.Steps;
 import org.openstreetmap.josm.plugins.netex_converter.util.OSMHelper;
 import org.openstreetmap.josm.plugins.netex_converter.util.OSMTags;
-import org.openstreetmap.josm.tools.Pair;
 
 /**
  *
@@ -329,7 +328,7 @@ public class NeTExParser {
         }
 
         LimitationStatusEnumeration wheelchairAccess = OSMHelper.getWheelchairLimitation(way);
-        
+
         EquipmentPlace equipmentPlace = null;
 
         boolean isRamp = OSMHelper.isRamp(way);
@@ -485,7 +484,6 @@ public class NeTExParser {
         equipmentPlace.withMembers(pointRefs);
 
         for (int i = 0; i < pathJunctions.size() - 1; i++) {
-
             PathJunction firstJunction = pathJunctions.get(i);
             PathJunction secondJunction = pathJunctions.get(i + 1);
 
@@ -556,37 +554,38 @@ public class NeTExParser {
     public Level getLevelObject(String level) {
         Level levelObject = null;
 
-        switch (level != null ? level : "") {
-            case "-4":
-                levelObject = level_minus_4;
-                break;
-            case "-3":
-                levelObject = level_minus_3;
-                break;
-            case "-2":
-                levelObject = level_minus_2;
-                break;
-            case "-1":
-                levelObject = level_minus_1;
-                break;
-            case "0":
-                levelObject = level_0;
-                break;
-            case "1":
-                levelObject = level_1;
-                break;
-            case "2":
-                levelObject = level_2;
-                break;
-            case "3":
-                levelObject = level_3;
-            case "4":
-                levelObject = level_4;
-            default:
-                levelObject = null;
-                break;
+        if (level != null && !level.trim().isEmpty()) {
+            switch (level) {
+                case "-4":
+                    levelObject = level_minus_4;
+                    break;
+                case "-3":
+                    levelObject = level_minus_3;
+                    break;
+                case "-2":
+                    levelObject = level_minus_2;
+                    break;
+                case "-1":
+                    levelObject = level_minus_1;
+                    break;
+                case "0":
+                    levelObject = level_0;
+                    break;
+                case "1":
+                    levelObject = level_1;
+                    break;
+                case "2":
+                    levelObject = level_2;
+                    break;
+                case "3":
+                    levelObject = level_3;
+                case "4":
+                    levelObject = level_4;
+                default:
+                    levelObject = null;
+                    break;
+            }
         }
-
         return levelObject;
     }
 }

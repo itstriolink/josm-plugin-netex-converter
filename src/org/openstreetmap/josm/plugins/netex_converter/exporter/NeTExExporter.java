@@ -157,7 +157,6 @@ public class NeTExExporter {
             Quays_RelStructure currentQuays = new Quays_RelStructure();
 
             for (HashMap.Entry<OsmPrimitive, Quay> quayEntry : quays.entrySet()) {
-
                 String stopUicRef = OSMHelper.getUicRef(stopEntry.getKey());
                 String quayUicRef = OSMHelper.getUicRef(quayEntry.getKey());
 
@@ -198,9 +197,31 @@ public class NeTExExporter {
                     if (closestStopPlace != null) {
                         quayUicRef = OSMHelper.getUicRef(closestStopPlace);
 
-                        currentQuays.withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
-                                .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
-                                .withPublicCode(quayRef)));
+                        quayRef = OSMHelper.switchRefDelimiter(quayRef);
+
+                        QuayTypeEnumeration quayType = QuayTypeEnumeration.OTHER;
+
+                        if (quayEntry.getValue().getQuayType() != null && quayEntry.getValue().getQuayType().equals(QuayTypeEnumeration.OTHER)) {
+                            if (OSMHelper.isBusStop(closestStopPlace)) {
+                                quayType = QuayTypeEnumeration.BUS_STOP;
+                            }
+                            else if (OSMHelper.isBusStation(closestStopPlace)) {
+                                quayType = QuayTypeEnumeration.BUS_PLATFORM;
+                            }
+                            else if (OSMHelper.isTrainStation(closestStopPlace)) {
+                                quayType = QuayTypeEnumeration.RAIL_PLATFORM;
+                            }
+
+                            currentQuays.withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
+                                    .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
+                                    .withPublicCode(quayRef).withQuayType(quayType)));
+                        }
+                        else {
+                            currentQuays.withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
+                                    .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
+                                    .withPublicCode(quayRef)));
+                        }
+
                         childrenAvailable = true;
                     }
                 }
@@ -289,10 +310,9 @@ public class NeTExExporter {
             }
         }
 
-        ArrayList<StopPlace> stopPlacesAsList = new ArrayList<>(stopPlaces.values());
-
         ResourceFrame resourceFrame = neTExParser.createResourceFrame();
-        SiteFrame siteFrame = neTExParser.createSiteFrame(stopPlacesAsList);
+
+        SiteFrame siteFrame = neTExParser.createSiteFrame(new ArrayList<>(stopPlaces.values()));
 
         CompositeFrame compositeFrame = neTExParser.createCompositeFrame(resourceFrame, siteFrame);
 
@@ -325,7 +345,7 @@ public class NeTExExporter {
 
     private Node findNearestMatchingStopPlace(LatLon coord, long matchingId) {
         Point p = MainApplication.getMap().mapView.getPoint(coord);
-        Map<Double, List<Node>> dist_nodes = getNearestNodesImpl(p, OsmPrimitive::isTagged);
+        Map<Double, List<Node>> dist_nodes = getNearestNodesImpl(p, OsmPrimitive::isTagged, 25);
         Double[] distances = dist_nodes.keySet().toArray(new Double[0]);
         Arrays.sort(distances);
 
@@ -392,7 +412,7 @@ public class NeTExExporter {
         if (ds != null) {
             MapView mapView = MainApplication.getMap().mapView;
 
-            double dist, snapDistanceSq = PROP_SNAP_DISTANCE.get();;
+            double dist, snapDistanceSq = PROP_SNAP_DISTANCE.get();
             snapDistanceSq *= snapDistanceSq;
 
             for (Node n : ds.searchNodes(getBBox(p, PROP_SNAP_DISTANCE.get()))) {

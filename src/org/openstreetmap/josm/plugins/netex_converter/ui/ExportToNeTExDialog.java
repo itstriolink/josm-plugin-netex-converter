@@ -105,16 +105,15 @@ public class ExportToNeTExDialog extends javax.swing.JFrame {
         }
         while (file.exists() && selectedOption == JOptionPane.NO_OPTION);
 
-        // MainApplication.getMap().mapView.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        MainApplication.getMap().mapView.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         neTExExporter = new NeTExExporter();
 
-        //try {
-        neTExExporter.exportToNeTEx(file);
-        //}
-        //finally {
-
-        //MainApplication.getMap().mapView.setCursor(Cursor.getDefaultCursor());
-        //}
+        try {
+            neTExExporter.exportToNeTEx(file);
+        }
+        finally {
+            MainApplication.getMap().mapView.setCursor(Cursor.getDefaultCursor());
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

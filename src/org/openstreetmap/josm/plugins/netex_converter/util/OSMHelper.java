@@ -11,6 +11,8 @@ package org.openstreetmap.josm.plugins.netex_converter.util;
 
 import com.netex.model.LimitationStatusEnumeration;
 import com.netex.model.QuayTypeEnumeration;
+import java.util.ArrayList;
+import java.util.List;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -23,6 +25,9 @@ import org.openstreetmap.josm.data.osm.Way;
  */
 public final class OSMHelper {
 
+    public static final String OUTER_ROLE = "outer";
+    public static final String INNER_ROLE = "inner";
+
     public static boolean isTrainStation(OsmPrimitive primitive) {
         if (primitive != null) {
             TagMap keys = primitive.getKeys();
@@ -31,9 +36,8 @@ public final class OSMHelper {
                     || (keys.containsKey(OSMTags.RAILWAY_TAG) && keys.get(OSMTags.RAILWAY_TAG).equals(OSMTags.STATION_TAG_VALUE)))
                     && !(keys.containsKey(OSMTags.PUBLIC_TRANSPORT_TAG) && keys.get(OSMTags.PUBLIC_TRANSPORT_TAG).equals(OSMTags.PLATFORM_TAG_VALUE));
         }
-        else {
-            return false;
-        }
+
+        return false;
     }
 
     public static boolean isTrainStation(OsmPrimitive primitive, boolean checkIfPlatformToo) {
@@ -50,9 +54,8 @@ public final class OSMHelper {
                         || (keys.containsKey(OSMTags.RAILWAY_TAG) && keys.get(OSMTags.RAILWAY_TAG).equals(OSMTags.STATION_TAG_VALUE)));
             }
         }
-        else {
-            return false;
-        }
+
+        return false;
     }
 
     public static boolean isBusStation(OsmPrimitive primitive) {
@@ -62,9 +65,8 @@ public final class OSMHelper {
                     && keys.get(OSMTags.AMENITY_TAG).equals(OSMTags.BUS_STATION_TAG_VALUE)
                     && !(keys.containsKey(OSMTags.PUBLIC_TRANSPORT_TAG) && keys.get(OSMTags.PUBLIC_TRANSPORT_TAG).equals(OSMTags.PLATFORM_TAG_VALUE));
         }
-        else {
-            return false;
-        }
+
+        return false;
     }
 
     public static boolean isBusStation(OsmPrimitive primitive, boolean checkIfPlatformToo) {
@@ -81,9 +83,8 @@ public final class OSMHelper {
                         && keys.get(OSMTags.AMENITY_TAG).equals(OSMTags.BUS_STATION_TAG_VALUE);
             }
         }
-        else {
-            return false;
-        }
+
+        return false;
     }
 
     public static boolean isBusStop(OsmPrimitive primitive) {
@@ -94,9 +95,8 @@ public final class OSMHelper {
                     && keys.get(OSMTags.HIGHWAY_TAG).equals(OSMTags.BUS_STOP_TAG_VALUE)
                     && !(keys.containsKey(OSMTags.PUBLIC_TRANSPORT_TAG) && keys.get(OSMTags.PUBLIC_TRANSPORT_TAG).equals(OSMTags.PLATFORM_TAG_VALUE));
         }
-        else {
-            return false;
-        }
+
+        return false;
     }
 
     public static boolean isBusStop(OsmPrimitive primitive, boolean checkIfPlatformToo) {
@@ -113,9 +113,8 @@ public final class OSMHelper {
                         && keys.get(OSMTags.HIGHWAY_TAG).equals(OSMTags.BUS_STOP_TAG_VALUE);
             }
         }
-        else {
-            return false;
-        }
+
+        return false;
     }
 
     public static boolean isPlatform(OsmPrimitive primitive) {
@@ -125,9 +124,8 @@ public final class OSMHelper {
             return (keys.containsKey(OSMTags.PUBLIC_TRANSPORT_TAG) && keys.get(OSMTags.PUBLIC_TRANSPORT_TAG).equals(OSMTags.PLATFORM_TAG_VALUE))
                     || (keys.containsKey(OSMTags.RAILWAY_TAG) && keys.get(OSMTags.RAILWAY_TAG).equals(OSMTags.PLATFORM_TAG_VALUE));
         }
-        else {
-            return false;
-        }
+
+        return false;
     }
 
     public static boolean isElevator(Node node) {
@@ -135,9 +133,8 @@ public final class OSMHelper {
             TagMap keys = node.getKeys();
             return keys.containsKey(OSMTags.HIGHWAY_TAG) && keys.get(OSMTags.HIGHWAY_TAG).equals(OSMTags.ELEVATOR_TAG_VALUE);
         }
-        else {
-            return false;
-        }
+
+        return false;
     }
 
     public static boolean isSteps(Way way) {
@@ -145,9 +142,8 @@ public final class OSMHelper {
             TagMap keys = way.getKeys();
             return keys.containsKey(OSMTags.HIGHWAY_TAG) && keys.get(OSMTags.HIGHWAY_TAG).equals(OSMTags.STEPS_TAG_VALUE);
         }
-        else {
-            return false;
-        }
+
+        return false;
     }
 
     public static boolean isFootPath(Way way) {
@@ -155,9 +151,8 @@ public final class OSMHelper {
             TagMap keys = way.getKeys();
             return keys.containsKey(OSMTags.HIGHWAY_TAG) && keys.get(OSMTags.HIGHWAY_TAG).equals(OSMTags.FOOTWAY_TAG_VALUE);
         }
-        else {
-            return false;
-        }
+
+        return false;
     }
 
     public static boolean isRamp(Way way) {
@@ -167,9 +162,8 @@ public final class OSMHelper {
             return (keys.containsKey(OSMTags.RAMP_TAG) && keys.get(OSMTags.RAMP_TAG).equals(OSMTags.YES_TAG_VALUE))
                     || keys.containsKey(OSMTags.INCLINE_TAG);
         }
-        else {
-            return false;
-        }
+
+        return false;
     }
 
     public static String getUicRef(OsmPrimitive primitive) {
@@ -179,13 +173,9 @@ public final class OSMHelper {
             if (keys.containsKey(OSMTags.UIC_REF_TAG)) {
                 return keys.get(OSMTags.UIC_REF_TAG);
             }
-            else {
-                return null;
-            }
         }
-        else {
-            return null;
-        }
+
+        return null;
     }
 
     public static String getRef(OsmPrimitive primitive) {
@@ -195,13 +185,9 @@ public final class OSMHelper {
             if (keys.containsKey(OSMTags.REF_TAG)) {
                 return keys.get(OSMTags.REF_TAG);
             }
-            else {
-                return null;
-            }
         }
-        else {
-            return null;
-        }
+
+        return null;
     }
 
     public static String getLevel(OsmPrimitive primitive) {
@@ -211,13 +197,9 @@ public final class OSMHelper {
             if (keys.containsKey(OSMTags.LEVEL_TAG)) {
                 return keys.get(OSMTags.LEVEL_TAG);
             }
-            else {
-                return null;
-            }
         }
-        else {
-            return null;
-        }
+
+        return null;
     }
 
     public static String getIncline(OsmPrimitive primitive) {
@@ -227,13 +209,9 @@ public final class OSMHelper {
             if (keys.containsKey(OSMTags.INCLINE_TAG)) {
                 return keys.get(OSMTags.INCLINE_TAG);
             }
-            else {
-                return null;
-            }
         }
-        else {
-            return null;
-        }
+
+        return null;
     }
 
     public static LimitationStatusEnumeration getWheelchairLimitation(OsmPrimitive primitive) {
@@ -257,12 +235,9 @@ public final class OSMHelper {
                         break;
                 }
             }
+        }
 
-            return wheelChairLimitation;
-        }
-        else {
-            return wheelChairLimitation;
-        }
+        return wheelChairLimitation;
     }
 
     public static QuayTypeEnumeration getQuayTypeEnumeration(OsmPrimitive primitive) {
@@ -291,6 +266,12 @@ public final class OSMHelper {
         return quayTypeEnumeration;
     }
 
-    public static final String OUTER_ROLE = "outer";
-    public static final String INNER_ROLE = "inner";
+    public static String switchRefDelimiter(String quayRef) {
+        if (quayRef != null && !quayRef.trim().isEmpty()) {
+            return quayRef.replace(";", "/");
+        }
+        else {
+            return quayRef;
+        }
+    }
 }
