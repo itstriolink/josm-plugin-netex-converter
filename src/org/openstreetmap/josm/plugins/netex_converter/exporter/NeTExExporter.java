@@ -148,165 +148,249 @@ public class NeTExExporter {
             return;
         }
 
-        for (HashMap.Entry<Node, StopPlace> stopEntry : stopPlaces.entrySet()) {
-            StopPlace stopPlace = stopEntry.getValue();
+        HashMap<StopPlace, Quays_RelStructure> currentQuays = new HashMap<>();
 
-            boolean childrenAvailable = false;
-            long stopPlaceNodeId = stopEntry.getKey().getId();
+        for (HashMap.Entry<OsmPrimitive, Quay> quayEntry : quays.entrySet()) {
+            String quayUicRef = OSMHelper.getUicRef(quayEntry.getKey());
 
-            Quays_RelStructure currentQuays = new Quays_RelStructure();
+            String quayRef = OSMHelper.getRef(quayEntry.getKey());
 
-            for (HashMap.Entry<OsmPrimitive, Quay> quayEntry : quays.entrySet()) {
-                String stopUicRef = OSMHelper.getUicRef(stopEntry.getKey());
-                String quayUicRef = OSMHelper.getUicRef(quayEntry.getKey());
-
-                String quayRef = OSMHelper.getRef(quayEntry.getKey());
-
-                if (quayUicRef != null && !quayUicRef.trim().isEmpty() && stopUicRef != null && !stopUicRef.trim().isEmpty()) {
-                    if (quayUicRef.equals(stopUicRef)) {
-                        currentQuays.withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
-                                .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
-                                .withPublicCode(quayRef)));
-                        childrenAvailable = true;
-                    }
-                }
-                else {
-                    LatLon coord = null;
-                    boolean isRelation = false;
-
-                    if (quayEntry.getKey() instanceof Node) {
-                        coord = ((Node) quayEntry.getKey()).getCoor();
-                    }
-                    else if (quayEntry.getKey() instanceof Way) {
-                        coord = ((Way) quayEntry.getKey()).firstNode().getCoor();
-                    }
-                    else {
-                        isRelation = true;
-                        coord = ((Relation) quayEntry.getKey()).firstMember().getWay().firstNode().getCoor();
-                    }
-
-                    Node closestStopPlace = null;
-
-                    if (isRelation) {
-                        closestStopPlace = findNearestMatchingTrainStation(coord, stopPlaceNodeId);
-                    }
-                    else {
-                        closestStopPlace = findNearestMatchingStopPlace(coord, stopPlaceNodeId);
-                    }
-
-                    if (closestStopPlace != null) {
-                        quayUicRef = OSMHelper.getUicRef(closestStopPlace);
-
-                        quayRef = OSMHelper.switchRefDelimiter(quayRef);
-
-                        QuayTypeEnumeration quayType = QuayTypeEnumeration.OTHER;
-
-                        if (quayEntry.getValue().getQuayType() != null && quayEntry.getValue().getQuayType().equals(QuayTypeEnumeration.OTHER)) {
-                            if (OSMHelper.isBusStop(closestStopPlace)) {
-                                quayType = QuayTypeEnumeration.BUS_STOP;
-                            }
-                            else if (OSMHelper.isBusStation(closestStopPlace)) {
-                                quayType = QuayTypeEnumeration.BUS_PLATFORM;
-                            }
-                            else if (OSMHelper.isTrainStation(closestStopPlace)) {
-                                quayType = QuayTypeEnumeration.RAIL_PLATFORM;
-                            }
-
-                            currentQuays.withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
+            if (quayUicRef != null && !quayUicRef.trim().isEmpty()) {
+                for (StopPlace stopPlace : stopPlaces.values()) {
+                    if (stopPlace.getPublicCode().equals(quayUicRef)) {
+                        if (currentQuays.containsKey(stopPlace)) {
+                            currentQuays.replace(stopPlace, currentQuays.get(stopPlace).withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
                                     .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
-                                    .withPublicCode(quayRef).withQuayType(quayType)));
+                                    .withPublicCode(quayRef))));
                         }
                         else {
-                            currentQuays.withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
+                            currentQuays.put(stopPlace, new Quays_RelStructure().withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
                                     .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
-                                    .withPublicCode(quayRef)));
+                                    .withPublicCode(quayRef))));
                         }
-
-                        childrenAvailable = true;
                     }
                 }
             }
+            else {
+                LatLon coord = null;
+                boolean isRelation = false;
 
-            if (childrenAvailable) {
-                stopPlaces.replace(stopEntry.getKey(), stopPlace.withQuays(currentQuays));
+                if (quayEntry.getKey() instanceof Node) {
+                    coord = ((Node) quayEntry.getKey()).getCoor();
+                }
+                else if (quayEntry.getKey() instanceof Way) {
+                    coord = ((Way) quayEntry.getKey()).firstNode().getCoor();
+                }
+                else {
+                    isRelation = true;
+                    coord = ((Relation) quayEntry.getKey()).firstMember().getWay().firstNode().getCoor();
+                }
+
+                Node closestStopPlace = null;
+
+                if (isRelation) {
+                    closestStopPlace = findNearestTrainStation(coord);
+                }
+                else {
+                    closestStopPlace = findNearestStopPlace(coord);
+                }
+
+                if (closestStopPlace != null) {
+                    quayUicRef = OSMHelper.getUicRef(closestStopPlace);
+
+                    quayRef = OSMHelper.switchRefDelimiter(quayRef);
+
+                    QuayTypeEnumeration quayType = QuayTypeEnumeration.OTHER;
+                    boolean modifiedQuayType = false;
+                    if (quayEntry.getValue().getQuayType() != null && quayEntry.getValue().getQuayType().equals(QuayTypeEnumeration.OTHER)) {
+
+                        if (OSMHelper.isBusStop(closestStopPlace)) {
+                            quayType = QuayTypeEnumeration.BUS_STOP;
+                            modifiedQuayType = true;
+                        }
+                        else if (OSMHelper.isBusStation(closestStopPlace)) {
+                            quayType = QuayTypeEnumeration.BUS_PLATFORM;
+                            modifiedQuayType = true;
+                        }
+                        else if (OSMHelper.isTrainStation(closestStopPlace)) {
+                            quayType = QuayTypeEnumeration.RAIL_PLATFORM;
+                            modifiedQuayType = true;
+                        }
+                    }
+
+                    for (StopPlace stopPlace : stopPlaces.values()) {
+                        if (stopPlace.getPublicCode().equals(quayUicRef)) {
+                            QuayTypeEnumeration currentQuayType = modifiedQuayType ? quayType : quayEntry.getValue().getQuayType();
+
+                            if (currentQuays.containsKey(stopPlace)) {
+                                currentQuays.replace(stopPlace, currentQuays.get(stopPlace).withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
+                                        .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
+                                        .withPublicCode(quayRef)
+                                        .withQuayType(currentQuayType))));
+                            }
+                            else {
+                                currentQuays.put(stopPlace, new Quays_RelStructure().withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
+                                        .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
+                                        .withPublicCode(quayRef)
+                                        .withQuayType(currentQuayType))));
+                            }
+                        }
+                    }
+                }
             }
         }
 
-        for (HashMap.Entry<Node, StopPlace> stopPlaceEntry : stopPlaces.entrySet()) {
-            boolean childrenAvailable = false;
-            long stopPlaceNodeId = stopPlaceEntry.getKey().getId();
-
-            SitePathLinks_RelStructure currentPathLinks = new SitePathLinks_RelStructure();
-            PathJunctions_RelStructure currentPathJunctions = new PathJunctions_RelStructure();
-            EquipmentPlaces_RelStructure currentEquipmentPlaces = new EquipmentPlaces_RelStructure();
-
-            for (HashMap.Entry<Node, Elevator> elevatorEntry : elevators.entrySet()) {
-                LatLon coord = elevatorEntry.getKey().getCoor();
-                Node closestStopPlace = findNearestMatchingStopPlace(coord, stopPlaceNodeId);
-                Node closestQuay = findNearestQuay(coord);
-
-                if (closestStopPlace != null) {
-                    currentEquipmentPlaces.withEquipmentPlaceRefOrEquipmentPlace(Arrays.asList(elevatorEntry.getValue().getEquipmentPlace()));
-                    currentPathJunctions.withPathJunctionRefOrPathJunction(Arrays.asList(elevatorEntry.getValue().getPathJunction()
-                            .withParentZoneRef(new ZoneRefStructure()
-                                    .withRef(quays.containsKey(closestQuay) ? quays.get(closestQuay).getId() : null))));
-
-                    childrenAvailable = true;
+        for (HashMap.Entry<StopPlace, Quays_RelStructure> entry : currentQuays.entrySet()) {
+            for (HashMap.Entry<Node, StopPlace> stopEntry : stopPlaces.entrySet()) {
+                if (stopEntry.getValue().equals(entry.getKey())) {
+                    stopPlaces.replace(stopEntry.getKey(), stopEntry.getValue().withQuays(entry.getValue()));
                 }
             }
+        }
 
-            for (HashMap.Entry<Way, Steps> stepsEntry : steps.entrySet()) {
-                LatLon coord = stepsEntry.getKey().firstNode().getCoor();
-                Node closestStopPlace = findNearestMatchingStopPlace(coord, stopPlaceNodeId);
+        HashMap<StopPlace, SitePathLinks_RelStructure> pathLinks = new HashMap<>();
+        HashMap<StopPlace, PathJunctions_RelStructure> pathJunctions = new HashMap<>();
+        HashMap<StopPlace, EquipmentPlaces_RelStructure> equipmentPlaces = new HashMap<>();
 
-                if (closestStopPlace != null) {
-                    Node closestQuay = findNearestQuay(coord);
+        for (HashMap.Entry<Node, Elevator> elevatorEntry : elevators.entrySet()) {
+            LatLon coord = elevatorEntry.getKey().getCoor();
+            Node nearestStopPlace = findNearestStopPlace(coord);
 
-                    for (PathJunction pathJunction : stepsEntry.getValue().getPathJunctions()) {
-                        currentPathJunctions.withPathJunctionRefOrPathJunction(Arrays.asList(pathJunction
-                                .withParentZoneRef(new ZoneRefStructure()
-                                        .withRef(quays.containsKey(closestQuay) ? quays.get(closestQuay).getId() : null))));
+            if (nearestStopPlace != null) {
+                Node nearestQuay = findNearestPlatform(coord);
+
+                for (HashMap.Entry<Node, StopPlace> stopEntry : stopPlaces.entrySet()) {
+                    StopPlace stopPlace = stopEntry.getValue();
+
+                    if (stopEntry.getKey().equals(nearestStopPlace)) {
+                        if (equipmentPlaces.containsKey(stopPlace)) {
+                            equipmentPlaces.replace(stopPlace, equipmentPlaces.get(stopPlace).withEquipmentPlaceRefOrEquipmentPlace(Arrays.asList(elevatorEntry.getValue().getEquipmentPlace())));
+                        }
+                        else {
+                            equipmentPlaces.put(stopPlace, new EquipmentPlaces_RelStructure().withEquipmentPlaceRefOrEquipmentPlace(Arrays.asList(elevatorEntry.getValue().getEquipmentPlace())));
+                        }
+
+                        if (pathJunctions.containsKey(stopPlace)) {
+                            pathJunctions.replace(stopPlace, pathJunctions.get(stopPlace).withPathJunctionRefOrPathJunction(Arrays.asList(elevatorEntry.getValue().getPathJunction()
+                                    .withParentZoneRef(new ZoneRefStructure()
+                                            .withRef(quays.containsKey(nearestQuay) ? quays.get(nearestQuay).getId() : null)))));
+                        }
+                        else {
+                            pathJunctions.put(stopPlace, new PathJunctions_RelStructure().withPathJunctionRefOrPathJunction(Arrays.asList(elevatorEntry.getValue().getPathJunction()
+                                    .withParentZoneRef(new ZoneRefStructure()
+                                            .withRef(quays.containsKey(nearestQuay) ? quays.get(nearestQuay).getId() : null)))));
+                        }
                     }
-
-                    currentEquipmentPlaces.withEquipmentPlaceRefOrEquipmentPlace(Arrays.asList(stepsEntry.getValue().getEquipmentPlace()));
-
-                    for (SitePathLink sitePathLink : stepsEntry.getValue().getSitePathLinks()) {
-                        currentPathLinks.withPathLinkRefOrSitePathLink(Arrays.asList(sitePathLink));
-                    }
-
-                    childrenAvailable = true;
                 }
             }
+        }
 
-            for (HashMap.Entry<Way, FootPath> footPathEntry : footPaths.entrySet()) {
-                LatLon coord = footPathEntry.getKey().firstNode().getCoor();
-                Node closestStopPlace = findNearestMatchingStopPlace(coord, stopPlaceNodeId);
+        for (HashMap.Entry<Way, Steps> stepsEntry : steps.entrySet()) {
+            LatLon coord = stepsEntry.getKey().firstNode().getCoor();
+            Node nearestStopPlace = findNearestStopPlace(coord);
 
-                if (closestStopPlace != null) {
+            if (nearestStopPlace != null) {
+                Node nearestQuay = findNearestPlatform(coord);
 
-                    Node closestQuay = findNearestQuay(coord);
+                for (HashMap.Entry<Node, StopPlace> stopEntry : stopPlaces.entrySet()) {
+                    StopPlace stopPlace = stopEntry.getValue();
 
-                    for (PathJunction pathJunction : footPathEntry.getValue().getPathJunctions()) {
-                        currentPathJunctions.withPathJunctionRefOrPathJunction(Arrays.asList(pathJunction
-                                .withParentZoneRef(new ZoneRefStructure()
-                                        .withRef(quays.containsKey(closestQuay) ? quays.get(closestQuay).getId() : null))));
+                    if (stopEntry.getKey().equals(nearestStopPlace)) {
+
+                        for (PathJunction pathJunction : stepsEntry.getValue().getPathJunctions()) {
+                            if (pathJunctions.containsKey(stopPlace)) {
+                                pathJunctions.replace(stopPlace, pathJunctions.get(stopPlace).withPathJunctionRefOrPathJunction(Arrays.asList(pathJunction
+                                        .withParentZoneRef(new ZoneRefStructure()
+                                                .withRef(quays.containsKey(nearestQuay) ? quays.get(nearestQuay).getId() : null)))));
+                            }
+                            else {
+                                pathJunctions.put(stopPlace, new PathJunctions_RelStructure().withPathJunctionRefOrPathJunction(Arrays.asList(pathJunction
+                                        .withParentZoneRef(new ZoneRefStructure()
+                                                .withRef(quays.containsKey(nearestQuay) ? quays.get(nearestQuay).getId() : null)))));
+                            }
+                        }
+
+                        if (equipmentPlaces.containsKey(stopPlace)) {
+                            equipmentPlaces.replace(stopPlace, equipmentPlaces.get(stopPlace).withEquipmentPlaceRefOrEquipmentPlace(Arrays.asList(stepsEntry.getValue().getEquipmentPlace())));
+                        }
+                        else {
+                            equipmentPlaces.put(stopPlace, new EquipmentPlaces_RelStructure().withEquipmentPlaceRefOrEquipmentPlace(Arrays.asList(stepsEntry.getValue().getEquipmentPlace())));
+                        }
+
+                        for (SitePathLink sitePathLink : stepsEntry.getValue().getSitePathLinks()) {
+                            if (pathLinks.containsKey(stopPlace)) {
+                                pathLinks.replace(stopPlace, pathLinks.get(stopPlace).withPathLinkRefOrSitePathLink(Arrays.asList(sitePathLink)));
+                            }
+                            else {
+                                pathLinks.put(stopPlace, new SitePathLinks_RelStructure().withPathLinkRefOrSitePathLink(Arrays.asList(sitePathLink)));
+                            }
+                        }
                     }
-
-                    currentEquipmentPlaces.withEquipmentPlaceRefOrEquipmentPlace(Arrays.asList(footPathEntry.getValue().getEquipmentPlace()));
-
-                    for (SitePathLink sitePathLink : footPathEntry.getValue().getSitePathLinks()) {
-                        currentPathLinks.withPathLinkRefOrSitePathLink(Arrays.asList(sitePathLink));
-                    }
-
-                    childrenAvailable = true;
                 }
             }
+        }
 
-            if (childrenAvailable == true) {
-                stopPlaces.replace(stopPlaceEntry.getKey(), stopPlaceEntry.getValue()
-                        .withEquipmentPlaces(currentEquipmentPlaces)
-                        .withPathJunctions(currentPathJunctions)
-                        .withPathLinks(currentPathLinks));
+        for (HashMap.Entry<Way, FootPath> footPathEntry : footPaths.entrySet()) {
+            LatLon coord = footPathEntry.getKey().firstNode().getCoor();
+            Node nearestStopPlace = findNearestStopPlace(coord);
+
+            if (nearestStopPlace != null) {
+                Node nearestQuay = findNearestPlatform(coord);
+
+                for (HashMap.Entry<Node, StopPlace> stopEntry : stopPlaces.entrySet()) {
+                    StopPlace stopPlace = stopEntry.getValue();
+
+                    if (stopEntry.getKey().equals(nearestStopPlace)) {
+                        for (PathJunction pathJunction : footPathEntry.getValue().getPathJunctions()) {
+                            if (pathJunctions.containsKey(stopPlace)) {
+                                pathJunctions.replace(stopPlace, pathJunctions.get(stopPlace).withPathJunctionRefOrPathJunction(Arrays.asList(pathJunction
+                                        .withParentZoneRef(new ZoneRefStructure()
+                                                .withRef(quays.containsKey(nearestQuay) ? quays.get(nearestQuay).getId() : null)))));
+                            }
+                            else {
+                                pathJunctions.put(stopPlace, new PathJunctions_RelStructure().withPathJunctionRefOrPathJunction(Arrays.asList(pathJunction
+                                        .withParentZoneRef(new ZoneRefStructure()
+                                                .withRef(quays.containsKey(nearestQuay) ? quays.get(nearestQuay).getId() : null)))));
+                            }
+                        }
+
+                        if (equipmentPlaces.containsKey(stopPlace)) {
+                            equipmentPlaces.replace(stopPlace, equipmentPlaces.get(stopPlace).withEquipmentPlaceRefOrEquipmentPlace(Arrays.asList(footPathEntry.getValue().getEquipmentPlace())));
+                        }
+                        else {
+                            equipmentPlaces.put(stopPlace, new EquipmentPlaces_RelStructure().withEquipmentPlaceRefOrEquipmentPlace(Arrays.asList(footPathEntry.getValue().getEquipmentPlace())));
+                        }
+
+                        for (SitePathLink sitePathLink : footPathEntry.getValue().getSitePathLinks()) {
+                            if (pathLinks.containsKey(stopPlace)) {
+                                pathLinks.replace(stopPlace, pathLinks.get(stopPlace).withPathLinkRefOrSitePathLink(Arrays.asList(sitePathLink)));
+                            }
+                            else {
+                                pathLinks.put(stopPlace, new SitePathLinks_RelStructure().withPathLinkRefOrSitePathLink(Arrays.asList(sitePathLink)));
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+        for (HashMap.Entry<Node, StopPlace> stopEntry
+                : stopPlaces.entrySet()) {
+            for (HashMap.Entry<StopPlace, PathJunctions_RelStructure> entry : pathJunctions.entrySet()) {
+                if (stopEntry.getValue().equals(entry.getKey())) {
+                    stopPlaces.replace(stopEntry.getKey(), stopEntry.getValue().withPathJunctions(entry.getValue()));
+                }
+            }
+            for (HashMap.Entry<StopPlace, EquipmentPlaces_RelStructure> entry : equipmentPlaces.entrySet()) {
+                if (stopEntry.getValue().equals(entry.getKey())) {
+                    stopPlaces.replace(stopEntry.getKey(), stopEntry.getValue().withEquipmentPlaces(entry.getValue()));
+                }
+            }
+            for (HashMap.Entry<StopPlace, SitePathLinks_RelStructure> entry : pathLinks.entrySet()) {
+                if (stopEntry.getValue().equals(entry.getKey())) {
+                    stopPlaces.replace(stopEntry.getKey(), stopEntry.getValue().withPathLinks(entry.getValue()));
+                }
             }
         }
 
@@ -325,7 +409,7 @@ public class NeTExExporter {
 
     private Node findNearestStopPlace(LatLon coord) {
         Point p = MainApplication.getMap().mapView.getPoint(coord);
-        Map<Double, List<Node>> dist_nodes = getNearestNodesImpl(p, OsmPrimitive::isTagged);
+        Map<Double, List<Node>> dist_nodes = getNearestStopsImpl(p, OsmPrimitive::isTagged);
         Double[] distances = dist_nodes.keySet().toArray(new Double[0]);
         Arrays.sort(distances);
         Integer distanceIndex = -1;
@@ -334,18 +418,16 @@ public class NeTExExporter {
             List<Node> nodes = dist_nodes.get(distances[distanceIndex]);
 
             for (Node node : nodes) {
-                if (OSMHelper.isBusStation(node) || OSMHelper.isBusStop(node) || OSMHelper.isTrainStation(node)) {
-                    return node;
-                }
+                return node;
             }
         }
 
         return null;
     }
 
-    private Node findNearestMatchingStopPlace(LatLon coord, long matchingId) {
+    private Node findNearestTrainStation(LatLon coord) {
         Point p = MainApplication.getMap().mapView.getPoint(coord);
-        Map<Double, List<Node>> dist_nodes = getNearestNodesImpl(p, OsmPrimitive::isTagged, 25);
+        Map<Double, List<Node>> dist_nodes = getNearestStopsImpl(p, OsmPrimitive::isTagged, 100);
         Double[] distances = dist_nodes.keySet().toArray(new Double[0]);
         Arrays.sort(distances);
 
@@ -355,7 +437,7 @@ public class NeTExExporter {
             List<Node> nodes = dist_nodes.get(distances[distanceIndex]);
 
             for (Node node : nodes) {
-                if (node.getId() == matchingId && (OSMHelper.isBusStation(node) || OSMHelper.isBusStop(node) || OSMHelper.isTrainStation(node))) {
+                if (OSMHelper.isTrainStation(node)) {
                     return node;
                 }
             }
@@ -364,9 +446,9 @@ public class NeTExExporter {
         return null;
     }
 
-    private Node findNearestMatchingTrainStation(LatLon coord, long matchingId) {
+    private Node findNearestPlatform(LatLon coord) {
         Point p = MainApplication.getMap().mapView.getPoint(coord);
-        Map<Double, List<Node>> dist_nodes = getNearestNodesImpl(p, OsmPrimitive::isTagged, 100);
+        Map<Double, List<Node>> dist_nodes = getNearestPlatformsImpl(p, OsmPrimitive::isTagged);
         Double[] distances = dist_nodes.keySet().toArray(new Double[0]);
         Arrays.sort(distances);
 
@@ -376,37 +458,14 @@ public class NeTExExporter {
             List<Node> nodes = dist_nodes.get(distances[distanceIndex]);
 
             for (Node node : nodes) {
-                if (node.getId() == matchingId && OSMHelper.isTrainStation(node)) {
-                    return node;
-                }
+                return node;
             }
         }
 
         return null;
     }
 
-    private Node findNearestQuay(LatLon coord) {
-        Point p = MainApplication.getMap().mapView.getPoint(coord);
-        Map<Double, List<Node>> dist_nodes = getNearestNodesImpl(p, OsmPrimitive::isTagged);
-        Double[] distances = dist_nodes.keySet().toArray(new Double[0]);
-        Arrays.sort(distances);
-
-        int distanceIndex = -1;
-
-        while (++distanceIndex < distances.length) {
-            List<Node> nodes = dist_nodes.get(distances[distanceIndex]);
-
-            for (Node node : nodes) {
-                if (OSMHelper.isPlatform(node)) {
-                    return node;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    private Map<Double, List<Node>> getNearestNodesImpl(Point p, Predicate<OsmPrimitive> predicate) {
+    private Map<Double, List<Node>> getNearestStopsImpl(Point p, Predicate<OsmPrimitive> predicate) {
         Map<Double, List<Node>> nearestMap = new TreeMap<>();
 
         if (ds != null) {
@@ -416,9 +475,10 @@ public class NeTExExporter {
             snapDistanceSq *= snapDistanceSq;
 
             for (Node n : ds.searchNodes(getBBox(p, PROP_SNAP_DISTANCE.get()))) {
-                if (predicate.test(n)
-                        && (dist = mapView.getPoint2D(n).distanceSq(p)) < snapDistanceSq) {
-                    nearestMap.computeIfAbsent(dist, k -> new LinkedList<>()).add(n);
+                if (predicate.test(n) && (dist = mapView.getPoint2D(n).distanceSq(p)) < snapDistanceSq) {
+                    if (OSMHelper.isTrainStation(n) || OSMHelper.isBusStop(n) || OSMHelper.isBusStation(n)) {
+                        nearestMap.computeIfAbsent(dist, k -> new LinkedList<>()).add(n);
+                    }
                 }
             }
         }
@@ -426,7 +486,7 @@ public class NeTExExporter {
         return nearestMap;
     }
 
-    private Map<Double, List<Node>> getNearestNodesImpl(Point p, Predicate<OsmPrimitive> predicate, int snapDistanceSq) {
+    private Map<Double, List<Node>> getNearestStopsImpl(Point p, Predicate<OsmPrimitive> predicate, int snapDistanceSq) {
         Map<Double, List<Node>> nearestMap = new TreeMap<>();
 
         if (ds != null) {
@@ -436,9 +496,31 @@ public class NeTExExporter {
             snapDistanceSq *= snapDistanceSq;
 
             for (Node n : ds.searchNodes(getBBox(p, snapDistanceSq))) {
-                if (predicate.test(n)
-                        && (dist = mapView.getPoint2D(n).distanceSq(p)) < snapDistanceSq) {
-                    nearestMap.computeIfAbsent(dist, k -> new LinkedList<>()).add(n);
+                if (predicate.test(n) && (dist = mapView.getPoint2D(n).distanceSq(p)) < snapDistanceSq) {
+                    if (OSMHelper.isTrainStation(n) || OSMHelper.isBusStop(n) || OSMHelper.isBusStation(n)) {
+                        nearestMap.computeIfAbsent(dist, k -> new LinkedList<>()).add(n);
+                    }
+                }
+            }
+        }
+
+        return nearestMap;
+    }
+
+    private Map<Double, List<Node>> getNearestPlatformsImpl(Point p, Predicate<OsmPrimitive> predicate) {
+        Map<Double, List<Node>> nearestMap = new TreeMap<>();
+
+        if (ds != null) {
+            MapView mapView = MainApplication.getMap().mapView;
+
+            double dist, snapDistanceSq = PROP_SNAP_DISTANCE.get();
+            snapDistanceSq *= snapDistanceSq;
+
+            for (Node n : ds.searchNodes(getBBox(p, PROP_SNAP_DISTANCE.get()))) {
+                if (predicate.test(n) && (dist = mapView.getPoint2D(n).distanceSq(p)) < snapDistanceSq) {
+                    if (OSMHelper.isPlatform(n)) {
+                        nearestMap.computeIfAbsent(dist, k -> new LinkedList<>()).add(n);
+                    }
                 }
             }
         }
