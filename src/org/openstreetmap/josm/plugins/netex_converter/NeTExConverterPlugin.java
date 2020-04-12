@@ -14,10 +14,15 @@ import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
+/**
+ *
+ * @author Labian Gashi
+ */
 public class NeTExConverterPlugin extends Plugin {
 
     public NeTExConverterPlugin(final PluginInformation info) {
         super(info);
+
         MainMenu.addAfter(MainApplication.getMenu().fileMenu, new NeTExConverterAction(), false, MainApplication.getMenu().gpxExport);
     }
 }

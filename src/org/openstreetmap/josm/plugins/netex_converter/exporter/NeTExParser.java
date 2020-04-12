@@ -27,7 +27,6 @@ import com.netex.model.LocationStructure;
 import com.netex.model.MultilingualString;
 import com.netex.model.ObjectFactory;
 import com.netex.model.PathJunction;
-import com.netex.model.PathLink;
 import com.netex.model.PathLinkEndStructure;
 import com.netex.model.PlaceRefStructure;
 import com.netex.model.PointRefStructure;
@@ -69,6 +68,9 @@ import org.openstreetmap.josm.plugins.netex_converter.model.FootPath;
 import org.openstreetmap.josm.plugins.netex_converter.model.Steps;
 import org.openstreetmap.josm.plugins.netex_converter.util.OSMHelper;
 import org.openstreetmap.josm.plugins.netex_converter.util.OSMTags;
+import org.openstreetmap.josm.tools.Logging;
+
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  *
@@ -94,14 +96,6 @@ public class NeTExParser {
     }
 
     public StopPlace createStopPlace(Node node, StopTypeEnumeration stopType) {
-        return createStopPlace(node, stopType, null);
-    }
-
-    public StopPlace createStopPlace(Node node, StopTypeEnumeration stopType, ArrayList<PathLink> pathLinks) {
-        return createStopPlace(node, stopType, pathLinks, null);
-    }
-
-    public StopPlace createStopPlace(Node node, StopTypeEnumeration stopType, ArrayList<PathLink> pathLinks, ArrayList<PathJunction> pathJunctions) {
         TagMap keys = node.getKeys();
         LatLon coordinates = node.getCoor();
 
@@ -119,7 +113,7 @@ public class NeTExParser {
                 altitude = new BigDecimal(keys.get(OSMTags.ELE_TAG));
             }
             catch (NumberFormatException nfe) {
-
+                Logging.warn(tr("Altitude tag could not be parsed into a number for the node with the id: {0}.", node.getId()), nfe);
             }
         }
 
@@ -145,14 +139,10 @@ public class NeTExParser {
                                 .withAccessibilityLimitation(new AccessibilityLimitation()
                                         .withWheelchairAccess(wheelchairAccess))))
                 .withStopPlaceType(stopType);
-//                .withPathLinks(new SitePathLinks_RelStructure().withPathLinkRefOrSitePathLink(pathLinks))
-//                .withPathJunctions(new PathJunctions_RelStructure().withPathJunctionRefOrPathJunction(pathJunctions));
     }
 
     public Quay createQuay(OsmPrimitive primitive) {
         long primitiveId = primitive.getId();
-
-        TagMap keys = primitive.getKeys();
 
         QuayTypeEnumeration quayTypeEnumeration = OSMHelper.getQuayTypeEnumeration(primitive);
 

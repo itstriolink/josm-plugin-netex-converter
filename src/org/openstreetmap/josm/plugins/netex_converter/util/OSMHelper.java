@@ -11,8 +11,6 @@ package org.openstreetmap.josm.plugins.netex_converter.util;
 
 import com.netex.model.LimitationStatusEnumeration;
 import com.netex.model.QuayTypeEnumeration;
-import java.util.ArrayList;
-import java.util.List;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
