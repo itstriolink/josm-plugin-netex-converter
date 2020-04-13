@@ -95,16 +95,12 @@ public class NeTExParser {
         neTExFactory = new ObjectFactory();
     }
 
-    public StopPlace createStopPlace(Node node, StopTypeEnumeration stopType) {
-        TagMap keys = node.getKeys();
-        LatLon coordinates = node.getCoor();
+    public StopPlace createStopPlace(OsmPrimitive primitive, StopTypeEnumeration stopType) {
+        TagMap keys = primitive.getKeys();
 
-        double lat = coordinates.lat();
-        double lon = coordinates.lon();
+        String primitiveName = primitive.getName();
 
-        String nodeName = node.getName();
-
-        String uic_ref = OSMHelper.getUicRef(node);
+        String uic_ref = OSMHelper.getUicRef(primitive);
 
         BigDecimal altitude = null;
 
@@ -113,32 +109,73 @@ public class NeTExParser {
                 altitude = new BigDecimal(keys.get(OSMTags.ELE_TAG));
             }
             catch (NumberFormatException nfe) {
-                Logging.warn(tr("Altitude tag could not be parsed into a number for the node with the id: {0}.", node.getId()), nfe);
+                Logging.warn(tr("Altitude tag could not be parsed into a number for the primitive with the id: {0}.", primitive.getId()), nfe);
             }
         }
+
+        LimitationStatusEnumeration wheelchairAccess = OSMHelper.getWheelchairLimitation(primitive);
 
         if (uic_ref == null || uic_ref.trim().isEmpty()) {
             //log warning...
         }
 
-        LimitationStatusEnumeration wheelchairAccess = OSMHelper.getWheelchairLimitation(node);
+        if (primitive instanceof Node) {
+            Node node = (Node) primitive;
 
-        return new StopPlace()
-                .withId(String.format("ch:1:StopPlace:%s", uic_ref != null && !uic_ref.trim().isEmpty() ? uic_ref : node.getId()))
-                .withName(new MultilingualString()
-                        .withValue(nodeName))
-                .withPrivateCode(new PrivateCodeStructure().withValue(String.format("org:osm:node:%s", node.getId())))
-                .withPublicCode(uic_ref)
-                .withCentroid(new SimplePoint_VersionStructure()
-                        .withLocation(new LocationStructure()
-                                .withLatitude(BigDecimal.valueOf(lat))
-                                .withLongitude(BigDecimal.valueOf(lon))
-                                .withAltitude(altitude)))
-                .withAccessibilityAssessment(new AccessibilityAssessment()
-                        .withLimitations(new AccessibilityLimitations_RelStructure()
-                                .withAccessibilityLimitation(new AccessibilityLimitation()
-                                        .withWheelchairAccess(wheelchairAccess))))
-                .withStopPlaceType(stopType);
+            LatLon coordinates = node.getCoor();
+
+            double lat = coordinates.lat();
+            double lon = coordinates.lon();
+
+            return new StopPlace()
+                    .withId(String.format("ch:1:StopPlace:%s", uic_ref != null && !uic_ref.trim().isEmpty() ? uic_ref : node.getId()))
+                    .withName(new MultilingualString()
+                            .withValue(primitiveName))
+                    .withPrivateCode(new PrivateCodeStructure().withValue(String.format("org:osm:node:%s", node.getId())))
+                    .withPublicCode(uic_ref)
+                    .withCentroid(new SimplePoint_VersionStructure()
+                            .withLocation(new LocationStructure()
+                                    .withLatitude(BigDecimal.valueOf(lat))
+                                    .withLongitude(BigDecimal.valueOf(lon))
+                                    .withAltitude(altitude)))
+                    .withAccessibilityAssessment(new AccessibilityAssessment()
+                            .withLimitations(new AccessibilityLimitations_RelStructure()
+                                    .withAccessibilityLimitation(new AccessibilityLimitation()
+                                            .withWheelchairAccess(wheelchairAccess))))
+                    .withStopPlaceType(stopType);
+        }
+        else if (primitive instanceof Way) {
+            Way way = (Way) primitive;
+
+            LinearRingType linearRing = new LinearRingType();
+
+            for (Node node : way.getNodes()) {
+                LatLon coord = node.getCoor();
+
+                linearRing.withPosOrPointProperty(Arrays.asList(new DirectPositionListType().withValue(coord.lat(), coord.lon())));
+            }
+
+            return new StopPlace()
+                    .withId(String.format("ch:1:StopPlace:%s", uic_ref != null && !uic_ref.trim().isEmpty() ? uic_ref : way.getId()))
+                    .withName(new MultilingualString()
+                            .withValue(primitiveName))
+                    .withPrivateCode(new PrivateCodeStructure().withValue(String.format("org:osm:way:%s", way.getId())))
+                    .withPublicCode(uic_ref)
+                    .withPolygon(new PolygonType()
+                            .withId(String.format("org:osm:way:%s", way.getId()))
+                            .withExterior(new AbstractRingPropertyType()
+                                    .withAbstractRing(gmlFactory.createLinearRing(linearRing))))
+                    .withAccessibilityAssessment(new AccessibilityAssessment()
+                            .withLimitations(new AccessibilityLimitations_RelStructure()
+                                    .withAccessibilityLimitation(new AccessibilityLimitation()
+                                            .withWheelchairAccess(wheelchairAccess))))
+                    .withStopPlaceType(stopType);
+        }
+        else {
+            //log warning... relation as stop place
+            return new StopPlace();
+        }
+
     }
 
     public Quay createQuay(OsmPrimitive primitive) {

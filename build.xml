@@ -8,6 +8,12 @@
     <property name="plugin.description" value="Convert OSM to NeTEx"/>
     <property name="plugin.icon" value="images/netex_converter.png"/>
     <property name="plugin.link" value="..."/>
+	<property name="plugin.requires" value="log4j"/>
 	
     <import file="../build-common.xml"/>
+	
+	
+    <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
+        <include name="log4j.jar"/>
+    </fileset>
 </project>

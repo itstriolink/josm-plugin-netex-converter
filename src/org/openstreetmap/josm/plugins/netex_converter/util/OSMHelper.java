@@ -126,6 +126,16 @@ public final class OSMHelper {
         return false;
     }
 
+    public static boolean isRailwayPlatform(OsmPrimitive primitive) {
+        if (primitive != null) {
+            TagMap keys = primitive.getKeys();
+
+            return keys.containsKey(OSMTags.RAILWAY_TAG) && keys.get(OSMTags.RAILWAY_TAG).equals(OSMTags.PLATFORM_TAG_VALUE);
+        }
+
+        return false;
+    }
+
     public static boolean isElevator(Node node) {
         if (node != null) {
             TagMap keys = node.getKeys();
@@ -239,33 +249,20 @@ public final class OSMHelper {
     }
 
     public static QuayTypeEnumeration getQuayTypeEnumeration(OsmPrimitive primitive) {
-        QuayTypeEnumeration quayTypeEnumeration = QuayTypeEnumeration.OTHER;
+        QuayTypeEnumeration quayTypeEnumeration;
 
-        if (primitive instanceof Node) {
-            Node node = (Node) primitive;
-
-            if (OSMHelper.isBusStation(node, false)) {
-                quayTypeEnumeration = QuayTypeEnumeration.BUS_PLATFORM;
-            }
-            else if (OSMHelper.isBusStop(node, false)) {
-                quayTypeEnumeration = QuayTypeEnumeration.BUS_STOP;
-            }
-            else if (OSMHelper.isTrainStation(node, false)) {
-                quayTypeEnumeration = QuayTypeEnumeration.RAIL_PLATFORM;
-            }
-            else {
-                quayTypeEnumeration = QuayTypeEnumeration.OTHER;
-            }
-        }
-        else if (primitive instanceof Relation) {
+        if (OSMHelper.isRailwayPlatform(primitive)) {
             quayTypeEnumeration = QuayTypeEnumeration.RAIL_PLATFORM;
+        }
+        else {
+            quayTypeEnumeration = QuayTypeEnumeration.OTHER;
         }
 
         return quayTypeEnumeration;
     }
-
+    
     public static String switchRefDelimiter(String quayRef) {
-        if (quayRef != null && !quayRef.trim().isEmpty()) {
+        if (quayRef != null) {
             return quayRef.replace(";", "/");
         }
         else {
