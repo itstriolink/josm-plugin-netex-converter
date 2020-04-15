@@ -165,7 +165,8 @@ public class NeTExExporter {
 
         while (stopPlacesIterator.hasNext()) {
             Map.Entry<OsmPrimitive, StopPlace> entry = stopPlacesIterator.next();
-
+            boolean removeEntry = false;
+            
             while (stopPlacesCloneIterator.hasNext()) {
                 Map.Entry<OsmPrimitive, StopPlace> entryClone = stopPlacesCloneIterator.next();
 
@@ -173,14 +174,16 @@ public class NeTExExporter {
                     String id = entry.getValue().getId();
                     String publicCode = entry.getValue().getPublicCode();
                     String name = entry.getValue().getName() != null ? entry.getValue().getName().getValue() : null;
+                    StopTypeEnumeration stopType = entry.getValue().getStopPlaceType();
 
                     if (id != null && publicCode != null && name != null) {
                         String cloneId = entryClone.getValue().getId();
                         String clonePublicCode = entryClone.getValue().getPublicCode();
                         String cloneName = entryClone.getValue().getName() != null ? entryClone.getValue().getName().getValue() : null;
+                        StopTypeEnumeration cloneStopType = entryClone.getValue().getStopPlaceType();
 
-                        if (id.equals(cloneId) && publicCode.equals(clonePublicCode) && name.equals(cloneName)) {
-                            stopPlacesIterator.remove();
+                        if (id.equals(cloneId) && publicCode.equals(clonePublicCode) && name.equals(cloneName) && stopType.equals(cloneStopType)) {
+                            removeEntry = true;
 
                             if (stopsToCorrect.containsKey(entryClone.getValue())) {
                                 List<OsmPrimitive> innerList = stopsToCorrect.get(entryClone.getValue());
@@ -195,12 +198,15 @@ public class NeTExExporter {
                                 innerList.add(entryClone.getKey());
 
                                 stopsToCorrect.put(entryClone.getValue(), innerList);
+
                             }
-                            break;
                         }
                     }
                 }
+            }
 
+            if (removeEntry) {
+                stopPlacesIterator.remove();
             }
 
             stopPlacesCloneIterator = stopPlacesClone.entrySet().iterator();
@@ -221,31 +227,29 @@ public class NeTExExporter {
 
         HashMap<StopPlace, Quays_RelStructure> currentQuays = new HashMap<>();
 
-        for (HashMap.Entry<OsmPrimitive, Quay> quayEntry : quays.entrySet()) {
+        for (Iterator<Map.Entry<OsmPrimitive, Quay>> it = quays.entrySet().iterator(); it.hasNext();) {
+            HashMap.Entry<OsmPrimitive, Quay> quayEntry = it.next();
             String quayUicRef = OSMHelper.getUicRef(quayEntry.getKey());
-
             String quayRef = OSMHelper.getRef(quayEntry.getKey());
             quayRef = OSMHelper.switchRefDelimiter(quayRef);
-
             QuayTypeEnumeration quayType = QuayTypeEnumeration.OTHER;
+
             if (quayUicRef != null && !quayUicRef.trim().isEmpty()) {
                 for (StopPlace stopPlace : stopPlaces.values()) {
                     if (stopPlace.getPublicCode() != null && stopPlace.getPublicCode().equals(quayUicRef)) {
 
                         boolean modifiedQuayType = false;
                         if (quayEntry.getValue().getQuayType().equals(QuayTypeEnumeration.OTHER)) {
+                            modifiedQuayType = true;
                             switch (stopPlace.getStopPlaceType()) {
                                 case ONSTREET_BUS:
                                     quayType = QuayTypeEnumeration.BUS_STOP;
-                                    modifiedQuayType = true;
                                     break;
                                 case BUS_STATION:
                                     quayType = QuayTypeEnumeration.BUS_PLATFORM;
-                                    modifiedQuayType = true;
                                     break;
                                 case RAIL_STATION:
                                     quayType = QuayTypeEnumeration.RAIL_PLATFORM;
-                                    modifiedQuayType = true;
                                     break;
                                 default:
                                     quayType = QuayTypeEnumeration.OTHER;
@@ -311,17 +315,19 @@ public class NeTExExporter {
 
                     boolean modifiedQuayType = false;
                     if (quayEntry.getValue().getQuayType().equals(QuayTypeEnumeration.OTHER)) {
+                        modifiedQuayType = true;
+
                         if (OSMHelper.isBusStop(closestStopPlace)) {
                             quayType = QuayTypeEnumeration.BUS_STOP;
-                            modifiedQuayType = true;
                         }
                         else if (OSMHelper.isBusStation(closestStopPlace)) {
                             quayType = QuayTypeEnumeration.BUS_PLATFORM;
-                            modifiedQuayType = true;
                         }
                         else if (OSMHelper.isTrainStation(closestStopPlace)) {
                             quayType = QuayTypeEnumeration.RAIL_PLATFORM;
-                            modifiedQuayType = true;
+                        }
+                        else {
+                            quayType = QuayTypeEnumeration.OTHER;
                         }
                     }
 
@@ -345,6 +351,25 @@ public class NeTExExporter {
                     }
                 }
                 else {
+//                    StopTypeEnumeration stopType;
+//
+//                    if (OSMHelper.isTrainStation(quayEntry.getKey(), false)) {
+//                        stopType = StopTypeEnumeration.RAIL_STATION;
+//                    }
+//                    else if (OSMHelper.isBusStation(quayEntry.getKey(), false)) {
+//                        stopType = StopTypeEnumeration.BUS_STATION;
+//                    }
+//                    else if (OSMHelper.isBusStop(quayEntry.getKey(), false)) {
+//                        stopType = StopTypeEnumeration.ONSTREET_BUS;
+//                    }
+//                    else {
+//                        stopType = StopTypeEnumeration.OTHER;
+//                    }
+//
+//                    stopPlaces.put(quayEntry.getKey(), neTExParser.createStopPlace(quayEntry.getKey(), stopType));
+//
+//                    it.remove();
+
                     //...
                 }
             }
@@ -518,14 +543,13 @@ public class NeTExExporter {
 
     private Node findNearestStopPlace(LatLon coord) {
         Point p = MainApplication.getMap().mapView.getPoint(coord);
-        Map<Double, List<Node>> dist_nodes = getNearestStopsImpl(p, OsmPrimitive::isTagged);
+        Map<Double, List<Node>> dist_nodes = getNearestStopImpl(p, OsmPrimitive::isTagged);
         Double[] distances = dist_nodes.keySet().toArray(new Double[0]);
         Arrays.sort(distances);
         Integer distanceIndex = -1;
 
         while (++distanceIndex < distances.length) {
             List<Node> nodes = dist_nodes.get(distances[distanceIndex]);
-
             for (Node node : nodes) {
                 return node;
             }
@@ -536,7 +560,7 @@ public class NeTExExporter {
 
     private Node findNearestTrainStation(LatLon coord) {
         Point p = MainApplication.getMap().mapView.getPoint(coord);
-        Map<Double, List<Node>> dist_nodes = getNearestStopsImpl(p, OsmPrimitive::isTagged, 125);
+        Map<Double, List<Node>> dist_nodes = getNearestTrainStationImpl(p, OsmPrimitive::isTagged);
         Double[] distances = dist_nodes.keySet().toArray(new Double[0]);
         Arrays.sort(distances);
 
@@ -546,9 +570,7 @@ public class NeTExExporter {
             List<Node> nodes = dist_nodes.get(distances[distanceIndex]);
 
             for (Node node : nodes) {
-                if (OSMHelper.isTrainStation(node)) {
-                    return node;
-                }
+                return node;
             }
         }
 
@@ -574,19 +596,20 @@ public class NeTExExporter {
         return null;
     }
 
-    private Map<Double, List<Node>> getNearestStopsImpl(Point p, Predicate<OsmPrimitive> predicate) {
+    private Map<Double, List<Node>> getNearestStopImpl(Point p, Predicate<OsmPrimitive> predicate) {
         Map<Double, List<Node>> nearestMap = new TreeMap<>();
 
         if (ds != null) {
             MapView mapView = MainApplication.getMap().mapView;
 
-            double dist, snapDistanceSq = PROP_SNAP_DISTANCE.get();
+            double dist, snapDistanceSq = 20;
             snapDistanceSq *= snapDistanceSq;
 
-            for (Node n : ds.searchNodes(getBBox(p, PROP_SNAP_DISTANCE.get()))) {
+            for (Node n : ds.searchNodes(getBBox(p, 20))) {
                 if (predicate.test(n) && (dist = mapView.getPoint2D(n).distanceSq(p)) < snapDistanceSq) {
                     if (OSMHelper.isTrainStation(n) || OSMHelper.isBusStop(n) || OSMHelper.isBusStation(n)) {
                         nearestMap.computeIfAbsent(dist, k -> new LinkedList<>()).add(n);
+                        break;
                     }
                 }
             }
@@ -595,18 +618,19 @@ public class NeTExExporter {
         return nearestMap;
     }
 
-    private Map<Double, List<Node>> getNearestStopsImpl(Point p, Predicate<OsmPrimitive> predicate, int snapDistanceSq) {
+    private Map<Double, List<Node>> getNearestTrainStationImpl(Point p, Predicate<OsmPrimitive> predicate) {
         Map<Double, List<Node>> nearestMap = new TreeMap<>();
 
         if (ds != null) {
             MapView mapView = MainApplication.getMap().mapView;
 
+            int snapDistanceSq = 1250;
             double dist = snapDistanceSq;
             snapDistanceSq *= snapDistanceSq;
 
             for (Node n : ds.searchNodes(getBBox(p, snapDistanceSq))) {
                 if (predicate.test(n) && (dist = mapView.getPoint2D(n).distanceSq(p)) < snapDistanceSq) {
-                    if (OSMHelper.isTrainStation(n) || OSMHelper.isBusStop(n) || OSMHelper.isBusStation(n)) {
+                    if (OSMHelper.isTrainStation(n)) {
                         nearestMap.computeIfAbsent(dist, k -> new LinkedList<>()).add(n);
                     }
                 }

@@ -78,12 +78,13 @@ public final class OSMTags {
     public static final String HIGH_SPEED_NETWORK_TAG_VALUE = "high_speed";
 
     public static final String REF_TAG = "ref";
+    public static final String LOCAL_REF_TAG = "local_ref";
     public static final String ELE_TAG = "ele";
     public static final String LEVEL_TAG = "level";
     public static final String UIC_REF_TAG = "uic_ref";
     public static final String WHEELCHAIR_TAG = "wheelchair";
     public static final String INCLINE_TAG = "incline";
-    
+
     public static final String DOWN_TAG_VALUE = "down";
     public static final String UP_TAG_VALUE = "up";
 }
