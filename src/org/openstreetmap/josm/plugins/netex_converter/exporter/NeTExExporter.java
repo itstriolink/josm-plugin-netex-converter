@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 
 import com.netex.model.*;
+import com.netex.validation.NeTExValidator;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ import org.openstreetmap.josm.plugins.netex_converter.model.FootPath;
 import org.openstreetmap.josm.plugins.netex_converter.model.Steps;
 
 import org.openstreetmap.josm.plugins.netex_converter.util.OSMHelper;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -66,9 +68,9 @@ public class NeTExExporter {
     private final HashMap<Way, Steps> steps;
     private final HashMap<Way, FootPath> footPaths;
     private final DataSet ds;
-    //private final NeTExValidator neTExValidator = NeTExValidator.getNeTExValidator();
+    //private final NeTExValidator neTExValidator;
 
-    public NeTExExporter() {
+    public NeTExExporter() throws IOException, SAXException {
         neTExParser = new NeTExParser();
         neTExFactory = new ObjectFactory();
         customMarshaller = new CustomMarshaller(PublicationDeliveryStructure.class);
@@ -80,9 +82,10 @@ public class NeTExExporter {
         elevators = new HashMap<>();
         steps = new HashMap<>();
         footPaths = new HashMap<>();
+        //neTExValidator = NeTExValidator.getNeTExValidator();
     }
 
-    public void exportToNeTEx(File neTExFile) {
+    public void exportToNeTEx(File neTExFile) throws IOException, org.xml.sax.SAXException, org.xml.sax.SAXException {
 
         Collection<OsmPrimitive> primitives;
 
@@ -139,11 +142,17 @@ public class NeTExExporter {
             }
             else if (primitive instanceof Relation) {
                 Relation relation = (Relation) primitive;
-
-                if (relation.isMultipolygon()) {
-                    if (OSMHelper.isPlatform(relation)) {
-                        quays.put(relation, neTExParser.createQuay(relation));
-                    }
+                if (OSMHelper.isTrainStation(relation)) {
+                    stopPlaces.put(relation, neTExParser.createStopPlace(relation, StopTypeEnumeration.RAIL_STATION));
+                }
+                else if (OSMHelper.isBusStation(relation)) {
+                    stopPlaces.put(relation, neTExParser.createStopPlace(relation, StopTypeEnumeration.BUS_STATION));
+                }
+                else if (OSMHelper.isBusStop(relation)) {
+                    stopPlaces.put(relation, neTExParser.createStopPlace(relation, StopTypeEnumeration.ONSTREET_BUS));
+                }
+                else if (OSMHelper.isPlatform(relation)) {
+                    quays.put(relation, neTExParser.createQuay(relation));
                 }
             }
             else {
@@ -166,7 +175,7 @@ public class NeTExExporter {
         while (stopPlacesIterator.hasNext()) {
             Map.Entry<OsmPrimitive, StopPlace> entry = stopPlacesIterator.next();
             boolean removeEntry = false;
-            
+
             while (stopPlacesCloneIterator.hasNext()) {
                 Map.Entry<OsmPrimitive, StopPlace> entryClone = stopPlacesCloneIterator.next();
 
@@ -538,6 +547,12 @@ public class NeTExExporter {
 
         customMarshaller.marshal(neTExFactory.createPublicationDelivery(publicationDeliveryStructure), neTExFile);
 
+        /*try {
+            neTExValidator.validate(new StreamSource(neTExFile));
+        }
+        catch (SAXException ex) {
+            Logger.getLogger(NeTExExporter.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }*/
         JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("NeTEx export has finished successfully."));
     }
 

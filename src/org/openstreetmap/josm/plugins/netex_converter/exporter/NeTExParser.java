@@ -99,6 +99,7 @@ public class NeTExParser {
         TagMap keys = primitive.getKeys();
 
         String primitiveName = primitive.getName();
+        long primitiveId = primitive.getId();
 
         String uic_ref = OSMHelper.getUicRef(primitive);
 
@@ -171,6 +172,68 @@ public class NeTExParser {
                                             .withWheelchairAccess(wheelchairAccess))))
                     .withStopPlaceType(stopType);
         }
+        else if (primitive instanceof Relation) {
+            Relation relation = (Relation) primitive;
+
+            PolygonType polygonType = new PolygonType()
+                    .withId(String.format("org:osm:way:%s", primitiveId));
+
+            for (RelationMember relationMember : relation.getMembers()) {
+                String role = relationMember.getRole();
+
+                if (role != null && !role.isEmpty()) {
+                    switch (role) {
+                        case OSMHelper.INNER_ROLE:
+                            LinearRingType linearRingInterior = new LinearRingType();
+
+                            if (relationMember.getMember() instanceof Way) {
+                                Way relationWay = relationMember.getWay();
+
+                                for (Node node : relationWay.getNodes()) {
+                                    LatLon coord = node.getCoor();
+
+                                    linearRingInterior.withPosOrPointProperty(Arrays.asList(new DirectPositionListType().withValue(coord.lat(), coord.lon())));
+                                }
+
+                                polygonType.withInterior(new AbstractRingPropertyType()
+                                        .withAbstractRing(gmlFactory.createLinearRing(linearRingInterior)));
+                            }
+                            break;
+                        case OSMHelper.OUTER_ROLE:
+                            LinearRingType linearRingExterior = new LinearRingType();
+
+                            if (relationMember.getMember() instanceof Way) {
+                                Way relationWay = relationMember.getWay();
+
+                                for (Node node : relationWay.getNodes()) {
+                                    LatLon coord = node.getCoor();
+
+                                    linearRingExterior.withPosOrPointProperty(Arrays.asList(new DirectPositionListType().withValue(coord.lat(), coord.lon())));
+                                }
+
+                                polygonType.withExterior(new AbstractRingPropertyType()
+                                        .withAbstractRing(gmlFactory.createLinearRing(linearRingExterior)));
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            return new StopPlace()
+                    .withId(String.format("ch:1:StopPlace:%s", uic_ref != null && !uic_ref.trim().isEmpty() ? uic_ref : primitiveId))
+                    .withName(new MultilingualString()
+                            .withValue(primitiveName))
+                    .withPrivateCode(new PrivateCodeStructure().withValue(String.format("org:osm:relation:%s", primitiveId)))
+                    .withPublicCode(uic_ref)
+                    .withPolygon(polygonType)
+                    .withAccessibilityAssessment(new AccessibilityAssessment()
+                            .withLimitations(new AccessibilityLimitations_RelStructure()
+                                    .withAccessibilityLimitation(new AccessibilityLimitation()
+                                            .withWheelchairAccess(wheelchairAccess))))
+                    .withStopPlaceType(stopType);
+        }
         else {
             //log warning... relation as stop place
             return new StopPlace();
@@ -221,10 +284,6 @@ public class NeTExParser {
         else if (primitive instanceof Relation) {
             Relation relation = (Relation) primitive;
 
-            Quay quay = new Quay()
-                    .withPrivateCode(new PrivateCodeStructure().withValue(String.format("org:osm:relation:%s", primitiveId)))
-                    .withQuayType(quayTypeEnumeration);
-
             PolygonType polygonType = new PolygonType()
                     .withId(String.format("org:osm:way:%s", primitiveId));
 
@@ -271,7 +330,10 @@ public class NeTExParser {
                 }
             }
 
-            return quay.withPolygon(polygonType);
+            return new Quay()
+                    .withPrivateCode(new PrivateCodeStructure().withValue(String.format("org:osm:relation:%s", primitiveId)))
+                    .withPolygon(polygonType)
+                    .withQuayType(quayTypeEnumeration);
         }
         else {
             return new Quay();
@@ -383,7 +445,7 @@ public class NeTExParser {
                 PathJunction secondJunction = pathJunctions.get(i + 1);
 
                 SitePathLink sitePathLink = new SitePathLink()
-                        .withId(String.format("ch:1:SitePathLink:%s", wayId))
+                        .withId(String.format("ch:1:SitePathLink:%1$s_%2$s", wayId, i + 1))
                         .withFrom(new PathLinkEndStructure()
                                 .withPlaceRef(new PlaceRefStructure().
                                         withRef(firstJunction.getId())))
@@ -420,7 +482,7 @@ public class NeTExParser {
                 PathJunction secondJunction = pathJunctions.get(i + 1);
 
                 sitePathLinks.add(new SitePathLink()
-                        .withId(String.format("ch:1:SitePathLink:%s", wayId))
+                        .withId(String.format("ch:1:SitePathLink:%1$s_%2$s", wayId, i + 1))
                         .withFrom(new PathLinkEndStructure()
                                 .withPlaceRef(new PlaceRefStructure().
                                         withRef(firstJunction.getId())))
@@ -515,7 +577,7 @@ public class NeTExParser {
             PathJunction secondJunction = pathJunctions.get(i + 1);
 
             SitePathLink sitePathLink = new SitePathLink()
-                    .withId(String.format("ch:1:SitePathLink:%s", wayId))
+                    .withId(String.format("ch:1:SitePathLink:%1$s_%2$s", wayId, i + 1))
                     .withFrom(new PathLinkEndStructure()
                             .withPlaceRef(new PlaceRefStructure().
                                     withRef(firstJunction.getId())))
