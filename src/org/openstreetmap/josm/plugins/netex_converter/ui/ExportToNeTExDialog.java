@@ -11,11 +11,13 @@ package org.openstreetmap.josm.plugins.netex_converter.ui;
 
 import java.awt.Cursor;
 import java.io.File;
+import java.io.IOException;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.netex_converter.exporter.NeTExExporter;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -27,7 +29,7 @@ public class ExportToNeTExDialog extends javax.swing.JFrame {
 
     private NeTExExporter neTExExporter;
 
-    public ExportToNeTExDialog() {
+    public ExportToNeTExDialog() throws IOException, SAXException {
         initComponents();
         buildGUI();
     }
@@ -65,11 +67,11 @@ public class ExportToNeTExDialog extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void buildGUI() {
+    private void buildGUI() throws IOException, SAXException {
         loadFileChooser(mainFileChooser);
     }
 
-    private void loadFileChooser(JFileChooser chooser) {
+    private void loadFileChooser(JFileChooser chooser) throws IOException, SAXException {
         chooser.setDialogType(JFileChooser.SAVE_DIALOG);
         chooser.setSelectedFile(new File(NETEX_FILE_NAME));
         chooser.setDialogTitle("Save as NeTEx");

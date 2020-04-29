@@ -146,26 +146,14 @@ public class NeTExParser {
                     .withStopPlaceType(stopType);
         }
         else if (primitive instanceof Way) {
-            Way way = (Way) primitive;
-
-            LinearRingType linearRing = new LinearRingType();
-
-            for (Node node : way.getNodes()) {
-                LatLon coord = node.getCoor();
-
-                linearRing.withPosOrPointProperty(Arrays.asList(new DirectPositionListType().withValue(coord.lat(), coord.lon())));
-            }
 
             return new StopPlace()
-                    .withId(String.format("ch:1:StopPlace:%s", uic_ref != null && !uic_ref.trim().isEmpty() ? uic_ref : way.getId()))
+                    .withId(String.format("ch:1:StopPlace:%s", uic_ref != null && !uic_ref.trim().isEmpty() ? uic_ref : primitiveId))
                     .withName(new MultilingualString()
                             .withValue(primitiveName))
-                    .withPrivateCode(new PrivateCodeStructure().withValue(String.format("org:osm:way:%s", way.getId())))
+                    .withPrivateCode(new PrivateCodeStructure().withValue(String.format("org:osm:way:%s", primitiveId)))
                     .withPublicCode(uic_ref)
-                    .withPolygon(new PolygonType()
-                            .withId(String.format("org:osm:way:%s", way.getId()))
-                            .withExterior(new AbstractRingPropertyType()
-                                    .withAbstractRing(gmlFactory.createLinearRing(linearRing))))
+                    .withPolygon(createPolygonType(primitive))
                     .withAccessibilityAssessment(new AccessibilityAssessment()
                             .withLimitations(new AccessibilityLimitations_RelStructure()
                                     .withAccessibilityLimitation(new AccessibilityLimitation()
@@ -173,53 +161,6 @@ public class NeTExParser {
                     .withStopPlaceType(stopType);
         }
         else if (primitive instanceof Relation) {
-            Relation relation = (Relation) primitive;
-
-            PolygonType polygonType = new PolygonType()
-                    .withId(String.format("org:osm:way:%s", primitiveId));
-
-            for (RelationMember relationMember : relation.getMembers()) {
-                String role = relationMember.getRole();
-
-                if (role != null && !role.isEmpty()) {
-                    switch (role) {
-                        case OSMHelper.INNER_ROLE:
-                            LinearRingType linearRingInterior = new LinearRingType();
-
-                            if (relationMember.getMember() instanceof Way) {
-                                Way relationWay = relationMember.getWay();
-
-                                for (Node node : relationWay.getNodes()) {
-                                    LatLon coord = node.getCoor();
-
-                                    linearRingInterior.withPosOrPointProperty(Arrays.asList(new DirectPositionListType().withValue(coord.lat(), coord.lon())));
-                                }
-
-                                polygonType.withInterior(new AbstractRingPropertyType()
-                                        .withAbstractRing(gmlFactory.createLinearRing(linearRingInterior)));
-                            }
-                            break;
-                        case OSMHelper.OUTER_ROLE:
-                            LinearRingType linearRingExterior = new LinearRingType();
-
-                            if (relationMember.getMember() instanceof Way) {
-                                Way relationWay = relationMember.getWay();
-
-                                for (Node node : relationWay.getNodes()) {
-                                    LatLon coord = node.getCoor();
-
-                                    linearRingExterior.withPosOrPointProperty(Arrays.asList(new DirectPositionListType().withValue(coord.lat(), coord.lon())));
-                                }
-
-                                polygonType.withExterior(new AbstractRingPropertyType()
-                                        .withAbstractRing(gmlFactory.createLinearRing(linearRingExterior)));
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
 
             return new StopPlace()
                     .withId(String.format("ch:1:StopPlace:%s", uic_ref != null && !uic_ref.trim().isEmpty() ? uic_ref : primitiveId))
@@ -227,7 +168,7 @@ public class NeTExParser {
                             .withValue(primitiveName))
                     .withPrivateCode(new PrivateCodeStructure().withValue(String.format("org:osm:relation:%s", primitiveId)))
                     .withPublicCode(uic_ref)
-                    .withPolygon(polygonType)
+                    .withPolygon(createPolygonType(primitive))
                     .withAccessibilityAssessment(new AccessibilityAssessment()
                             .withLimitations(new AccessibilityLimitations_RelStructure()
                                     .withAccessibilityLimitation(new AccessibilityLimitation()
@@ -235,10 +176,8 @@ public class NeTExParser {
                     .withStopPlaceType(stopType);
         }
         else {
-            //log warning... relation as stop place
             return new StopPlace();
         }
-
     }
 
     public Quay createQuay(OsmPrimitive primitive) {
@@ -262,77 +201,16 @@ public class NeTExParser {
                     .withQuayType(quayTypeEnumeration);
         }
         else if (primitive instanceof Way) {
-            Way way = (Way) primitive;
-
-            LinearRingType linearRing = new LinearRingType();
-
-            for (Node node : way.getNodes()) {
-                LatLon coord = node.getCoor();
-
-                linearRing.withPosOrPointProperty(Arrays.asList(new DirectPositionListType().withValue(coord.lat(), coord.lon())));
-            }
-
             return new Quay()
                     .withPrivateCode(new PrivateCodeStructure().withValue(String.format("org:osm:way:%s", primitiveId)))
-                    .withPolygon(new PolygonType()
-                            .withId(String.format("org:osm:way:%s", primitiveId))
-                            .withExterior(new AbstractRingPropertyType()
-                                    .withAbstractRing(gmlFactory.createLinearRing(linearRing))))
+                    .withPolygon(createPolygonType(primitive))
                     .withQuayType(quayTypeEnumeration);
 
         }
         else if (primitive instanceof Relation) {
-            Relation relation = (Relation) primitive;
-
-            PolygonType polygonType = new PolygonType()
-                    .withId(String.format("org:osm:way:%s", primitiveId));
-
-            for (RelationMember relationMember : relation.getMembers()) {
-                String role = relationMember.getRole();
-
-                if (role != null && !role.isEmpty()) {
-                    switch (role) {
-                        case OSMHelper.INNER_ROLE:
-                            LinearRingType linearRingInterior = new LinearRingType();
-
-                            if (relationMember.getMember() instanceof Way) {
-                                Way relationWay = relationMember.getWay();
-
-                                for (Node node : relationWay.getNodes()) {
-                                    LatLon coord = node.getCoor();
-
-                                    linearRingInterior.withPosOrPointProperty(Arrays.asList(new DirectPositionListType().withValue(coord.lat(), coord.lon())));
-                                }
-
-                                polygonType.withInterior(new AbstractRingPropertyType()
-                                        .withAbstractRing(gmlFactory.createLinearRing(linearRingInterior)));
-                            }
-                            break;
-                        case OSMHelper.OUTER_ROLE:
-                            LinearRingType linearRingExterior = new LinearRingType();
-
-                            if (relationMember.getMember() instanceof Way) {
-                                Way relationWay = relationMember.getWay();
-
-                                for (Node node : relationWay.getNodes()) {
-                                    LatLon coord = node.getCoor();
-
-                                    linearRingExterior.withPosOrPointProperty(Arrays.asList(new DirectPositionListType().withValue(coord.lat(), coord.lon())));
-                                }
-
-                                polygonType.withExterior(new AbstractRingPropertyType()
-                                        .withAbstractRing(gmlFactory.createLinearRing(linearRingExterior)));
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-
             return new Quay()
                     .withPrivateCode(new PrivateCodeStructure().withValue(String.format("org:osm:relation:%s", primitiveId)))
-                    .withPolygon(polygonType)
+                    .withPolygon(createPolygonType(primitive))
                     .withQuayType(quayTypeEnumeration);
         }
         else {
@@ -638,6 +516,81 @@ public class NeTExParser {
                 .withDataObjects(new PublicationDeliveryStructure.DataObjects()
                         .withCompositeFrameOrCommonFrame(Arrays.asList(
                                 neTExFactory.createCompositeFrame(compositeFrame))));
+    }
+
+    public PolygonType createPolygonType(OsmPrimitive primitive) {
+        long primitiveId = primitive.getId();
+
+        if (primitive instanceof Way) {
+            Way way = (Way) primitive;
+
+            LinearRingType linearRing = new LinearRingType();
+
+            for (Node node : way.getNodes()) {
+                LatLon nodeCoord = node.getCoor();
+
+                linearRing.withPosOrPointProperty(Arrays.asList(new DirectPositionListType().withValue(nodeCoord.lat(), nodeCoord.lon())));
+            }
+
+            return new PolygonType()
+                    .withId(String.format("org:osm:way:%s", primitiveId))
+                    .withExterior(new AbstractRingPropertyType()
+                            .withAbstractRing(gmlFactory.createLinearRing(linearRing)));
+        }
+        else if (primitive instanceof Relation) {
+            Relation relation = (Relation) primitive;
+
+            PolygonType polygonType = new PolygonType()
+                    .withId(String.format("org:osm:relation:%s", primitiveId));
+
+            for (RelationMember relationMember : relation.getMembers()) {
+                String role = relationMember.getRole();
+
+                if (role != null && !role.isEmpty()) {
+                    switch (role) {
+                        case OSMHelper.INNER_ROLE:
+                            LinearRingType linearRingInterior = new LinearRingType();
+
+                            if (relationMember.getMember() instanceof Way) {
+                                Way relationWay = relationMember.getWay();
+
+                                for (Node node : relationWay.getNodes()) {
+                                    LatLon coord = node.getCoor();
+
+                                    linearRingInterior.withPosOrPointProperty(Arrays.asList(new DirectPositionListType().withValue(coord.lat(), coord.lon())));
+                                }
+
+                                polygonType.withInterior(new AbstractRingPropertyType()
+                                        .withAbstractRing(gmlFactory.createLinearRing(linearRingInterior)));
+                            }
+                            break;
+                        case OSMHelper.OUTER_ROLE:
+                            LinearRingType linearRingExterior = new LinearRingType();
+
+                            if (relationMember.getMember() instanceof Way) {
+                                Way relationWay = relationMember.getWay();
+
+                                for (Node node : relationWay.getNodes()) {
+                                    LatLon coord = node.getCoor();
+
+                                    linearRingExterior.withPosOrPointProperty(Arrays.asList(new DirectPositionListType().withValue(coord.lat(), coord.lon())));
+                                }
+
+                                polygonType.withExterior(new AbstractRingPropertyType()
+                                        .withAbstractRing(gmlFactory.createLinearRing(linearRingExterior)));
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            return polygonType;
+        }
+        else {
+            return null;
+        }
     }
 
     public Level getLevelObject(String level) {

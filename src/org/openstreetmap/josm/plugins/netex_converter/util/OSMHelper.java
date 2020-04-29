@@ -13,7 +13,6 @@ import com.netex.model.LimitationStatusEnumeration;
 import com.netex.model.QuayTypeEnumeration;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.TagMap;
 import org.openstreetmap.josm.data.osm.Way;
 
@@ -111,6 +110,16 @@ public final class OSMHelper {
 
         return false;
     }
+    
+    public static boolean isStopArea(OsmPrimitive primitive){
+        if (primitive != null){
+            TagMap keys = primitive.getKeys();
+            
+            return keys.containsKey(OSMTags.PUBLIC_TRANSPORT_TAG) && keys.get(OSMTags.PUBLIC_TRANSPORT_TAG).equals(OSMTags.STOP_AREA_TAG_VALUE);
+        }
+        
+        return false;
+    }
 
     public static boolean isPlatform(OsmPrimitive primitive) {
         if (primitive != null) {
@@ -118,6 +127,16 @@ public final class OSMHelper {
 
             return (keys.containsKey(OSMTags.PUBLIC_TRANSPORT_TAG) && keys.get(OSMTags.PUBLIC_TRANSPORT_TAG).equals(OSMTags.PLATFORM_TAG_VALUE))
                     || (keys.containsKey(OSMTags.RAILWAY_TAG) && keys.get(OSMTags.RAILWAY_TAG).equals(OSMTags.PLATFORM_TAG_VALUE));
+        }
+
+        return false;
+    }
+    
+    public static boolean isHighwayPlatform(OsmPrimitive primitive) {
+        if (primitive != null) {
+            TagMap keys = primitive.getKeys();
+
+            return keys.containsKey(OSMTags.HIGHWAY_TAG) && keys.get(OSMTags.HIGHWAY_TAG).equals(OSMTags.PLATFORM_TAG_VALUE);
         }
 
         return false;

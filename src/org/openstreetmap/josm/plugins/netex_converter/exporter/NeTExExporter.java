@@ -31,6 +31,11 @@ import java.util.function.Predicate;
 import javax.swing.JOptionPane;
 
 import jaxb.CustomMarshaller;
+import net.opengis.gml._3.AbstractRingPropertyType;
+import net.opengis.gml._3.DirectPositionListType;
+import net.opengis.gml._3.LinearRingType;
+import net.opengis.gml._3.PolygonType;
+import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -42,6 +47,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.BBox;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.gui.MapView;
 import static org.openstreetmap.josm.gui.NavigatableComponent.PROP_SNAP_DISTANCE;
 
@@ -142,10 +148,11 @@ public class NeTExExporter {
             }
             else if (primitive instanceof Relation) {
                 Relation relation = (Relation) primitive;
+
                 if (OSMHelper.isTrainStation(relation)) {
                     stopPlaces.put(relation, neTExParser.createStopPlace(relation, StopTypeEnumeration.RAIL_STATION));
                 }
-                else if (OSMHelper.isBusStation(relation)) {
+                else if (OSMHelper.isBusStation(relation) || OSMHelper.isStopArea(relation)) {
                     stopPlaces.put(relation, neTExParser.createStopPlace(relation, StopTypeEnumeration.BUS_STATION));
                 }
                 else if (OSMHelper.isBusStop(relation)) {
@@ -182,16 +189,18 @@ public class NeTExExporter {
                 if (entry.getValue() != null && entryClone.getValue() != null && !entry.getValue().getPrivateCode().equals(entryClone.getValue().getPrivateCode())) {
                     String id = entry.getValue().getId();
                     String publicCode = entry.getValue().getPublicCode();
-                    String name = entry.getValue().getName() != null ? entry.getValue().getName().getValue() : null;
                     StopTypeEnumeration stopType = entry.getValue().getStopPlaceType();
 
-                    if (id != null && publicCode != null && name != null) {
+                    if (id != null && publicCode != null) {
                         String cloneId = entryClone.getValue().getId();
                         String clonePublicCode = entryClone.getValue().getPublicCode();
-                        String cloneName = entryClone.getValue().getName() != null ? entryClone.getValue().getName().getValue() : null;
                         StopTypeEnumeration cloneStopType = entryClone.getValue().getStopPlaceType();
 
-                        if (id.equals(cloneId) && publicCode.equals(clonePublicCode) && name.equals(cloneName) && stopType.equals(cloneStopType)) {
+                        if (id.equals(cloneId) && publicCode.equals(clonePublicCode) && stopType.equals(cloneStopType)) {
+                            //if(OSMHelper.isBusStation(entry.getKey()) && OSMHelper.isStopArea(entryClone.getKey())){
+                            //   continue;
+                            //}
+
                             removeEntry = true;
 
                             if (stopsToCorrect.containsKey(entryClone.getValue())) {
@@ -243,6 +252,39 @@ public class NeTExExporter {
             quayRef = OSMHelper.switchRefDelimiter(quayRef);
             QuayTypeEnumeration quayType = QuayTypeEnumeration.OTHER;
 
+            LatLon coord;
+
+            if (quayEntry.getKey() instanceof Node) {
+                coord = ((Node) quayEntry.getKey()).getCoor();
+            }
+            else if (quayEntry.getKey() instanceof Way) {
+                coord = ((Way) quayEntry.getKey()).firstNode().getCoor();
+            }
+            else {
+                RelationMember firstMember = ((Relation) quayEntry.getKey()).firstMember();
+
+                if (firstMember.isNode()) {
+                    coord = firstMember.getNode().getCoor();
+                }
+                else if (firstMember.isWay()) {
+                    coord = firstMember.getWay().firstNode().getCoor();
+                }
+                else {
+                    coord = null;
+                }
+            }
+
+            Point p = MainApplication.getMap().mapView.getPoint(coord);
+
+            List<Way> nearestWays = MainApplication.getMap().mapView.getNearestWays(p, OsmPrimitive::isTagged);
+
+            PolygonType polygonType = null;
+            for (Way way : nearestWays) {
+                if (OSMHelper.isHighwayPlatform(way)) {
+                    polygonType = neTExParser.createPolygonType(way);
+                }
+            }
+
             if (quayUicRef != null && !quayUicRef.trim().isEmpty()) {
                 for (StopPlace stopPlace : stopPlaces.values()) {
                     if (stopPlace.getPublicCode() != null && stopPlace.getPublicCode().equals(quayUicRef)) {
@@ -272,25 +314,28 @@ public class NeTExExporter {
                                 currentQuays.replace(stopPlace, currentQuays.get(stopPlace).withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
                                         .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
                                         .withPublicCode(quayRef)
+                                        .withPolygon(polygonType)
                                         .withQuayType(currentQuayType))));
                             }
                             else {
                                 currentQuays.put(stopPlace, new Quays_RelStructure().withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
                                         .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
                                         .withPublicCode(quayRef)
+                                        .withPolygon(polygonType)
                                         .withQuayType(currentQuayType))));
                             }
                         }
                         else {
                             if (currentQuays.containsKey(stopPlace)) {
-
                                 currentQuays.replace(stopPlace, currentQuays.get(stopPlace).withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
                                         .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayEntry.getKey().getId()))
+                                        .withPolygon(polygonType)
                                         .withQuayType(currentQuayType))));
                             }
                             else {
                                 currentQuays.put(stopPlace, new Quays_RelStructure().withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
                                         .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayEntry.getKey().getId()))
+                                        .withPolygon(polygonType)
                                         .withQuayType(currentQuayType))));
                             }
                         }
@@ -298,17 +343,6 @@ public class NeTExExporter {
                 }
             }
             else {
-                LatLon coord;
-
-                if (quayEntry.getKey() instanceof Node) {
-                    coord = ((Node) quayEntry.getKey()).getCoor();
-                }
-                else if (quayEntry.getKey() instanceof Way) {
-                    coord = ((Way) quayEntry.getKey()).firstNode().getCoor();
-                }
-                else {
-                    coord = ((Relation) quayEntry.getKey()).firstMember().getWay().firstNode().getCoor();
-                }
 
                 Node closestStopPlace;
 
