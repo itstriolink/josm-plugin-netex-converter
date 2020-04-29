@@ -651,10 +651,10 @@ public class NeTExExporter {
         if (ds != null) {
             MapView mapView = MainApplication.getMap().mapView;
 
-            double dist, snapDistanceSq = 20;
+            double dist, snapDistanceSq = PROP_SNAP_DISTANCE.get();
             snapDistanceSq *= snapDistanceSq;
 
-            for (Node n : ds.searchNodes(getBBox(p, 20))) {
+            for (Node n : ds.searchNodes(getBBox(p, PROP_SNAP_DISTANCE.get()))) {
                 if (predicate.test(n) && (dist = mapView.getPoint2D(n).distanceSq(p)) < snapDistanceSq) {
                     if (OSMHelper.isTrainStation(n) || OSMHelper.isBusStop(n) || OSMHelper.isBusStation(n)) {
                         nearestMap.computeIfAbsent(dist, k -> new LinkedList<>()).add(n);

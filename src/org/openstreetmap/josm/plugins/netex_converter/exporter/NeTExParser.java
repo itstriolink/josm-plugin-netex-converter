@@ -519,8 +519,9 @@ public class NeTExParser {
     }
 
     public PolygonType createPolygonType(OsmPrimitive primitive) {
+        PolygonType polygonType = null;
         long primitiveId = primitive.getId();
-
+        
         if (primitive instanceof Way) {
             Way way = (Way) primitive;
 
@@ -532,7 +533,7 @@ public class NeTExParser {
                 linearRing.withPosOrPointProperty(Arrays.asList(new DirectPositionListType().withValue(nodeCoord.lat(), nodeCoord.lon())));
             }
 
-            return new PolygonType()
+            polygonType = new PolygonType()
                     .withId(String.format("org:osm:way:%s", primitiveId))
                     .withExterior(new AbstractRingPropertyType()
                             .withAbstractRing(gmlFactory.createLinearRing(linearRing)));
@@ -540,7 +541,7 @@ public class NeTExParser {
         else if (primitive instanceof Relation) {
             Relation relation = (Relation) primitive;
 
-            PolygonType polygonType = new PolygonType()
+            polygonType = new PolygonType()
                     .withId(String.format("org:osm:relation:%s", primitiveId));
 
             for (RelationMember relationMember : relation.getMembers()) {
@@ -585,12 +586,9 @@ public class NeTExParser {
                     }
                 }
             }
-
-            return polygonType;
         }
-        else {
-            return null;
-        }
+        
+        return polygonType;
     }
 
     public Level getLevelObject(String level) {
