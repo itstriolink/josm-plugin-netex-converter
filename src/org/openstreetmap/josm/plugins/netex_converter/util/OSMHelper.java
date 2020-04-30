@@ -212,9 +212,6 @@ public final class OSMHelper {
             else if (keys.containsKey(OSMTags.LOCAL_REF_TAG)) {
                 return keys.get(OSMTags.LOCAL_REF_TAG);
             }
-            else {
-                return null;
-            }
         }
 
         return null;

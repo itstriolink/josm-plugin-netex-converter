@@ -197,9 +197,9 @@ public class NeTExExporter {
                         StopTypeEnumeration cloneStopType = entryClone.getValue().getStopPlaceType();
 
                         if (id.equals(cloneId) && publicCode.equals(clonePublicCode) && stopType.equals(cloneStopType)) {
-                            //if(OSMHelper.isBusStation(entry.getKey()) && OSMHelper.isStopArea(entryClone.getKey())){
-                            //   continue;
-                            //}
+                            if (OSMHelper.isBusStation(entry.getKey()) && OSMHelper.isStopArea(entryClone.getKey())) {
+                                continue;
+                            }
 
                             removeEntry = true;
 
@@ -234,6 +234,9 @@ public class NeTExExporter {
             if (entry.getValue() != null && !entry.getValue().isEmpty()) {
                 StopTypeEnumeration stopTypeEnumeration = entry.getKey().getStopPlaceType();
                 OsmPrimitive firstStopPlace = entry.getValue().get(0);
+                if (entry.getKey().getPublicCode().equals("8594419")) {
+                    int index = 0;
+                }
 
                 stopPlaces.put(firstStopPlace, neTExParser.createStopPlace(firstStopPlace, stopTypeEnumeration));
 
@@ -249,7 +252,17 @@ public class NeTExExporter {
             HashMap.Entry<OsmPrimitive, Quay> quayEntry = it.next();
             String quayUicRef = OSMHelper.getUicRef(quayEntry.getKey());
             String quayRef = OSMHelper.getRef(quayEntry.getKey());
-            quayRef = OSMHelper.switchRefDelimiter(quayRef);
+            if (quayRef != null && !quayRef.isEmpty()) {
+                quayRef = OSMHelper.switchRefDelimiter(quayRef);
+            }
+            else {
+                quayRef = Long.toString(quayEntry.getKey().getId());
+            }
+
+            if (quayUicRef != null && quayUicRef.equals("8594419")) {
+                String a = "sd";
+            }
+
             QuayTypeEnumeration quayType = QuayTypeEnumeration.OTHER;
 
             LatLon coord;
@@ -311,42 +324,25 @@ public class NeTExExporter {
 
                         QuayTypeEnumeration currentQuayType = modifiedQuayType ? quayType : quayEntry.getValue().getQuayType();
 
-                        if (quayRef != null && !quayRef.isEmpty()) {
-                            if (currentQuays.containsKey(stopPlace)) {
-                                currentQuays.replace(stopPlace, currentQuays.get(stopPlace).withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
-                                        .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
-                                        .withPublicCode(quayRef)
-                                        .withPolygon(polygonType)
-                                        .withQuayType(currentQuayType))));
-                            }
-                            else {
-                                currentQuays.put(stopPlace, new Quays_RelStructure().withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
-                                        .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
-                                        .withPublicCode(quayRef)
-                                        .withPolygon(polygonType)
-                                        .withQuayType(currentQuayType))));
-                            }
+                        if (currentQuays.containsKey(stopPlace)) {
+                            currentQuays.replace(stopPlace, currentQuays.get(stopPlace).withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
+                                    .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
+                                    .withPublicCode(quayRef)
+                                    .withPolygon(polygonType)
+                                    .withQuayType(currentQuayType))));
                         }
                         else {
-                            if (currentQuays.containsKey(stopPlace)) {
-                                currentQuays.replace(stopPlace, currentQuays.get(stopPlace).withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
-                                        .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayEntry.getKey().getId()))
-                                        .withPolygon(polygonType)
-                                        .withQuayType(currentQuayType))));
-                            }
-                            else {
-                                currentQuays.put(stopPlace, new Quays_RelStructure().withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
-                                        .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayEntry.getKey().getId()))
-                                        .withPolygon(polygonType)
-                                        .withQuayType(currentQuayType))));
-                            }
+                            currentQuays.put(stopPlace, new Quays_RelStructure().withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
+                                    .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
+                                    .withPublicCode(quayRef)
+                                    .withPolygon(polygonType)
+                                    .withQuayType(currentQuayType))));
                         }
                     }
                 }
             }
             else {
-
-                Node closestStopPlace = null;
+                Node closestStopPlace;
 
                 if (quayEntry.getValue().getQuayType().equals(QuayTypeEnumeration.RAIL_PLATFORM)) {
                     closestStopPlace = findNearestTrainStation(coord);
@@ -400,31 +396,60 @@ public class NeTExExporter {
 
             if (!foundStopPlace) {
                 StopTypeEnumeration stopType;
+                boolean modifiedQuayType = false;
+
+                if (quayEntry.getValue().getQuayType().equals(QuayTypeEnumeration.OTHER)) {
+                    modifiedQuayType = true;
+                }
 
                 if (OSMHelper.isTrainStation(quayEntry.getKey(), false)) {
                     stopType = StopTypeEnumeration.RAIL_STATION;
+                    quayType = QuayTypeEnumeration.RAIL_PLATFORM;
                 }
                 else if (OSMHelper.isBusStation(quayEntry.getKey(), false)) {
                     stopType = StopTypeEnumeration.BUS_STATION;
+                    quayType = QuayTypeEnumeration.BUS_PLATFORM;
                 }
                 else if (OSMHelper.isBusStop(quayEntry.getKey(), false)) {
                     stopType = StopTypeEnumeration.ONSTREET_BUS;
+                    quayType = QuayTypeEnumeration.BUS_STOP;
                 }
                 else {
                     stopType = StopTypeEnumeration.OTHER;
+                    quayType = QuayTypeEnumeration.OTHER;
                 }
 
-                stopPlaces.put(quayEntry.getKey(), neTExParser.createStopPlace(quayEntry.getKey(), stopType));
+                QuayTypeEnumeration currentQuayType = modifiedQuayType ? quayType : quayEntry.getValue().getQuayType();
 
-                //create quay...
+                StopPlace stopPlace = neTExParser.createStopPlace(quayEntry.getKey(), stopType);
+
+                if (!stopPlaces.containsKey(quayEntry.getKey())) {
+                    stopPlaces.put(quayEntry.getKey(), stopPlace);
+                }
+
+                if (currentQuays.containsKey(stopPlace)) {
+                    currentQuays.replace(stopPlace, currentQuays.get(stopPlace).withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
+                            .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
+                            .withPublicCode(quayRef)
+                            .withQuayType(currentQuayType))));
+                }
+                else {
+                    currentQuays.put(stopPlace, new Quays_RelStructure().withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
+                            .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
+                            .withPublicCode(quayRef)
+                            .withQuayType(currentQuayType))));
+                }
+
                 it.remove();
             }
         }
 
-        for (HashMap.Entry<StopPlace, Quays_RelStructure> entry
-                : currentQuays.entrySet()) {
+        for (HashMap.Entry<StopPlace, Quays_RelStructure> entry : currentQuays.entrySet()) {
             for (HashMap.Entry<OsmPrimitive, StopPlace> stopEntry : stopPlaces.entrySet()) {
                 if (stopEntry.getValue().equals(entry.getKey())) {
+                    if (stopEntry.getValue().getPublicCode().equals("8594419")) {
+                        String a = "";
+                    }
                     stopPlaces.replace(stopEntry.getKey(), stopEntry.getValue().withQuays(entry.getValue()));
                 }
             }
