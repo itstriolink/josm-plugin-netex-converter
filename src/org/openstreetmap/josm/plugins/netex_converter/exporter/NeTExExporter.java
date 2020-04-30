@@ -285,10 +285,12 @@ public class NeTExExporter {
                 }
             }
 
+            boolean foundStopPlace = false;
+
             if (quayUicRef != null && !quayUicRef.trim().isEmpty()) {
                 for (StopPlace stopPlace : stopPlaces.values()) {
                     if (stopPlace.getPublicCode() != null && stopPlace.getPublicCode().equals(quayUicRef)) {
-
+                        foundStopPlace = true;
                         boolean modifiedQuayType = false;
                         if (quayEntry.getValue().getQuayType().equals(QuayTypeEnumeration.OTHER)) {
                             modifiedQuayType = true;
@@ -344,7 +346,7 @@ public class NeTExExporter {
             }
             else {
 
-                Node closestStopPlace;
+                Node closestStopPlace = null;
 
                 if (quayEntry.getValue().getQuayType().equals(QuayTypeEnumeration.RAIL_PLATFORM)) {
                     closestStopPlace = findNearestTrainStation(coord);
@@ -354,6 +356,7 @@ public class NeTExExporter {
                 }
 
                 if (closestStopPlace != null) {
+                    foundStopPlace = true;
                     quayUicRef = OSMHelper.getUicRef(closestStopPlace);
 
                     boolean modifiedQuayType = false;
@@ -393,32 +396,33 @@ public class NeTExExporter {
                         }
                     }
                 }
-                else {
-//                    StopTypeEnumeration stopType;
-//
-//                    if (OSMHelper.isTrainStation(quayEntry.getKey(), false)) {
-//                        stopType = StopTypeEnumeration.RAIL_STATION;
-//                    }
-//                    else if (OSMHelper.isBusStation(quayEntry.getKey(), false)) {
-//                        stopType = StopTypeEnumeration.BUS_STATION;
-//                    }
-//                    else if (OSMHelper.isBusStop(quayEntry.getKey(), false)) {
-//                        stopType = StopTypeEnumeration.ONSTREET_BUS;
-//                    }
-//                    else {
-//                        stopType = StopTypeEnumeration.OTHER;
-//                    }
-//
-//                    stopPlaces.put(quayEntry.getKey(), neTExParser.createStopPlace(quayEntry.getKey(), stopType));
-//
-//                    it.remove();
+            }
 
-                    //...
+            if (!foundStopPlace) {
+                StopTypeEnumeration stopType;
+
+                if (OSMHelper.isTrainStation(quayEntry.getKey(), false)) {
+                    stopType = StopTypeEnumeration.RAIL_STATION;
                 }
+                else if (OSMHelper.isBusStation(quayEntry.getKey(), false)) {
+                    stopType = StopTypeEnumeration.BUS_STATION;
+                }
+                else if (OSMHelper.isBusStop(quayEntry.getKey(), false)) {
+                    stopType = StopTypeEnumeration.ONSTREET_BUS;
+                }
+                else {
+                    stopType = StopTypeEnumeration.OTHER;
+                }
+
+                stopPlaces.put(quayEntry.getKey(), neTExParser.createStopPlace(quayEntry.getKey(), stopType));
+
+                //create quay...
+                it.remove();
             }
         }
 
-        for (HashMap.Entry<StopPlace, Quays_RelStructure> entry : currentQuays.entrySet()) {
+        for (HashMap.Entry<StopPlace, Quays_RelStructure> entry
+                : currentQuays.entrySet()) {
             for (HashMap.Entry<OsmPrimitive, StopPlace> stopEntry : stopPlaces.entrySet()) {
                 if (stopEntry.getValue().equals(entry.getKey())) {
                     stopPlaces.replace(stopEntry.getKey(), stopEntry.getValue().withQuays(entry.getValue()));
