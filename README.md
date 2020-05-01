@@ -11,8 +11,10 @@ Installation
 
 Usage
 -----
-* Go to File -> ...
-* Go through the wizard
+* Download map data into a JOSM layer
+* Go to File -> Export to NeTEx (Ctrl+Alt+Shift+N)
+* Choose the file destination
+* Wait for the export process to finish
 
 Author
 ------
