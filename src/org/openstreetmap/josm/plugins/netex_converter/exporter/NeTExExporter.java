@@ -258,11 +258,7 @@ public class NeTExExporter {
             else {
                 quayRef = Long.toString(quayEntry.getKey().getId());
             }
-
-            if (quayUicRef != null && quayUicRef.equals("8594419")) {
-                String a = "sd";
-            }
-
+            
             QuayTypeEnumeration quayType = QuayTypeEnumeration.OTHER;
 
             LatLon coord;
@@ -447,9 +443,6 @@ public class NeTExExporter {
         for (HashMap.Entry<StopPlace, Quays_RelStructure> entry : currentQuays.entrySet()) {
             for (HashMap.Entry<OsmPrimitive, StopPlace> stopEntry : stopPlaces.entrySet()) {
                 if (stopEntry.getValue().equals(entry.getKey())) {
-                    if (stopEntry.getValue().getPublicCode().equals("8594419")) {
-                        String a = "";
-                    }
                     stopPlaces.replace(stopEntry.getKey(), stopEntry.getValue().withQuays(entry.getValue()));
                 }
             }
