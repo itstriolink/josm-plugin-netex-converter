@@ -7,7 +7,7 @@
  * of the License, or (at your option) any later version.
  *
  */
-package org.openstreetmap.josm.plugins.netex_converter.model;
+package org.openstreetmap.josm.plugins.netex_converter.model.netex;
 
 import com.netex.model.EquipmentPlace;
 import com.netex.model.PathJunction;
@@ -18,18 +18,13 @@ import java.util.List;
  *
  * @author Labian Gashi
  */
-public class FootPath {
+public class Steps {
 
     private List<PathJunction> pathJunctions;
     private EquipmentPlace equipmentPlace;
     private List<SitePathLink> sitePathLinks;
 
-    public FootPath(List<PathJunction> pathJunctions, List<SitePathLink> sitePathLinks) {
-        this.pathJunctions = pathJunctions;
-        this.sitePathLinks = sitePathLinks;
-    }
-
-    public FootPath(List<PathJunction> pathJunctions, EquipmentPlace equipmentPlace, List<SitePathLink> sitePathLinks) {
+    public Steps(List<PathJunction> pathJunctions, EquipmentPlace equipmentPlace, List<SitePathLink> sitePathLinks) {
         this.pathJunctions = pathJunctions;
         this.equipmentPlace = equipmentPlace;
         this.sitePathLinks = sitePathLinks;
@@ -39,7 +34,7 @@ public class FootPath {
         return pathJunctions;
     }
 
-    public void setPathJunctions(List<PathJunction> pathJunctions) {
+    public void setPathJunction(List<PathJunction> pathJunctions) {
         this.pathJunctions = pathJunctions;
     }
 
@@ -55,7 +50,7 @@ public class FootPath {
         return sitePathLinks;
     }
 
-    public void setSitePathLink(List<SitePathLink> sitePathLinks) {
+    public void setSitePathLinks(List<SitePathLink> sitePathLinks) {
         this.sitePathLinks = sitePathLinks;
     }
 }

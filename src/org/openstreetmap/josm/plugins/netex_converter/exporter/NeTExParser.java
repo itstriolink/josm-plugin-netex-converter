@@ -63,9 +63,9 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.TagMap;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.plugins.netex_converter.model.Elevator;
-import org.openstreetmap.josm.plugins.netex_converter.model.FootPath;
-import org.openstreetmap.josm.plugins.netex_converter.model.Steps;
+import org.openstreetmap.josm.plugins.netex_converter.model.netex.Elevator;
+import org.openstreetmap.josm.plugins.netex_converter.model.netex.FootPath;
+import org.openstreetmap.josm.plugins.netex_converter.model.netex.Steps;
 import org.openstreetmap.josm.plugins.netex_converter.util.OSMHelper;
 import org.openstreetmap.josm.plugins.netex_converter.util.OSMTags;
 import org.openstreetmap.josm.tools.Logging;
@@ -521,7 +521,7 @@ public class NeTExParser {
     public PolygonType createPolygonType(OsmPrimitive primitive) {
         PolygonType polygonType = null;
         long primitiveId = primitive.getId();
-        
+
         if (primitive instanceof Way) {
             Way way = (Way) primitive;
 
@@ -587,7 +587,7 @@ public class NeTExParser {
                 }
             }
         }
-        
+
         return polygonType;
     }
 

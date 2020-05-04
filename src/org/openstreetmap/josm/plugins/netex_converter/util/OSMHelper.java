@@ -110,14 +110,14 @@ public final class OSMHelper {
 
         return false;
     }
-    
-    public static boolean isStopArea(OsmPrimitive primitive){
-        if (primitive != null){
+
+    public static boolean isStopArea(OsmPrimitive primitive) {
+        if (primitive != null) {
             TagMap keys = primitive.getKeys();
-            
+
             return keys.containsKey(OSMTags.PUBLIC_TRANSPORT_TAG) && keys.get(OSMTags.PUBLIC_TRANSPORT_TAG).equals(OSMTags.STOP_AREA_TAG_VALUE);
         }
-        
+
         return false;
     }
 
@@ -131,7 +131,7 @@ public final class OSMHelper {
 
         return false;
     }
-    
+
     public static boolean isHighwayPlatform(OsmPrimitive primitive) {
         if (primitive != null) {
             TagMap keys = primitive.getKeys();
@@ -272,6 +272,9 @@ public final class OSMHelper {
 
         if (OSMHelper.isRailwayPlatform(primitive)) {
             quayTypeEnumeration = QuayTypeEnumeration.RAIL_PLATFORM;
+        }
+        else if (OSMHelper.isBusStop(primitive, false)) {
+            quayTypeEnumeration = QuayTypeEnumeration.BUS_STOP;
         }
         else {
             quayTypeEnumeration = QuayTypeEnumeration.OTHER;
