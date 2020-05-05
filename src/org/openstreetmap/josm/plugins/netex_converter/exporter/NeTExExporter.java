@@ -9,13 +9,13 @@
  */
 package org.openstreetmap.josm.plugins.netex_converter.exporter;
 
-import org.openstreetmap.josm.plugins.netex_converter.model.josm.PrimitiveLogMessage;
-import org.openstreetmap.josm.tools.Logging;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 
 import com.netex.model.*;
+
+import org.xml.sax.SAXException;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -32,6 +32,7 @@ import javax.swing.JOptionPane;
 
 import jaxb.CustomMarshaller;
 import net.opengis.gml._3.PolygonType;
+
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -39,22 +40,24 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainApplication;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.gui.MapView;
+
+import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.gui.NavigatableComponent.PROP_SNAP_DISTANCE;
-import org.openstreetmap.josm.plugins.netex_converter.model.josm.PrimitiveLogMessage.LogLevel;
 
 import org.openstreetmap.josm.plugins.netex_converter.model.netex.Elevator;
 import org.openstreetmap.josm.plugins.netex_converter.model.netex.FootPath;
 import org.openstreetmap.josm.plugins.netex_converter.model.netex.Steps;
 
+import org.openstreetmap.josm.plugins.netex_converter.model.josm.PrimitiveLogMessage;
+import org.openstreetmap.josm.plugins.netex_converter.model.josm.PrimitiveLogMessage.LogLevel;
+
 import org.openstreetmap.josm.plugins.netex_converter.util.OSMHelper;
-import org.xml.sax.SAXException;
+import org.openstreetmap.josm.plugins.netex_converter.util.OSMTags;
 
 /**
  *
@@ -97,8 +100,6 @@ public class NeTExExporter {
 
         Collection<OsmPrimitive> primitives;
 
-        Logging.info(tr("Grüezi {0}!", "Labian"));
-
         if (ds == null) {
             JOptionPane.showMessageDialog(MainApplication.getMainFrame(), tr("No data has been loaded into JOSM"));
             return;
@@ -115,29 +116,35 @@ public class NeTExExporter {
             if (primitive instanceof Node) {
                 Node node = (Node) primitive;
 
+                StopPlace stopPlace = null;
                 if (OSMHelper.isTrainStation(node)) {
-                    stopPlaces.put(node, neTExParser.createStopPlace(node, StopTypeEnumeration.RAIL_STATION));
+                    stopPlace = neTExParser.createStopPlace(node, StopTypeEnumeration.RAIL_STATION);
+                    stopPlaces.put(node, stopPlace);
                 }
                 else if (OSMHelper.isBusStation(node)) {
-                    stopPlaces.put(node, neTExParser.createStopPlace(node, StopTypeEnumeration.BUS_STATION));
+                    stopPlace = neTExParser.createStopPlace(node, StopTypeEnumeration.BUS_STATION);
+                    stopPlaces.put(node, stopPlace);
                 }
                 else if (OSMHelper.isBusStop(node)) {
-                    stopPlaces.put(node, neTExParser.createStopPlace(node, StopTypeEnumeration.ONSTREET_BUS));
-                    logMessages.add(new PrimitiveLogMessage(node.getId(),
-                            OsmPrimitiveType.NODE,
-                            LogLevel.WARNING,
-                            new HashMap<String, String>() {
-                        {
-                            put("example_tag", "example_message");
-                            put("example_tag_2", "example_message_2");
-                        }
-                    }));
+                    stopPlace = neTExParser.createStopPlace(node, StopTypeEnumeration.ONSTREET_BUS);
+                    stopPlaces.put(node, stopPlace);
                 }
                 else if (OSMHelper.isPlatform(node)) {
                     quays.put(node, neTExParser.createQuay(node));
                 }
                 else if (OSMHelper.isElevator(node)) {
                     elevators.put(node, neTExParser.createElevator(node));
+                }
+
+                if (stopPlace != null && stopPlace.getPublicCode() == null) {
+                    logMessages.add(new PrimitiveLogMessage(primitive.getId(),
+                            OsmPrimitiveType.NODE,
+                            LogLevel.CRITICAL,
+                            new HashMap<String, String>() {
+                        {
+                            put(OSMTags.UIC_REF_TAG, PrimitiveLogMessage.Messages.UIC_REF_MISSING_MESSAGE);
+                        }
+                    }));
                 }
 
             }
@@ -260,11 +267,12 @@ public class NeTExExporter {
             HashMap.Entry<OsmPrimitive, Quay> quayEntry = it.next();
             String quayUicRef = OSMHelper.getUicRef(quayEntry.getKey());
             String quayRef = OSMHelper.getRef(quayEntry.getKey());
+            String modifiedQuayRef = null;
             if (quayRef != null && !quayRef.trim().isEmpty()) {
-                quayRef = OSMHelper.switchRefDelimiter(quayRef);
+                modifiedQuayRef = OSMHelper.switchRefDelimiter(quayRef);
             }
             else {
-                quayRef = Long.toString(quayEntry.getKey().getId());
+                modifiedQuayRef = Long.toString(quayEntry.getKey().getId());
             }
 
             QuayTypeEnumeration quayType = QuayTypeEnumeration.OTHER;
@@ -330,15 +338,15 @@ public class NeTExExporter {
 
                         if (currentQuays.containsKey(stopPlace)) {
                             currentQuays.replace(stopPlace, currentQuays.get(stopPlace).withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
-                                    .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
-                                    .withPublicCode(quayRef)
+                                    .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, modifiedQuayRef))
+                                    .withPublicCode(modifiedQuayRef)
                                     .withPolygon(polygonType)
                                     .withQuayType(currentQuayType))));
                         }
                         else {
                             currentQuays.put(stopPlace, new Quays_RelStructure().withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
-                                    .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
-                                    .withPublicCode(quayRef)
+                                    .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, modifiedQuayRef))
+                                    .withPublicCode(modifiedQuayRef)
                                     .withPolygon(polygonType)
                                     .withQuayType(currentQuayType))));
                         }
@@ -383,14 +391,14 @@ public class NeTExExporter {
 
                             if (currentQuays.containsKey(stopPlace)) {
                                 currentQuays.replace(stopPlace, currentQuays.get(stopPlace).withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
-                                        .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
-                                        .withPublicCode(quayRef)
+                                        .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, modifiedQuayRef))
+                                        .withPublicCode(modifiedQuayRef)
                                         .withQuayType(currentQuayType))));
                             }
                             else {
                                 currentQuays.put(stopPlace, new Quays_RelStructure().withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
-                                        .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
-                                        .withPublicCode(quayRef)
+                                        .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, modifiedQuayRef))
+                                        .withPublicCode(modifiedQuayRef)
                                         .withQuayType(currentQuayType))));
                             }
                         }
@@ -433,18 +441,30 @@ public class NeTExExporter {
 
                 if (currentQuays.containsKey(stopPlace)) {
                     currentQuays.replace(stopPlace, currentQuays.get(stopPlace).withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
-                            .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
-                            .withPublicCode(quayRef)
+                            .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, modifiedQuayRef))
+                            .withPublicCode(modifiedQuayRef)
                             .withQuayType(currentQuayType))));
                 }
                 else {
                     currentQuays.put(stopPlace, new Quays_RelStructure().withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
-                            .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, quayRef))
-                            .withPublicCode(quayRef)
+                            .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, modifiedQuayRef))
+                            .withPublicCode(modifiedQuayRef)
                             .withQuayType(currentQuayType))));
                 }
 
                 it.remove();
+            }
+            else {
+                if (quayRef == null) {
+//                    logMessages.add(new PrimitiveLogMessage(quayEntry.getKey().getId(),
+//                            quayEntry.getKey().getType(),
+//                            LogLevel.WARNING,
+//                            new HashMap<String, String>() {
+//                        {
+//                            put(OSMTags.REF_TAG, PrimitiveLogMessage.Messages.REF_MISSING_MESSAGE);
+//                        }
+//                    }));
+                }
             }
         }
 
@@ -705,8 +725,8 @@ public class NeTExExporter {
         JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                 tr("{0} {1} {2}",
                         "NeTEx export has finished successfully.",
-                        "Primitives that need improvement have been highlighted on the map.",
-                        "Please correct them for a more accurate conversion."));
+                        "Primitives that need improvement have been highlighted on the map,",
+                        "please correct them for a more accurate conversion."));
 
         //openXMLFile(neTExFile);
     }

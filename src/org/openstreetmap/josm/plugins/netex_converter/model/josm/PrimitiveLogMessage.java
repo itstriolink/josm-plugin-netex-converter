@@ -111,7 +111,7 @@ public class PrimitiveLogMessage {
         if (this.primitiveType != other.primitiveType) {
             return false;
         }
-        
+
         return this.logLevel == other.logLevel;
     }
 
@@ -127,6 +127,12 @@ public class PrimitiveLogMessage {
     public enum LogLevel {
         INFO,
         WARNING,
-        ERROR
+        CRITICAL
     }
+
+    public static final class Messages {
+        public static final String REF_MISSING_MESSAGE = "Please enter a required \"ref\" or \"local_ref\" tag for the platform number.";
+        public static final String UIC_REF_MISSING_MESSAGE = "Please enter a required \"uic_ref\" tag for the station.";
+    }
+
 }

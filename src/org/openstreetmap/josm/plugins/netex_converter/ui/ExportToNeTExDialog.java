@@ -108,8 +108,8 @@ public class ExportToNeTExDialog extends javax.swing.JFrame {
         while (file.exists() && selectedOption == JOptionPane.NO_OPTION);
 
         MainApplication.getMap().mapView.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        
         neTExExporter = new NeTExExporter();
-
         try {
             neTExExporter.exportToNeTEx(file);
         }
