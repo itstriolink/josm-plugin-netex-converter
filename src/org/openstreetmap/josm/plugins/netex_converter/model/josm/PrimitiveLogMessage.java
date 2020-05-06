@@ -21,34 +21,29 @@ public class PrimitiveLogMessage {
 
     private long primitiveId;
     private OsmPrimitiveType primitiveType;
-    private LogLevel logLevel;
     private String message;
     private Map<String, String> keys;
 
-    public PrimitiveLogMessage(long primitiveId, OsmPrimitiveType primitiveType, LogLevel logLevel) {
+    public PrimitiveLogMessage(long primitiveId, OsmPrimitiveType primitiveType) {
         this.primitiveId = primitiveId;
         this.primitiveType = primitiveType;
-        this.logLevel = logLevel;
     }
 
-    public PrimitiveLogMessage(long primitiveId, OsmPrimitiveType primitiveType, LogLevel logLevel, String message) {
+    public PrimitiveLogMessage(long primitiveId, OsmPrimitiveType primitiveType, String message) {
         this.primitiveId = primitiveId;
         this.primitiveType = primitiveType;
-        this.logLevel = logLevel;
         this.message = message;
     }
 
-    public PrimitiveLogMessage(long primitiveId, OsmPrimitiveType primitiveType, LogLevel logLevel, Map<String, String> keys) {
+    public PrimitiveLogMessage(long primitiveId, OsmPrimitiveType primitiveType, Map<String, String> keys) {
         this.primitiveId = primitiveId;
         this.primitiveType = primitiveType;
-        this.logLevel = logLevel;
         this.keys = keys;
     }
 
-    public PrimitiveLogMessage(long primitiveId, OsmPrimitiveType primitiveType, LogLevel logLevel, String message, Map<String, String> keys) {
+    public PrimitiveLogMessage(long primitiveId, OsmPrimitiveType primitiveType, String message, Map<String, String> keys) {
         this.primitiveId = primitiveId;
         this.primitiveType = primitiveType;
-        this.logLevel = logLevel;
         this.message = message;
         this.keys = keys;
     }
@@ -67,14 +62,6 @@ public class PrimitiveLogMessage {
 
     public void setPrimitiveType(OsmPrimitiveType primitiveType) {
         this.primitiveType = primitiveType;
-    }
-
-    public LogLevel getLogLevel() {
-        return logLevel;
-    }
-
-    public void setLogLevel(LogLevel logLevel) {
-        this.logLevel = logLevel;
     }
 
     public String getMessage() {
@@ -104,35 +91,30 @@ public class PrimitiveLogMessage {
         if (getClass() != obj.getClass()) {
             return false;
         }
+
         final PrimitiveLogMessage other = (PrimitiveLogMessage) obj;
+
         if (this.primitiveId != other.primitiveId) {
             return false;
         }
         if (this.primitiveType != other.primitiveType) {
             return false;
         }
-
-        return this.logLevel == other.logLevel;
+        return Objects.equals(this.keys, other.keys);
     }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 53 * hash + (int) (this.primitiveId ^ (this.primitiveId >>> 32));
-        hash = 53 * hash + Objects.hashCode(this.primitiveType);
-        hash = 53 * hash + Objects.hashCode(this.logLevel);
+        int hash = 7;
+        hash = 97 * hash + (int) (this.primitiveId ^ (this.primitiveId >>> 32));
+        hash = 97 * hash + Objects.hashCode(this.primitiveType);
+        hash = 97 * hash + Objects.hashCode(this.keys);
         return hash;
     }
 
-    public enum LogLevel {
-        INFO,
-        WARNING,
-        CRITICAL
-    }
-
     public static final class Messages {
+
         public static final String REF_MISSING_MESSAGE = "Please enter a required \"ref\" or \"local_ref\" tag for the platform number.";
         public static final String UIC_REF_MISSING_MESSAGE = "Please enter a required \"uic_ref\" tag for the station.";
     }
-
 }

@@ -116,10 +116,6 @@ public class NeTExParser {
 
         LimitationStatusEnumeration wheelchairAccess = OSMHelper.getWheelchairLimitation(primitive);
 
-        if (uic_ref == null || uic_ref.trim().isEmpty()) {
-            //log warning...
-        }
-
         if (primitive instanceof Node) {
             Node node = (Node) primitive;
 
@@ -591,7 +587,7 @@ public class NeTExParser {
         return polygonType;
     }
 
-    public Level getLevelObject(String level) {
+    private Level getLevelObject(String level) {
         Level levelObject = null;
 
         if (level != null && !level.trim().isEmpty()) {
