@@ -45,6 +45,7 @@ import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.tools.Geometry;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.gui.NavigatableComponent.PROP_SNAP_DISTANCE;
@@ -278,27 +279,29 @@ public class NeTExExporter {
 
             QuayTypeEnumeration quayType = QuayTypeEnumeration.OTHER;
 
-            LatLon coord;
+            Node firstNode;
 
             if (quayEntry.getKey() instanceof Node) {
-                coord = ((Node) quayEntry.getKey()).getCoor();
+                firstNode = (Node) quayEntry.getKey();
             }
             else if (quayEntry.getKey() instanceof Way) {
-                coord = ((Way) quayEntry.getKey()).firstNode().getCoor();
+                firstNode = ((Way) quayEntry.getKey()).firstNode();
             }
             else {
                 RelationMember firstMember = ((Relation) quayEntry.getKey()).firstMember();
 
                 if (firstMember.isNode()) {
-                    coord = firstMember.getNode().getCoor();
+                    firstNode = firstMember.getNode();
                 }
                 else if (firstMember.isWay()) {
-                    coord = firstMember.getWay().firstNode().getCoor();
+                    firstNode = firstMember.getWay().firstNode();
                 }
                 else {
-                    coord = null;
+                    continue; //implement while loop for relation inside relations until a node is found...
                 }
             }
+
+            LatLon coord = firstNode.getCoor();
 
             Point p = MainApplication.getMap().mapView.getPoint(coord);
 
@@ -306,8 +309,9 @@ public class NeTExExporter {
 
             PolygonType polygonType = null;
             for (Way way : nearestWays) {
-                if (OSMHelper.isHighwayPlatform(way)) {
+                if (OSMHelper.isHighwayPlatform(way) && Geometry.nodeInsidePolygon(firstNode, way.getNodes())) {
                     polygonType = neTExParser.createPolygonType(way);
+                    break;
                 }
             }
 
@@ -601,11 +605,17 @@ public class NeTExExporter {
         }
 
         for (HashMap.Entry<Way, Steps> stepsEntry : steps.entrySet()) {
-            LatLon coord = stepsEntry.getKey().firstNode().getCoor();
-            Node nearestStopPlace = findNearestStopPlace(coord);
+            LatLon coordFirst = stepsEntry.getKey().firstNode().getCoor();
+            LatLon coordLast = stepsEntry.getKey().lastNode().getCoor();
+            
+            Node nearestStopPlace = findNearestStopPlace(coordFirst);
 
             if (nearestStopPlace != null && !OSMHelper.isBusStop(nearestStopPlace)) {
-                Node nearestQuay = findNearestPlatform(coord);
+                Node nearestQuay = findNearestPlatform(coordFirst);
+
+                if (nearestQuay == null) {
+                    nearestQuay = findNearestPlatform(coordLast);
+                }
 
                 for (HashMap.Entry<OsmPrimitive, StopPlace> stopEntry : stopPlaces.entrySet()) {
                     StopPlace stopPlace = stopEntry.getValue();
@@ -646,11 +656,16 @@ public class NeTExExporter {
         }
 
         for (HashMap.Entry<Way, FootPath> footPathEntry : footPaths.entrySet()) {
-            LatLon coord = footPathEntry.getKey().firstNode().getCoor();
-            Node nearestStopPlace = findNearestStopPlace(coord);
+            LatLon coordFirst = footPathEntry.getKey().firstNode().getCoor();
+            LatLon coordLast = footPathEntry.getKey().lastNode().getCoor();
+            Node nearestStopPlace = findNearestStopPlace(coordFirst);
 
             if (nearestStopPlace != null && !OSMHelper.isBusStop(nearestStopPlace)) {
-                Node nearestQuay = findNearestPlatform(coord);
+                Node nearestQuay = findNearestPlatform(coordFirst);
+
+                if (nearestQuay == null) {
+                    nearestQuay = findNearestPlatform(coordLast);
+                }
 
                 for (HashMap.Entry<OsmPrimitive, StopPlace> stopEntry : stopPlaces.entrySet()) {
                     StopPlace stopPlace = stopEntry.getValue();
