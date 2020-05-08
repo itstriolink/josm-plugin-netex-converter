@@ -22,12 +22,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 
 import jaxb.CustomMarshaller;
@@ -607,7 +610,7 @@ public class NeTExExporter {
         for (Map.Entry<Way, Steps> stepsEntry : steps.entrySet()) {
             LatLon coordFirst = stepsEntry.getKey().firstNode().getCoor();
             LatLon coordLast = stepsEntry.getKey().lastNode().getCoor();
-            
+
             Node nearestStopPlace = findNearestStopPlace(coordFirst);
 
             if (nearestStopPlace != null && !OSMHelper.isBusStop(nearestStopPlace)) {
@@ -706,9 +709,48 @@ public class NeTExExporter {
         }
 
         for (Map.Entry<OsmPrimitive, StopPlace> stopEntry : stopPlaces.entrySet()) {
-            for (Map.Entry<StopPlace, PathJunctions_RelStructure> entry : pathJunctions.entrySet()) {
-                if (stopEntry.getValue() != null && stopEntry.getValue().equals(entry.getKey())) {
-                    stopPlaces.replace(stopEntry.getKey(), stopEntry.getValue().withPathJunctions(entry.getValue()));
+            for (Map.Entry<StopPlace, PathJunctions_RelStructure> pathJunctionEntry : pathJunctions.entrySet()) {
+                if (stopEntry.getValue() != null && stopEntry.getValue().equals(pathJunctionEntry.getKey())) {
+                    List<PathJunction> currentPathJunctions = pathJunctionEntry.getValue().getPathJunctionRefOrPathJunction().stream()
+                            .filter(p -> p instanceof PathJunction)
+                            .map(p -> (PathJunction) p)
+                            .collect(Collectors.toList());
+
+                    List<PathJunction> pathJunctionsToDelete = new ArrayList<>();
+                    PathJunctions_RelStructure relStructure = new PathJunctions_RelStructure();
+
+                    for (int i = 0; i < currentPathJunctions.size(); i++) {
+                        PathJunction pathJunctionOuter = currentPathJunctions.get(i);
+                        for (int j = i + 1; j < currentPathJunctions.size(); j++) {
+                            PathJunction pathJunctionInner = currentPathJunctions.get(j);
+                            if (pathJunctionOuter.getId().equals(pathJunctionInner.getId())) {
+                                pathJunctionsToDelete.add(pathJunctionInner);
+
+                                TypeOfPointRefs_RelStructure typeOfPointsStructure = new TypeOfPointRefs_RelStructure();
+
+                                List<TypeOfPointRefStructure> typeOfPoints = pathJunctionOuter.getTypes().getTypeOfPointRef();
+
+                                if (pathJunctionInner.getTypes().getTypeOfPointRef() != null && !pathJunctionInner.getTypes().getTypeOfPointRef().isEmpty()) {
+                                    typeOfPoints.addAll(pathJunctionInner.getTypes().getTypeOfPointRef());
+                                }
+
+                                for (TypeOfPointRefStructure typeOfPoint : typeOfPoints) {
+                                    typeOfPointsStructure.withTypeOfPointRef(Arrays.asList(typeOfPoint));
+                                }
+
+                                currentPathJunctions.set(i, pathJunctionOuter.withTypes(typeOfPointsStructure));
+                            }
+                        }
+                    }
+
+                    currentPathJunctions.removeAll(pathJunctionsToDelete);
+
+                    for (PathJunction pathJunction : currentPathJunctions) {
+                        relStructure.withPathJunctionRefOrPathJunction(Arrays.asList(pathJunction));
+                    }
+
+                    stopPlaces.replace(stopEntry.getKey(),
+                            stopEntry.getValue().withPathJunctions(relStructure));
                 }
             }
             for (Map.Entry<StopPlace, EquipmentPlaces_RelStructure> entry : equipmentPlaces.entrySet()) {

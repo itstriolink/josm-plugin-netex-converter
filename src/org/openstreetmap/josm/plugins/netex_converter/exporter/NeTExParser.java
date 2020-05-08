@@ -52,6 +52,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import net.opengis.gml._3.AbstractRingPropertyType;
 import net.opengis.gml._3.DirectPositionListType;
 import net.opengis.gml._3.LinearRingType;
@@ -427,7 +428,6 @@ public class NeTExParser {
                     .withTypes(new TypeOfPointRefs_RelStructure()
                             .withTypeOfPointRef(new TypeOfPointRefStructure()
                                     .withRef(String.format("ch:1:TypeOfPoint:%s", ref)))));
-
         }
 
         EquipmentPlace equipmentPlace = new EquipmentPlace()
