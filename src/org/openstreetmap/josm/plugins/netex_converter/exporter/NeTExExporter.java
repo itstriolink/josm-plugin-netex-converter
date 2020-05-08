@@ -265,7 +265,7 @@ public class NeTExExporter {
         HashMap<StopPlace, Quays_RelStructure> currentQuays = new HashMap<>();
 
         for (Iterator<Map.Entry<OsmPrimitive, Quay>> it = quays.entrySet().iterator(); it.hasNext();) {
-            HashMap.Entry<OsmPrimitive, Quay> quayEntry = it.next();
+            Map.Entry<OsmPrimitive, Quay> quayEntry = it.next();
             String quayUicRef = OSMHelper.getUicRef(quayEntry.getKey());
             String quayRef = OSMHelper.getRef(quayEntry.getKey());
             String modifiedQuayRef;
@@ -468,7 +468,7 @@ public class NeTExExporter {
                 it.remove();
             }
             else {
-                if (quayRef == null) {
+                if (quayRef == null || quayRef.trim().isEmpty()) {
 //                    logMessages.add(new PrimitiveLogMessage(quayEntry.getKey().getId(),
 //                            quayEntry.getKey().getType(),
 //                            new HashMap<String, String>() {
@@ -480,8 +480,8 @@ public class NeTExExporter {
             }
         }
 
-        for (HashMap.Entry<StopPlace, Quays_RelStructure> entry : currentQuays.entrySet()) {
-            for (HashMap.Entry<OsmPrimitive, StopPlace> stopEntry : stopPlaces.entrySet()) {
+        for (Map.Entry<StopPlace, Quays_RelStructure> entry : currentQuays.entrySet()) {
+            for (Map.Entry<OsmPrimitive, StopPlace> stopEntry : stopPlaces.entrySet()) {
                 if (stopEntry.getValue().equals(entry.getKey())) {
                     stopPlaces.replace(stopEntry.getKey(), stopEntry.getValue().withQuays(entry.getValue()));
                 }
@@ -494,7 +494,7 @@ public class NeTExExporter {
                 String areaUicRef = OSMHelper.getUicRef(relation);
 
                 if (areaUicRef != null && !areaUicRef.trim().isEmpty()) {
-                    for (HashMap.Entry<OsmPrimitive, StopPlace> entry : stopPlaces.entrySet()) {
+                    for (Map.Entry<OsmPrimitive, StopPlace> entry : stopPlaces.entrySet()) {
                         String stopUicRef = OSMHelper.getUicRef(entry.getKey());
 
                         if (areaUicRef.equals(stopUicRef)) {
@@ -571,14 +571,14 @@ public class NeTExExporter {
         HashMap<StopPlace, PathJunctions_RelStructure> pathJunctions = new HashMap<>();
         HashMap<StopPlace, EquipmentPlaces_RelStructure> equipmentPlaces = new HashMap<>();
 
-        for (HashMap.Entry<Node, Elevator> elevatorEntry : elevators.entrySet()) {
+        for (Map.Entry<Node, Elevator> elevatorEntry : elevators.entrySet()) {
             LatLon coord = elevatorEntry.getKey().getCoor();
             Node nearestStopPlace = findNearestStopPlace(coord);
 
             if (nearestStopPlace != null && !OSMHelper.isBusStop(nearestStopPlace)) {
                 Node nearestQuay = findNearestPlatform(coord);
 
-                for (HashMap.Entry<OsmPrimitive, StopPlace> stopEntry : stopPlaces.entrySet()) {
+                for (Map.Entry<OsmPrimitive, StopPlace> stopEntry : stopPlaces.entrySet()) {
                     StopPlace stopPlace = stopEntry.getValue();
 
                     if (stopEntry.getKey().equals(nearestStopPlace)) {
@@ -604,7 +604,7 @@ public class NeTExExporter {
             }
         }
 
-        for (HashMap.Entry<Way, Steps> stepsEntry : steps.entrySet()) {
+        for (Map.Entry<Way, Steps> stepsEntry : steps.entrySet()) {
             LatLon coordFirst = stepsEntry.getKey().firstNode().getCoor();
             LatLon coordLast = stepsEntry.getKey().lastNode().getCoor();
             
@@ -617,7 +617,7 @@ public class NeTExExporter {
                     nearestQuay = findNearestPlatform(coordLast);
                 }
 
-                for (HashMap.Entry<OsmPrimitive, StopPlace> stopEntry : stopPlaces.entrySet()) {
+                for (Map.Entry<OsmPrimitive, StopPlace> stopEntry : stopPlaces.entrySet()) {
                     StopPlace stopPlace = stopEntry.getValue();
 
                     if (stopEntry.getKey().equals(nearestStopPlace)) {
@@ -655,7 +655,7 @@ public class NeTExExporter {
             }
         }
 
-        for (HashMap.Entry<Way, FootPath> footPathEntry : footPaths.entrySet()) {
+        for (Map.Entry<Way, FootPath> footPathEntry : footPaths.entrySet()) {
             LatLon coordFirst = footPathEntry.getKey().firstNode().getCoor();
             LatLon coordLast = footPathEntry.getKey().lastNode().getCoor();
             Node nearestStopPlace = findNearestStopPlace(coordFirst);
@@ -667,7 +667,7 @@ public class NeTExExporter {
                     nearestQuay = findNearestPlatform(coordLast);
                 }
 
-                for (HashMap.Entry<OsmPrimitive, StopPlace> stopEntry : stopPlaces.entrySet()) {
+                for (Map.Entry<OsmPrimitive, StopPlace> stopEntry : stopPlaces.entrySet()) {
                     StopPlace stopPlace = stopEntry.getValue();
 
                     if (stopEntry.getKey().equals(nearestStopPlace)) {
@@ -705,18 +705,18 @@ public class NeTExExporter {
             }
         }
 
-        for (HashMap.Entry<OsmPrimitive, StopPlace> stopEntry : stopPlaces.entrySet()) {
-            for (HashMap.Entry<StopPlace, PathJunctions_RelStructure> entry : pathJunctions.entrySet()) {
+        for (Map.Entry<OsmPrimitive, StopPlace> stopEntry : stopPlaces.entrySet()) {
+            for (Map.Entry<StopPlace, PathJunctions_RelStructure> entry : pathJunctions.entrySet()) {
                 if (stopEntry.getValue() != null && stopEntry.getValue().equals(entry.getKey())) {
                     stopPlaces.replace(stopEntry.getKey(), stopEntry.getValue().withPathJunctions(entry.getValue()));
                 }
             }
-            for (HashMap.Entry<StopPlace, EquipmentPlaces_RelStructure> entry : equipmentPlaces.entrySet()) {
+            for (Map.Entry<StopPlace, EquipmentPlaces_RelStructure> entry : equipmentPlaces.entrySet()) {
                 if (stopEntry.getValue() != null && stopEntry.getValue().equals(entry.getKey())) {
                     stopPlaces.replace(stopEntry.getKey(), stopEntry.getValue().withEquipmentPlaces(entry.getValue()));
                 }
             }
-            for (HashMap.Entry<StopPlace, SitePathLinks_RelStructure> entry : pathLinks.entrySet()) {
+            for (Map.Entry<StopPlace, SitePathLinks_RelStructure> entry : pathLinks.entrySet()) {
                 if (stopEntry.getValue() != null && stopEntry.getValue().equals(entry.getKey())) {
                     stopPlaces.replace(stopEntry.getKey(), stopEntry.getValue().withPathLinks(entry.getValue()));
                 }
@@ -748,7 +748,7 @@ public class NeTExExporter {
         JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                 tr("{0} {1} {2}",
                         "NeTEx export has finished successfully.",
-                        "Primitives that need improvement have been highlighted on the map,",
+                        "Objects that need improvement have been highlighted on the map,",
                         "please correct them for a more accurate conversion."));
 
         //openXMLFile(neTExFile);

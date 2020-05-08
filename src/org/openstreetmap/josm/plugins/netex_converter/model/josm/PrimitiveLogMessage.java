@@ -21,7 +21,6 @@ public class PrimitiveLogMessage {
 
     private long primitiveId;
     private OsmPrimitiveType primitiveType;
-    private String message;
     private Map<String, String> keys;
 
     public PrimitiveLogMessage(long primitiveId, OsmPrimitiveType primitiveType) {
@@ -29,22 +28,9 @@ public class PrimitiveLogMessage {
         this.primitiveType = primitiveType;
     }
 
-    public PrimitiveLogMessage(long primitiveId, OsmPrimitiveType primitiveType, String message) {
-        this.primitiveId = primitiveId;
-        this.primitiveType = primitiveType;
-        this.message = message;
-    }
-
     public PrimitiveLogMessage(long primitiveId, OsmPrimitiveType primitiveType, Map<String, String> keys) {
         this.primitiveId = primitiveId;
         this.primitiveType = primitiveType;
-        this.keys = keys;
-    }
-
-    public PrimitiveLogMessage(long primitiveId, OsmPrimitiveType primitiveType, String message, Map<String, String> keys) {
-        this.primitiveId = primitiveId;
-        this.primitiveType = primitiveType;
-        this.message = message;
         this.keys = keys;
     }
 
@@ -62,14 +48,6 @@ public class PrimitiveLogMessage {
 
     public void setPrimitiveType(OsmPrimitiveType primitiveType) {
         this.primitiveType = primitiveType;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public Map<String, String> getKeys() {
@@ -116,5 +94,6 @@ public class PrimitiveLogMessage {
 
         public static final String REF_MISSING_MESSAGE = "Please enter a required \"ref\" or \"local_ref\" tag for the platform number.";
         public static final String UIC_REF_MISSING_MESSAGE = "Please enter a required \"uic_ref\" tag for the station.";
+
     }
 }

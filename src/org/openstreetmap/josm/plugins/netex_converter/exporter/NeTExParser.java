@@ -319,7 +319,7 @@ public class NeTExParser {
                 PathJunction secondJunction = pathJunctions.get(i + 1);
 
                 SitePathLink sitePathLink = new SitePathLink()
-                        .withId(String.format("ch:1:SitePathLink:%1$s_%2$s", wayId, i + 1))
+                        .withId(String.format("ch:1:SitePathLink:%1$s%2$s", wayId, pathJunctions.size() > 2 ? "_" + (i + 1) : ""))
                         .withFrom(new PathLinkEndStructure()
                                 .withPlaceRef(new PlaceRefStructure().
                                         withRef(firstJunction.getId())))
@@ -356,7 +356,7 @@ public class NeTExParser {
                 PathJunction secondJunction = pathJunctions.get(i + 1);
 
                 sitePathLinks.add(new SitePathLink()
-                        .withId(String.format("ch:1:SitePathLink:%1$s_%2$s", wayId, i + 1))
+                        .withId(String.format("ch:1:SitePathLink:%1$s%2$s", wayId, pathJunctions.size() > 2 ? "_" + (i + 1) : ""))
                         .withFrom(new PathLinkEndStructure()
                                 .withPlaceRef(new PlaceRefStructure().
                                         withRef(firstJunction.getId())))
@@ -451,7 +451,7 @@ public class NeTExParser {
             PathJunction secondJunction = pathJunctions.get(i + 1);
 
             SitePathLink sitePathLink = new SitePathLink()
-                    .withId(String.format("ch:1:SitePathLink:%1$s_%2$s", wayId, i + 1))
+                    .withId(String.format("ch:1:SitePathLink:%1$s%2$s", wayId, pathJunctions.size() > 2 ? "_" + (i + 1) : ""))
                     .withFrom(new PathLinkEndStructure()
                             .withPlaceRef(new PlaceRefStructure().
                                     withRef(firstJunction.getId())))
