@@ -6,8 +6,8 @@ A JOSM Plugin that converts OpenStreetMap data into the Network Timetable Exchan
 
 Installation
 ------
-* Download plugin and place it to plugins directory `~/.josm/plugins/`. 
-* Go to preferences (F12) and enable the plugin
+* Download plugin and place it to plugins directory `~/.josm/plugins/`
+* Go to JOSM preferences (F12) and enable the plugin
 
 Usage
 -----
