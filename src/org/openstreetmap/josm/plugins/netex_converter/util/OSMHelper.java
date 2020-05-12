@@ -25,6 +25,15 @@ public final class OSMHelper {
     public static final String OUTER_ROLE = "outer";
     public static final String INNER_ROLE = "inner";
 
+    public static boolean isStopPlace(OsmPrimitive primitive) {
+        if (primitive != null) {
+            return isTrainStation(primitive) || isBusStation(primitive) || isBusStop(primitive);
+        }
+        else {
+            return false;
+        }
+    }
+
     public static boolean isTrainStation(OsmPrimitive primitive) {
         if (primitive != null) {
             TagMap keys = primitive.getKeys();
