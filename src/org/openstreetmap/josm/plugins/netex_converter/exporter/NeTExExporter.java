@@ -49,7 +49,6 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.tools.Geometry;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
-import static org.openstreetmap.josm.gui.NavigatableComponent.PROP_SNAP_DISTANCE;
 
 import org.openstreetmap.josm.plugins.netex_converter.model.netex.Elevator;
 import org.openstreetmap.josm.plugins.netex_converter.model.netex.FootPath;
@@ -58,7 +57,6 @@ import org.openstreetmap.josm.plugins.netex_converter.model.netex.Steps;
 import org.openstreetmap.josm.plugins.netex_converter.model.josm.PrimitiveLogMessage;
 
 import org.openstreetmap.josm.plugins.netex_converter.util.OSMHelper;
-import org.openstreetmap.josm.plugins.netex_converter.util.OSMTags;
 
 /**
  *
@@ -78,9 +76,9 @@ public class NeTExExporter {
 
     private final DataSet ds;
 
-    private final List<PrimitiveLogMessage> logMessages;
+    private final static List<PrimitiveLogMessage> LOG_MESSAGES = new ArrayList<>();
 
-    private static int SNAP_DISTANCE = 20;
+    private static final int SNAP_DISTANCE = 20;
 
     public NeTExExporter() throws IOException, SAXException {
         neTExParser = new NeTExParser();
@@ -94,7 +92,6 @@ public class NeTExExporter {
         elevators = new HashMap<>();
         steps = new HashMap<>();
         footPaths = new HashMap<>();
-        logMessages = new ArrayList<>();
     }
 
     public void exportToNeTEx(File neTExFile) throws IOException, org.xml.sax.SAXException, org.xml.sax.SAXException {
@@ -185,7 +182,7 @@ public class NeTExExporter {
             if (stopPlace != null && stopPlace.getPublicCode() == null) {
                 logMessage(primitive.getId(), primitive.getType(), new HashMap<String, String>() {
                     {
-                        put(OSMTags.UIC_REF_TAG, PrimitiveLogMessage.Messages.UIC_REF_MISSING_MESSAGE);
+                        put(PrimitiveLogMessage.Tags.UIC_REF_TAG, PrimitiveLogMessage.Messages.UIC_REF_MISSING_MESSAGE);
                     }
                 });
             }
@@ -305,6 +302,15 @@ public class NeTExExporter {
             }
 
             LatLon coord = firstNode.getCoor();
+
+            if (coord == null) {
+                logMessage(firstNode.getId(), firstNode.getType(), new HashMap<String, String>() {
+                    {
+                        put(PrimitiveLogMessage.Tags.UNKNOWN_COORDS_TAG, PrimitiveLogMessage.Messages.UNKNOWN_COORDS_MESSAGE);
+                    }
+                });
+                continue;
+            }
 
             Point p = MainApplication.getMap().mapView.getPoint(coord);
 
@@ -449,7 +455,7 @@ public class NeTExExporter {
                     if (stopPlace != null && stopPlace.getPublicCode() == null) {
                         logMessage(quayEntry.getKey().getId(), quayEntry.getKey().getType(), new HashMap<String, String>() {
                             {
-                                put(OSMTags.UIC_REF_TAG, PrimitiveLogMessage.Messages.UIC_REF_MISSING_MESSAGE);
+                                put(PrimitiveLogMessage.Tags.UIC_REF_TAG, PrimitiveLogMessage.Messages.UIC_REF_MISSING_MESSAGE);
                             }
                         });
                     }
@@ -471,15 +477,13 @@ public class NeTExExporter {
                 it.remove();
             }
             else {
-                if (quayRef == null || quayRef.trim().isEmpty()) {
-//                    logMessages.add(new PrimitiveLogMessage(quayEntry.getKey().getId(),
-//                            quayEntry.getKey().getType(),
-//                            new HashMap<String, String>() {
+//                if (quayRef == null || quayRef.trim().isEmpty()) {
+//                   logMessage(quayEntry.getKey().getId(), quayEntry.getKey().getType(), new HashMap<String, String>() {
 //                        {
-//                            put(OSMTags.REF_TAG, PrimitiveLogMessage.Messages.REF_MISSING_MESSAGE);
+//                           put(PrimitiveLogMessage.Tags.REF_TAG, PrimitiveLogMessage.Messages.REF_MISSING_MESSAGE);
 //                        }
-//                    }));
-                }
+//                    });
+//                }
             }
         }
 
@@ -510,6 +514,7 @@ public class NeTExExporter {
                                 for (RelationMember relationMember : relation.getMembers()) {
                                     OsmPrimitive member = relationMember.getMember();
 
+                                    //...
                                 }
                             }
                         }
@@ -533,6 +538,7 @@ public class NeTExExporter {
                             }
 
                             Quay quay = neTExParser.createQuay(member);
+                            
                             quays.put(member, quay);
 
                             boolean modifiedQuayType = false;
@@ -576,6 +582,16 @@ public class NeTExExporter {
 
         for (Map.Entry<Node, Elevator> elevatorEntry : elevators.entrySet()) {
             LatLon coord = elevatorEntry.getKey().getCoor();
+            if (coord == null) {
+                logMessage(elevatorEntry.getKey().getId(), elevatorEntry.getKey().getType(), new HashMap<String, String>() {
+                    {
+                        put(PrimitiveLogMessage.Tags.UNKNOWN_COORDS_TAG, PrimitiveLogMessage.Messages.UNKNOWN_COORDS_MESSAGE);
+                    }
+                });
+
+                continue;
+            }
+
             Node nearestStopPlace = findNearestStopPlace(coord);
 
             if (nearestStopPlace != null && !OSMHelper.isBusStop(nearestStopPlace)) {
@@ -610,6 +626,16 @@ public class NeTExExporter {
         for (Map.Entry<Way, Steps> stepsEntry : steps.entrySet()) {
             LatLon coordFirst = stepsEntry.getKey().firstNode().getCoor();
             LatLon coordLast = stepsEntry.getKey().lastNode().getCoor();
+
+            if (coordFirst == null || coordLast == null) {
+                logMessage(stepsEntry.getKey().getId(), stepsEntry.getKey().getType(), new HashMap<String, String>() {
+                    {
+                        put(PrimitiveLogMessage.Tags.UNKNOWN_COORDS_TAG, PrimitiveLogMessage.Messages.UNKNOWN_COORDS_MESSAGE);
+                    }
+                });
+
+                continue;
+            }
 
             List<Node> nearestStopPlaces = findNearestStopPlaces(coordFirst);
             nearestStopPlaces.addAll(findNearestStopPlaces(coordLast));
@@ -666,8 +692,15 @@ public class NeTExExporter {
         for (Map.Entry<Way, FootPath> footPathEntry : footPaths.entrySet()) {
             LatLon coordFirst = footPathEntry.getKey().firstNode().getCoor();
             LatLon coordLast = footPathEntry.getKey().lastNode().getCoor();
-            if (footPathEntry.getKey().getId() == 245669542) {
-                String a = "asd";
+
+            if (coordFirst == null || coordLast == null) {
+                logMessage(footPathEntry.getKey().getId(), footPathEntry.getKey().getType(), new HashMap<String, String>() {
+                    {
+                        put(PrimitiveLogMessage.Tags.UNKNOWN_COORDS_TAG, PrimitiveLogMessage.Messages.UNKNOWN_COORDS_MESSAGE);
+                    }
+                });
+
+                continue;
             }
 
             List<Node> nearestStopPlaces = findNearestStopPlaces(coordFirst);
@@ -791,7 +824,7 @@ public class NeTExExporter {
 
         customMarshaller.marshal(neTExFactory.createPublicationDelivery(publicationDeliveryStructure), neTExFile);
 
-        for (PrimitiveLogMessage logMessage : logMessages) {
+        for (PrimitiveLogMessage logMessage : LOG_MESSAGES) {
             OsmPrimitive primitive = ds.getPrimitiveById(logMessage.getPrimitiveId(), logMessage.getPrimitiveType());
 
             primitive.setHighlighted(true);
@@ -956,13 +989,9 @@ public class NeTExExporter {
                 mapView.getLatLon(p.x + snapDistance, p.y + snapDistance));
     }
 
-    private PrimitiveLogMessage logMessage(long primitiveId, OsmPrimitiveType primitiveType, HashMap<String, String> keys) {
-        return logMessage(primitiveId, primitiveType, null, keys);
-    }
-
-    private PrimitiveLogMessage logMessage(long primitiveId, OsmPrimitiveType primitiveType, String message, HashMap<String, String> keys) {
+    public static PrimitiveLogMessage logMessage(long primitiveId, OsmPrimitiveType primitiveType, HashMap<String, String> keys) {
         PrimitiveLogMessage logMessage = new PrimitiveLogMessage(primitiveId, primitiveType, keys);
-        logMessages.add(logMessage);
+        LOG_MESSAGES.add(logMessage);
 
         return logMessage;
     }

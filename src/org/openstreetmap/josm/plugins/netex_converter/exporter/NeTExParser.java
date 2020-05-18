@@ -19,7 +19,6 @@ import com.netex.model.EquipmentPlaceRefStructure;
 import com.netex.model.EquipmentPlaces_RelStructure;
 import com.netex.model.Equipments_RelStructure;
 import com.netex.model.Frames_RelStructure;
-import com.netex.model.Level;
 import com.netex.model.LevelRefStructure;
 import com.netex.model.LiftEquipment;
 import com.netex.model.LimitationStatusEnumeration;
@@ -51,8 +50,8 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import net.opengis.gml._3.AbstractRingPropertyType;
 import net.opengis.gml._3.DirectPositionListType;
 import net.opengis.gml._3.LinearRingType;
@@ -64,14 +63,12 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.TagMap;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.plugins.netex_converter.model.josm.PrimitiveLogMessage;
 import org.openstreetmap.josm.plugins.netex_converter.model.netex.Elevator;
 import org.openstreetmap.josm.plugins.netex_converter.model.netex.FootPath;
 import org.openstreetmap.josm.plugins.netex_converter.model.netex.Steps;
 import org.openstreetmap.josm.plugins.netex_converter.util.OSMHelper;
 import org.openstreetmap.josm.plugins.netex_converter.util.OSMTags;
-import org.openstreetmap.josm.tools.Logging;
-
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  *
@@ -80,17 +77,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 public class NeTExParser {
 
     private final ObjectFactory neTExFactory;
-    private static final net.opengis.gml._3.ObjectFactory gmlFactory = new net.opengis.gml._3.ObjectFactory();
-
-    private final Level level_minus_4 = new Level();
-    private final Level level_minus_3 = new Level();
-    private final Level level_minus_2 = new Level();
-    private final Level level_minus_1 = new Level();
-    private final Level level_0 = new Level();
-    private final Level level_1 = new Level();
-    private final Level level_2 = new Level();
-    private final Level level_3 = new Level();
-    private final Level level_4 = new Level();
+    private static final net.opengis.gml._3.ObjectFactory GML_FACTORY = new net.opengis.gml._3.ObjectFactory();
 
     public NeTExParser() {
         neTExFactory = new ObjectFactory();
@@ -111,7 +98,11 @@ public class NeTExParser {
                 altitude = new BigDecimal(keys.get(OSMTags.ELE_TAG));
             }
             catch (NumberFormatException nfe) {
-                Logging.warn(tr("Altitude tag could not be parsed into a number for the primitive with the id: {0}.", primitive.getId()), nfe);
+                NeTExExporter.logMessage(primitive.getId(), primitive.getType(), new HashMap<String, String>() {
+                    {
+                        put(PrimitiveLogMessage.Tags.ELE_TAG, PrimitiveLogMessage.Messages.ELE_TAG_NOT_NUMBER_MESSAGE);
+                    }
+                });
             }
         }
 
@@ -121,6 +112,15 @@ public class NeTExParser {
             Node node = (Node) primitive;
 
             LatLon coordinates = node.getCoor();
+            if (coordinates == null) {
+                NeTExExporter.logMessage(primitive.getId(), primitive.getType(), new HashMap<String, String>() {
+                    {
+                        put(PrimitiveLogMessage.Tags.UNKNOWN_COORDS_TAG, PrimitiveLogMessage.Messages.UNKNOWN_COORDS_MESSAGE);
+                    }
+                });
+
+                return new StopPlace();
+            }
 
             double lat = coordinates.lat();
             double lon = coordinates.lon();
@@ -186,6 +186,16 @@ public class NeTExParser {
             Node node = (Node) primitive;
 
             LatLon coordinates = node.getCoor();
+            if (coordinates == null) {
+                NeTExExporter.logMessage(primitive.getId(), primitive.getType(), new HashMap<String, String>() {
+                    {
+                        put(PrimitiveLogMessage.Tags.UNKNOWN_COORDS_TAG, PrimitiveLogMessage.Messages.UNKNOWN_COORDS_MESSAGE);
+                    }
+                });
+
+                return new Quay();
+            }
+
             double lat = coordinates.lat();
             double lon = coordinates.lon();
 
@@ -219,6 +229,16 @@ public class NeTExParser {
         long nodeId = node.getId();
         LatLon coordinates = node.getCoor();
 
+        if (coordinates == null) {
+            NeTExExporter.logMessage(node.getId(), node.getType(), new HashMap<String, String>() {
+                {
+                    put(PrimitiveLogMessage.Tags.UNKNOWN_COORDS_TAG, PrimitiveLogMessage.Messages.UNKNOWN_COORDS_MESSAGE);
+                }
+            });
+
+            return null;
+        }
+
         PathJunction pathJunction = new PathJunction()
                 .withId(String.format("ch:1:PathJunction:%s", node.getId()))
                 .withLocation(new LocationStructure()
@@ -249,30 +269,45 @@ public class NeTExParser {
         List<Node> nodes = way.getNodes();
 
         String level = OSMHelper.getLevel(way);
-        Level fromLevel = null;
-        Level toLevel = null;
+        String fromLevel = null;
+        String toLevel = null;
+        String endLevel = null;
 
         String[] levels = level != null ? level.split(";") : new String[0];
 
         String incline = OSMHelper.getIncline(way);
 
         if (levels.length == 2) {
-            fromLevel = getLevelObject(levels[0]);
-            toLevel = getLevelObject(levels[1]);
+            fromLevel = String.format("ch:1:Level:%s", levels[0].trim());
+            toLevel = String.format("ch:1:Level:%s", levels[1].trim());
         }
-        else if (incline != null && !incline.isEmpty() && level != null && !level.isEmpty()) {
-            if (incline.equals(OSMTags.DOWN_TAG_VALUE)) {
-                fromLevel = getLevelObject(Integer.toString((Integer.parseInt(level) + 1)));
-                toLevel = getLevelObject(level);
+        else if (level != null && !level.isEmpty() && OSMHelper.isNumeric(level)) {
+            if (incline != null && !incline.isEmpty()) {
+                if (incline.equals(OSMTags.DOWN_TAG_VALUE)) {
+                    fromLevel = String.format("ch:1:Level:%s", Integer.parseInt(level) + 1);
+                    toLevel = String.format("ch:1:Level:%s", level);
+                }
+                else if (incline.equals(OSMTags.UP_TAG_VALUE)) {
+                    fromLevel = String.format("ch:1:Level:%s", Integer.parseInt(level) - 1);
+                    toLevel = String.format("ch:1:Level:%s", level);
+                }
             }
-            else if (incline.equals(OSMTags.UP_TAG_VALUE)) {
-                fromLevel = getLevelObject(Integer.toString((Integer.parseInt(level) - 1)));
-                toLevel = getLevelObject(level);
+            else {
+                endLevel = String.format("ch:1:Level:%s", level);
             }
         }
 
         for (Node node : nodes) {
             LatLon coordinates = node.getCoor();
+            if (coordinates == null) {
+                NeTExExporter.logMessage(node.getId(), node.getType(), new HashMap<String, String>() {
+                    {
+                        put(PrimitiveLogMessage.Tags.UNKNOWN_COORDS_TAG, PrimitiveLogMessage.Messages.UNKNOWN_COORDS_MESSAGE);
+                    }
+                });
+
+                continue;
+            }
             long nodeId = node.getId();
 
             String ref = "artificial_waypoint";
@@ -337,13 +372,22 @@ public class NeTExParser {
                                 .withEquipmentPlaceRefOrEquipmentPlace(new EquipmentPlaceRefStructure()
                                         .withRef(equipmentPlace.getId())));
 
-                if (i == 0) {
-                    sitePathLink.withLevelRef(new LevelRefStructure()
-                            .withRef(fromLevel != null ? fromLevel.getId() : null));
+                if (fromLevel != null && toLevel != null) {
+                    if (i == 0) {
+                        sitePathLink.withFrom(new PathLinkEndStructure()
+                                .withLevelRef(new LevelRefStructure()
+                                        .withRef(fromLevel)));
+                    }
+
+                    if (i == pathJunctions.size() - 2) {
+                        sitePathLink.withTo(new PathLinkEndStructure()
+                                .withLevelRef(new LevelRefStructure()
+                                        .withRef(toLevel)));
+                    }
                 }
-                else if (i == pathJunctions.size() - 2) {
+                else if (endLevel != null) {
                     sitePathLink.withLevelRef(new LevelRefStructure()
-                            .withRef(toLevel != null ? toLevel.getId() : null));
+                            .withRef(endLevel));
                 }
 
                 sitePathLinks.add(sitePathLink);
@@ -388,30 +432,45 @@ public class NeTExParser {
         List<Node> nodes = way.getNodes();
 
         String level = OSMHelper.getLevel(way);
-        Level fromLevel = null;
-        Level toLevel = null;
+        String fromLevel = null;
+        String toLevel = null;
+        String endLevel = null;
 
         String[] levels = level != null ? level.split(";") : new String[0];
 
         String incline = OSMHelper.getIncline(way);
 
         if (levels.length == 2) {
-            fromLevel = getLevelObject(levels[0]);
-            toLevel = getLevelObject(levels[1]);
+            fromLevel = String.format("ch:1:Level:%s", levels[0].trim());
+            toLevel = String.format("ch:1:Level:%s", levels[1].trim());
         }
-        else if (incline != null && !incline.isEmpty() && level != null && !level.isEmpty()) {
-            if (incline.equals(OSMTags.DOWN_TAG_VALUE)) {
-                fromLevel = getLevelObject(Integer.toString((Integer.parseInt(level) + 1)));
-                toLevel = getLevelObject(level);
+        else if (level != null && !level.isEmpty() && OSMHelper.isNumeric(level)) {
+            if (incline != null && !incline.isEmpty()) {
+                if (incline.equals(OSMTags.DOWN_TAG_VALUE)) {
+                    fromLevel = String.format("ch:1:Level:%s", Integer.parseInt(level) + 1);
+                    toLevel = String.format("ch:1:Level:%s", level);
+                }
+                else if (incline.equals(OSMTags.UP_TAG_VALUE)) {
+                    fromLevel = String.format("ch:1:Level:%s", Integer.parseInt(level) - 1);
+                    toLevel = String.format("ch:1:Level:%s", level);
+                }
             }
-            else if (incline.equals(OSMTags.UP_TAG_VALUE)) {
-                fromLevel = getLevelObject(Integer.toString((Integer.parseInt(level) - 1)));
-                toLevel = getLevelObject(level);
+            else {
+                endLevel = String.format("ch:1:Level:%s", level);
             }
         }
 
         for (Node node : nodes) {
             LatLon coordinates = node.getCoor();
+            if (coordinates == null) {
+                NeTExExporter.logMessage(node.getId(), node.getType(), new HashMap<String, String>() {
+                    {
+                        put(PrimitiveLogMessage.Tags.UNKNOWN_COORDS_TAG, PrimitiveLogMessage.Messages.UNKNOWN_COORDS_MESSAGE);
+                    }
+                });
+
+                continue;
+            }
             long nodeId = node.getId();
 
             String ref = "artificial_waypoint";
@@ -468,13 +527,22 @@ public class NeTExParser {
                             .withEquipmentPlaceRefOrEquipmentPlace(new EquipmentPlaceRefStructure()
                                     .withRef(equipmentPlace.getId())));
 
-            if (i == 0) {
-                sitePathLink.withLevelRef(new LevelRefStructure()
-                        .withRef(fromLevel != null ? fromLevel.getId() : null));
+            if (fromLevel != null && toLevel != null) {
+                if (i == 0) {
+                    sitePathLink.withFrom(new PathLinkEndStructure()
+                            .withLevelRef(new LevelRefStructure()
+                                    .withRef(fromLevel)));
+                }
+
+                if (i == pathJunctions.size() - 2) {
+                    sitePathLink.withTo(new PathLinkEndStructure()
+                            .withLevelRef(new LevelRefStructure()
+                                    .withRef(toLevel)));
+                }
             }
-            else if (i == pathJunctions.size() - 2) {
+            else if (endLevel != null) {
                 sitePathLink.withLevelRef(new LevelRefStructure()
-                        .withRef(toLevel != null ? toLevel.getId() : null));
+                        .withRef(endLevel));
             }
 
             sitePathLinks.add(sitePathLink);
@@ -525,6 +593,15 @@ public class NeTExParser {
 
             for (Node node : way.getNodes()) {
                 LatLon nodeCoord = node.getCoor();
+                if (nodeCoord == null) {
+                    NeTExExporter.logMessage(node.getId(), node.getType(), new HashMap<String, String>() {
+                        {
+                            put(PrimitiveLogMessage.Tags.UNKNOWN_COORDS_TAG, PrimitiveLogMessage.Messages.UNKNOWN_COORDS_MESSAGE);
+                        }
+                    });
+
+                    continue;
+                }
 
                 linearRing.withPosOrPointProperty(Arrays.asList(new DirectPositionListType().withValue(nodeCoord.lat(), nodeCoord.lon())));
             }
@@ -532,7 +609,7 @@ public class NeTExParser {
             polygonType = new PolygonType()
                     .withId(String.format("org:osm:way:%s", primitiveId))
                     .withExterior(new AbstractRingPropertyType()
-                            .withAbstractRing(gmlFactory.createLinearRing(linearRing)));
+                            .withAbstractRing(GML_FACTORY.createLinearRing(linearRing)));
         }
         else if (primitive instanceof Relation) {
             Relation relation = (Relation) primitive;
@@ -553,12 +630,21 @@ public class NeTExParser {
 
                                 for (Node node : relationWay.getNodes()) {
                                     LatLon coord = node.getCoor();
+                                    if (coord == null) {
+                                        NeTExExporter.logMessage(node.getId(), node.getType(), new HashMap<String, String>() {
+                                            {
+                                                put(PrimitiveLogMessage.Tags.UNKNOWN_COORDS_TAG, PrimitiveLogMessage.Messages.UNKNOWN_COORDS_MESSAGE);
+                                            }
+                                        });
+
+                                        continue;
+                                    }
 
                                     linearRingInterior.withPosOrPointProperty(Arrays.asList(new DirectPositionListType().withValue(coord.lat(), coord.lon())));
                                 }
 
                                 polygonType.withInterior(new AbstractRingPropertyType()
-                                        .withAbstractRing(gmlFactory.createLinearRing(linearRingInterior)));
+                                        .withAbstractRing(GML_FACTORY.createLinearRing(linearRingInterior)));
                             }
                             break;
                         case OSMHelper.OUTER_ROLE:
@@ -569,12 +655,21 @@ public class NeTExParser {
 
                                 for (Node node : relationWay.getNodes()) {
                                     LatLon coord = node.getCoor();
+                                    if (coord == null) {
+                                        NeTExExporter.logMessage(node.getId(), node.getType(), new HashMap<String, String>() {
+                                            {
+                                                put(PrimitiveLogMessage.Tags.UNKNOWN_COORDS_TAG, PrimitiveLogMessage.Messages.UNKNOWN_COORDS_MESSAGE);
+                                            }
+                                        });
+
+                                        continue;
+                                    }
 
                                     linearRingExterior.withPosOrPointProperty(Arrays.asList(new DirectPositionListType().withValue(coord.lat(), coord.lon())));
                                 }
 
                                 polygonType.withExterior(new AbstractRingPropertyType()
-                                        .withAbstractRing(gmlFactory.createLinearRing(linearRingExterior)));
+                                        .withAbstractRing(GML_FACTORY.createLinearRing(linearRingExterior)));
                             }
                             break;
                         default:
@@ -585,43 +680,5 @@ public class NeTExParser {
         }
 
         return polygonType;
-    }
-
-    private Level getLevelObject(String level) {
-        Level levelObject = null;
-
-        if (level != null && !level.trim().isEmpty()) {
-            switch (level) {
-                case "-4":
-                    levelObject = level_minus_4;
-                    break;
-                case "-3":
-                    levelObject = level_minus_3;
-                    break;
-                case "-2":
-                    levelObject = level_minus_2;
-                    break;
-                case "-1":
-                    levelObject = level_minus_1;
-                    break;
-                case "0":
-                    levelObject = level_0;
-                    break;
-                case "1":
-                    levelObject = level_1;
-                    break;
-                case "2":
-                    levelObject = level_2;
-                    break;
-                case "3":
-                    levelObject = level_3;
-                case "4":
-                    levelObject = level_4;
-                default:
-                    levelObject = null;
-                    break;
-            }
-        }
-        return levelObject;
     }
 }

@@ -300,4 +300,8 @@ public final class OSMHelper {
             return quayRef;
         }
     }
+
+    public static boolean isNumeric(String str) {
+        return str.matches("-?\\d+(\\.\\d+)?");
+    }
 }

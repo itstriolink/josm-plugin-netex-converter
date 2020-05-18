@@ -12,6 +12,9 @@ package org.openstreetmap.josm.plugins.netex_converter.model.josm;
 import java.util.Map;
 import java.util.Objects;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
+import org.openstreetmap.josm.plugins.netex_converter.util.OSMHelper;
+import org.openstreetmap.josm.plugins.netex_converter.util.OSMTags;
+
 /**
  *
  * @author Labian Gashi
@@ -89,12 +92,21 @@ public class PrimitiveLogMessage {
         return hash;
     }
 
+    public static final class Tags extends OSMTags {
+
+        public static final String UNKNOWN_COORDS_TAG = "UNKNOWN_COORDS";
+    }
+
     public static final class Messages {
-        
+
         public static final String LOG_MESSAGE_SUFFIX = " - (NeTEx Converter)";
-        
+
         public static final String REF_MISSING_MESSAGE = "Please enter a required \"ref\" or \"local_ref\" tag for the platform number" + LOG_MESSAGE_SUFFIX;
         public static final String UIC_REF_MISSING_MESSAGE = "Please enter a required \"uic_ref\" tag for the station" + LOG_MESSAGE_SUFFIX;
+
+        public static final String ELE_TAG_NOT_NUMBER_MESSAGE = "Please enter a numeric value for the elevation tag " + LOG_MESSAGE_SUFFIX;
+
+        public static final String UNKNOWN_COORDS_MESSAGE = "The coordinates for this object are unknown and therefore cannot be converted into a NeTEx object.";
 
     }
 }
