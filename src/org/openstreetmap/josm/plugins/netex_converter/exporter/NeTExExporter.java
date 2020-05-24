@@ -180,14 +180,6 @@ public class NeTExExporter {
                     quays.put(relation, neTExParser.createQuay(relation));
                 }
             }
-
-            if (stopPlace != null && stopPlace.getPublicCode() == null) {
-                logMessage(primitive.getId(), primitive.getType(), new HashMap<String, String>() {
-                    {
-                        put(PrimitiveLogMessage.Tags.UIC_REF_TAG, PrimitiveLogMessage.Messages.UIC_REF_MISSING_MESSAGE);
-                    }
-                });
-            }
         }
 
         if (stopPlaces.isEmpty()) {
@@ -266,7 +258,9 @@ public class NeTExExporter {
 
         HashMap<StopPlace, Quays_RelStructure> currentQuays = new HashMap<>();
 
-        List<StopTypeEnumeration> stopTypesWithoutRef = new ArrayList<>();
+        List<StopTypeEnumeration> stopTypesWithRef = new ArrayList<>(
+                Arrays.asList(StopTypeEnumeration.RAIL_STATION, StopTypeEnumeration.BUS_STATION)
+        );
 
         for (Iterator<Map.Entry<OsmPrimitive, Quay>> it = quays.entrySet().iterator(); it.hasNext();) {
             Map.Entry<OsmPrimitive, Quay> quayEntry = it.next();
@@ -369,7 +363,7 @@ public class NeTExExporter {
                                     .withQuayType(currentQuayType))));
                         }
 
-                        if ((quayRef == null || quayRef.trim().isEmpty()) && stopTypesWithoutRef.contains(stopPlace.getStopPlaceType())) {
+                        if ((quayRef == null || quayRef.trim().isEmpty()) && stopTypesWithRef.contains(stopPlace.getStopPlaceType())) {
                             logMessage(quayEntry.getKey().getId(), quayEntry.getKey().getType(), new HashMap<String, String>() {
                                 {
                                     put(PrimitiveLogMessage.Tags.REF_TAG, PrimitiveLogMessage.Messages.REF_MISSING_MESSAGE);
@@ -428,7 +422,7 @@ public class NeTExExporter {
                                         .withQuayType(currentQuayType))));
                             }
 
-                            if ((quayRef == null || quayRef.trim().isEmpty()) && stopTypesWithoutRef.contains(stopPlace.getStopPlaceType())) {
+                            if ((quayRef == null || quayRef.trim().isEmpty()) && stopTypesWithRef.contains(stopPlace.getStopPlaceType())) {
                                 logMessage(quayEntry.getKey().getId(), quayEntry.getKey().getType(), new HashMap<String, String>() {
                                     {
                                         put(PrimitiveLogMessage.Tags.REF_TAG, PrimitiveLogMessage.Messages.REF_MISSING_MESSAGE);

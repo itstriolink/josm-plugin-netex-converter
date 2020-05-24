@@ -98,7 +98,15 @@ public class NeTExParser {
 
         long primitiveId = primitive.getId();
 
-        String uic_ref = OSMHelper.getUicRef(primitive);
+        String uicRef = OSMHelper.getUicRef(primitive);
+
+        if (uicRef == null || uicRef.trim().isEmpty()) {
+            NeTExExporter.logMessage(primitive.getId(), primitive.getType(), new HashMap<String, String>() {
+                {
+                    put(PrimitiveLogMessage.Tags.UIC_REF_TAG, PrimitiveLogMessage.Messages.UIC_REF_MISSING_MESSAGE);
+                }
+            });
+        }
 
         BigDecimal altitude = null;
 
@@ -135,11 +143,11 @@ public class NeTExParser {
             double lon = coordinates.lon();
 
             return new StopPlace()
-                    .withId(String.format("ch:1:StopPlace:%s", uic_ref != null && !uic_ref.trim().isEmpty() ? uic_ref : node.getId()))
+                    .withId(String.format("ch:1:StopPlace:%s", uicRef != null && !uicRef.trim().isEmpty() ? uicRef : node.getId()))
                     .withName(new MultilingualString()
                             .withValue(primitiveName))
                     .withPrivateCode(new PrivateCodeStructure().withValue(String.format("org:osm:node:%s", node.getId())))
-                    .withPublicCode(uic_ref)
+                    .withPublicCode(uicRef)
                     .withCentroid(new SimplePoint_VersionStructure()
                             .withLocation(new LocationStructure()
                                     .withLatitude(BigDecimal.valueOf(lat))
@@ -154,11 +162,11 @@ public class NeTExParser {
         else if (primitive instanceof Way) {
 
             return new StopPlace()
-                    .withId(String.format("ch:1:StopPlace:%s", uic_ref != null && !uic_ref.trim().isEmpty() ? uic_ref : primitiveId))
+                    .withId(String.format("ch:1:StopPlace:%s", uicRef != null && !uicRef.trim().isEmpty() ? uicRef : primitiveId))
                     .withName(new MultilingualString()
                             .withValue(primitiveName))
                     .withPrivateCode(new PrivateCodeStructure().withValue(String.format("org:osm:way:%s", primitiveId)))
-                    .withPublicCode(uic_ref)
+                    .withPublicCode(uicRef)
                     .withPolygon(createPolygonType(primitive))
                     .withAccessibilityAssessment(new AccessibilityAssessment()
                             .withLimitations(new AccessibilityLimitations_RelStructure()
@@ -169,11 +177,11 @@ public class NeTExParser {
         else if (primitive instanceof Relation) {
 
             return new StopPlace()
-                    .withId(String.format("ch:1:StopPlace:%s", uic_ref != null && !uic_ref.trim().isEmpty() ? uic_ref : primitiveId))
+                    .withId(String.format("ch:1:StopPlace:%s", uicRef != null && !uicRef.trim().isEmpty() ? uicRef : primitiveId))
                     .withName(new MultilingualString()
                             .withValue(primitiveName))
                     .withPrivateCode(new PrivateCodeStructure().withValue(String.format("org:osm:relation:%s", primitiveId)))
-                    .withPublicCode(uic_ref)
+                    .withPublicCode(uicRef)
                     .withPolygon(createPolygonType(primitive))
                     .withAccessibilityAssessment(new AccessibilityAssessment()
                             .withLimitations(new AccessibilityLimitations_RelStructure()
