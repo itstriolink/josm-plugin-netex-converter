@@ -87,6 +87,15 @@ public class NeTExParser {
         TagMap keys = primitive.getKeys();
 
         String primitiveName = primitive.getName();
+
+        if (primitiveName == null || primitiveName.trim().isEmpty()) {
+            NeTExExporter.logMessage(primitive.getId(), primitive.getType(), new HashMap<String, String>() {
+                {
+                    put(PrimitiveLogMessage.Tags.NAME_TAG, PrimitiveLogMessage.Messages.NAME_TAG_MISSING_MESSAGE);
+                }
+            });
+        }
+
         long primitiveId = primitive.getId();
 
         String uic_ref = OSMHelper.getUicRef(primitive);

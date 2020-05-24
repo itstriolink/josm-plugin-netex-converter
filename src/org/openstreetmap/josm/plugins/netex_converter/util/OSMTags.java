@@ -14,7 +14,7 @@ package org.openstreetmap.josm.plugins.netex_converter.util;
  * @author labian
  */
 public class OSMTags {
-
+    
     public static final String TERTIARY_LINK_TAG_VALUE = "tertiary_link";
     public static final String SECONDARY_LINK_TAG_VALUE = "secondary_link";
     public static final String PRIMARY_LINK_TAG_VALUE = "primary_link";
