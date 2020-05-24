@@ -264,6 +264,8 @@ public class NeTExExporter {
 
         HashMap<StopPlace, Quays_RelStructure> currentQuays = new HashMap<>();
 
+        List<StopTypeEnumeration> stopTypesWithoutRef = new ArrayList<>();
+
         for (Iterator<Map.Entry<OsmPrimitive, Quay>> it = quays.entrySet().iterator(); it.hasNext();) {
             Map.Entry<OsmPrimitive, Quay> quayEntry = it.next();
             String quayUicRef = OSMHelper.getUicRef(quayEntry.getKey());
@@ -364,6 +366,14 @@ public class NeTExExporter {
                                     .withPolygon(polygonType)
                                     .withQuayType(currentQuayType))));
                         }
+
+                        if ((quayRef == null || quayRef.trim().isEmpty()) && !stopTypesWithoutRef.contains(stopPlace.getStopPlaceType())) {
+                            logMessage(quayEntry.getKey().getId(), quayEntry.getKey().getType(), new HashMap<String, String>() {
+                                {
+                                    put(PrimitiveLogMessage.Tags.REF_TAG, PrimitiveLogMessage.Messages.REF_MISSING_MESSAGE);
+                                }
+                            });
+                        }
                     }
                 }
             }
@@ -414,6 +424,14 @@ public class NeTExExporter {
                                         .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, modifiedQuayRef))
                                         .withPublicCode(modifiedQuayRef)
                                         .withQuayType(currentQuayType))));
+                            }
+
+                            if ((quayRef == null || quayRef.trim().isEmpty()) && !stopTypesWithoutRef.contains(stopPlace.getStopPlaceType())) {
+                                logMessage(quayEntry.getKey().getId(), quayEntry.getKey().getType(), new HashMap<String, String>() {
+                                    {
+                                        put(PrimitiveLogMessage.Tags.REF_TAG, PrimitiveLogMessage.Messages.REF_MISSING_MESSAGE);
+                                    }
+                                });
                             }
                         }
                     }
@@ -476,15 +494,6 @@ public class NeTExExporter {
 
                 it.remove();
             }
-            else {
-//                if (quayRef == null || quayRef.trim().isEmpty()) {
-//                   logMessage(quayEntry.getKey().getId(), quayEntry.getKey().getType(), new HashMap<String, String>() {
-//                        {
-//                           put(PrimitiveLogMessage.Tags.REF_TAG, PrimitiveLogMessage.Messages.REF_MISSING_MESSAGE);
-//                        }
-//                    });
-//                }
-            }
         }
 
         for (Map.Entry<StopPlace, Quays_RelStructure> entry : currentQuays.entrySet()) {
@@ -538,7 +547,7 @@ public class NeTExExporter {
                             }
 
                             Quay quay = neTExParser.createQuay(member);
-                            
+
                             quays.put(member, quay);
 
                             boolean modifiedQuayType = false;

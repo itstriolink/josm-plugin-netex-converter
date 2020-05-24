@@ -101,7 +101,7 @@ public class PrimitiveLogMessage {
 
         public static final String LOG_MESSAGE_SUFFIX = " - (NeTEx Converter)";
 
-        public static final String REF_MISSING_MESSAGE = "Please enter a required \"ref\" or \"local_ref\" tag for the platform number" + LOG_MESSAGE_SUFFIX;
+        public static final String REF_MISSING_MESSAGE = "Please enter a required \"ref\" or \"local_ref\" tag for the platform" + LOG_MESSAGE_SUFFIX;
         public static final String UIC_REF_MISSING_MESSAGE = "Please enter a required \"uic_ref\" tag for the station" + LOG_MESSAGE_SUFFIX;
 
         public static final String ELE_TAG_NOT_NUMBER_MESSAGE = "Please enter a numeric value for the elevation tag " + LOG_MESSAGE_SUFFIX;
