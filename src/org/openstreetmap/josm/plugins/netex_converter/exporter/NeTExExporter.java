@@ -78,9 +78,9 @@ public class NeTExExporter {
 
     private final DataSet ds;
 
-    private final static List<PrimitiveLogMessage> LOG_MESSAGES = new ArrayList<>();
+    private static final List<PrimitiveLogMessage> LOG_MESSAGES = new ArrayList<>();
 
-    private static final int SNAP_DISTANCE = 18;
+    private static final int SNAP_DISTANCE = 15;
 
     public NeTExExporter() throws IOException, SAXException {
         neTExParser = new NeTExParser();
@@ -113,21 +113,17 @@ public class NeTExExporter {
         }
 
         for (OsmPrimitive primitive : primitives) {
-            StopPlace stopPlace = null;
             if (primitive instanceof Node) {
                 Node node = (Node) primitive;
 
                 if (OSMHelper.isTrainStation(node)) {
-                    stopPlace = neTExParser.createStopPlace(node, StopTypeEnumeration.RAIL_STATION);
-                    stopPlaces.put(node, stopPlace);
+                    stopPlaces.put(node, neTExParser.createStopPlace(node, StopTypeEnumeration.RAIL_STATION));
                 }
                 else if (OSMHelper.isBusStation(node)) {
-                    stopPlace = neTExParser.createStopPlace(node, StopTypeEnumeration.BUS_STATION);
-                    stopPlaces.put(node, stopPlace);
+                    stopPlaces.put(node, neTExParser.createStopPlace(node, StopTypeEnumeration.BUS_STATION));
                 }
                 else if (OSMHelper.isBusStop(node)) {
-                    stopPlace = neTExParser.createStopPlace(node, StopTypeEnumeration.ONSTREET_BUS);
-                    stopPlaces.put(node, stopPlace);
+                    stopPlaces.put(node, neTExParser.createStopPlace(node, StopTypeEnumeration.ONSTREET_BUS));
                 }
                 else if (OSMHelper.isPlatform(node)) {
                     quays.put(node, neTExParser.createQuay(node));
@@ -140,16 +136,13 @@ public class NeTExExporter {
                 Way way = (Way) primitive;
 
                 if (OSMHelper.isBusStation(way)) {
-                    stopPlace = neTExParser.createStopPlace(way, StopTypeEnumeration.BUS_STATION);
-                    stopPlaces.put(way, stopPlace);
+                    stopPlaces.put(way, neTExParser.createStopPlace(way, StopTypeEnumeration.BUS_STATION));
                 }
                 else if (OSMHelper.isBusStation(way)) {
-                    stopPlace = neTExParser.createStopPlace(way, StopTypeEnumeration.BUS_STATION);
-                    stopPlaces.put(way, stopPlace);
+                    stopPlaces.put(way, neTExParser.createStopPlace(way, StopTypeEnumeration.BUS_STATION));
                 }
                 else if (OSMHelper.isBusStop(way)) {
-                    stopPlace = neTExParser.createStopPlace(way, StopTypeEnumeration.ONSTREET_BUS);
-                    stopPlaces.put(way, stopPlace);
+                    stopPlaces.put(way, neTExParser.createStopPlace(way, StopTypeEnumeration.ONSTREET_BUS));
                 }
                 else if (OSMHelper.isSteps(way)) {
                     steps.put(way, neTExParser.createSteps(way));
@@ -165,16 +158,13 @@ public class NeTExExporter {
                 Relation relation = (Relation) primitive;
 
                 if (OSMHelper.isTrainStation(relation)) {
-                    stopPlace = neTExParser.createStopPlace(relation, StopTypeEnumeration.RAIL_STATION);
-                    stopPlaces.put(relation, stopPlace);
+                    stopPlaces.put(relation, neTExParser.createStopPlace(relation, StopTypeEnumeration.RAIL_STATION));
                 }
                 else if (OSMHelper.isBusStation(relation)) {
-                    stopPlace = neTExParser.createStopPlace(relation, StopTypeEnumeration.BUS_STATION);
-                    stopPlaces.put(relation, stopPlace);
+                    stopPlaces.put(relation, neTExParser.createStopPlace(relation, StopTypeEnumeration.BUS_STATION));
                 }
                 else if (OSMHelper.isBusStop(relation)) {
-                    stopPlace = neTExParser.createStopPlace(relation, StopTypeEnumeration.ONSTREET_BUS);
-                    stopPlaces.put(relation, stopPlace);
+                    stopPlaces.put(relation, neTExParser.createStopPlace(relation, StopTypeEnumeration.ONSTREET_BUS));
                 }
                 else if (OSMHelper.isPlatform(relation)) {
                     quays.put(relation, neTExParser.createQuay(relation));

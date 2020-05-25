@@ -173,6 +173,7 @@ public final class OSMHelper {
     public static boolean isSteps(Way way) {
         if (way != null) {
             TagMap keys = way.getKeys();
+            
             return keys.containsKey(OSMTags.HIGHWAY_TAG) && keys.get(OSMTags.HIGHWAY_TAG).equals(OSMTags.STEPS_TAG_VALUE);
         }
 
@@ -182,6 +183,7 @@ public final class OSMHelper {
     public static boolean isFootPath(Way way) {
         if (way != null) {
             TagMap keys = way.getKeys();
+            
             return keys.containsKey(OSMTags.HIGHWAY_TAG) && keys.get(OSMTags.HIGHWAY_TAG).equals(OSMTags.FOOTWAY_TAG_VALUE);
         }
 
