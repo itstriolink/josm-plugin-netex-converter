@@ -94,6 +94,7 @@ public class PrimitiveLogMessage {
     public static final class Tags extends OSMTags {
 
         public static final String UNKNOWN_COORDS_TAG = "UNKNOWN_COORDS";
+        public static final String FIX_ME_TAG = "FIX_ME";
     }
 
     public static final class Messages {
@@ -104,10 +105,13 @@ public class PrimitiveLogMessage {
 
         public static final String REF_MISSING_MESSAGE = "Please enter a required \"ref\" or \"local_ref\" tag for the platform" + LOG_MESSAGE_SUFFIX;
         public static final String UIC_REF_MISSING_MESSAGE = "Please enter a required \"uic_ref\" tag for the station" + LOG_MESSAGE_SUFFIX;
+        
+        public static final String NO_STOP_IN_VICINITY_MESSAGE = "No stop place has been found in the vinicity. "
+                + "Please enter a \"uic_ref\" tag to identify this stop place." + LOG_MESSAGE_SUFFIX;
 
         public static final String ELE_TAG_NOT_NUMBER_MESSAGE = "Please enter a numeric value for the elevation tag " + LOG_MESSAGE_SUFFIX;
 
-        public static final String UNKNOWN_COORDS_MESSAGE = "The coordinates for this object are unknown and therefore cannot be converted into a NeTEx object.";
+        public static final String UNKNOWN_COORDS_MESSAGE = "The coordinates for this object are unknown and therefore cannot be converted into a NeTEx object." + LOG_MESSAGE_SUFFIX;
 
     }
 }

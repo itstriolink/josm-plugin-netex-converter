@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 
 import com.netex.model.*;
+import com.netex.validation.NeTExValidator;
 
 import org.xml.sax.SAXException;
 
@@ -31,6 +32,7 @@ import java.util.TreeMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
+import javax.xml.transform.stream.StreamSource;
 
 import jaxb.CustomMarshaller;
 import net.opengis.gml._3.PolygonType;
@@ -77,10 +79,9 @@ public class NeTExExporter {
     private final HashMap<Way, FootPath> footPaths;
 
     private final DataSet ds;
-
+    
     private static final List<PrimitiveLogMessage> LOG_MESSAGES = new ArrayList<>();
-
-    private static final int SNAP_DISTANCE = 15;
+    private static final int SNAP_DISTANCE = 20;
 
     public NeTExExporter() throws IOException, SAXException {
         neTExParser = new NeTExParser();
@@ -459,7 +460,7 @@ public class NeTExExporter {
                     if (stopPlace != null && stopPlace.getPublicCode() == null) {
                         logMessage(quayEntry.getKey().getId(), quayEntry.getKey().getType(), new HashMap<String, String>() {
                             {
-                                put(PrimitiveLogMessage.Tags.UIC_REF_TAG, PrimitiveLogMessage.Messages.UIC_REF_MISSING_MESSAGE);
+                                put(PrimitiveLogMessage.Tags.UIC_REF_TAG, PrimitiveLogMessage.Messages.NO_STOP_IN_VICINITY_MESSAGE);
                             }
                         });
                     }
@@ -814,7 +815,7 @@ public class NeTExExporter {
         PublicationDeliveryStructure publicationDeliveryStructure = neTExParser.createPublicationDeliveryStsructure(compositeFrame);
 
         customMarshaller.marshal(neTExFactory.createPublicationDelivery(publicationDeliveryStructure), neTExFile);
-
+        
         for (PrimitiveLogMessage logMessage : LOG_MESSAGES) {
             OsmPrimitive primitive = ds.getPrimitiveById(logMessage.getPrimitiveId(), logMessage.getPrimitiveType());
 
@@ -858,7 +859,7 @@ public class NeTExExporter {
 
         distanceIndex = -1;
 
-        while (++distanceIndex < distances_nodes.length) {
+        while (++distanceIndex < distance_ways.length) {
             List<WaySegment> waySegments = dist_ways.get(distance_ways[distanceIndex]);
             for (WaySegment ws : waySegments) {
                 if (ws != null && ws.way != null) {
@@ -931,7 +932,7 @@ public class NeTExExporter {
 
     private List<OsmPrimitive> findNearestStopPlaces(LatLon coord) {
         Point p = MainApplication.getMap().mapView.getPoint(coord);
-        Map<Double, List<Node>> dist_nodes = getNearestNodesImpl(p, OsmPrimitive::isTagged);
+        Map<Double, List<Node>> dist_nodes = getNearestNodesImpl(p, OsmPrimitive::isTagged, 15);
         Double[] distances_nodes = dist_nodes.keySet().toArray(new Double[0]);
         Arrays.sort(distances_nodes);
 
@@ -949,7 +950,7 @@ public class NeTExExporter {
             }
         }
 
-        Map<Double, List<WaySegment>> dist_ways = getNearestWaySegmentsImpl(p, OsmPrimitive::isTagged);
+        Map<Double, List<WaySegment>> dist_ways = getNearestWaySegmentsImpl(p, OsmPrimitive::isTagged, 15);
         Double[] distance_ways = dist_ways.keySet().toArray(new Double[0]);
         Arrays.sort(distance_ways);
 
@@ -975,7 +976,7 @@ public class NeTExExporter {
         if (ds != null) {
             MapView mapView = MainApplication.getMap().mapView;
 
-            int snapDistanceSq = 1000;
+            int snapDistanceSq = 1300;
             double dist = snapDistanceSq;
             snapDistanceSq *= snapDistanceSq;
 
@@ -1011,6 +1012,27 @@ public class NeTExExporter {
 
         return nearestMap;
     }
+    
+    private Map<Double, List<Node>> getNearestNodesImpl(Point p, Predicate<OsmPrimitive> predicate, int snapDistance) {
+        Map<Double, List<Node>> nearestMap = new TreeMap<>();
+        DataSet ds = MainApplication.getLayerManager().getActiveDataSet();
+
+        if (ds != null) {
+            MapView mapView = MainApplication.getMap().mapView;
+
+            double dist, snapDistanceSq = snapDistance;
+            snapDistanceSq *= snapDistanceSq;
+
+            for (Node n : ds.searchNodes(getBBox(p, snapDistance))) {
+                if (predicate.test(n)
+                        && (dist = mapView.getPoint2D(n).distanceSq(p)) < snapDistanceSq) {
+                    nearestMap.computeIfAbsent(dist, k -> new LinkedList<>()).add(n);
+                }
+            }
+        }
+
+        return nearestMap;
+    }
 
     private Map<Double, List<WaySegment>> getNearestWaySegmentsImpl(Point p, Predicate<OsmPrimitive> predicate) {
         Map<Double, List<WaySegment>> nearestMap = new TreeMap<>();
@@ -1030,7 +1052,55 @@ public class NeTExExporter {
                 int i = -2;
                 for (Node n : w.getNodes()) {
                     i++;
-                    if (n.isDeleted() || n.isIncomplete()) { //FIXME: This shouldn't happen, raise exception?
+                    if (n.isDeleted() || n.isIncomplete()) {
+                        continue;
+                    }
+                    if (lastN == null) {
+                        lastN = n;
+                        continue;
+                    }
+
+                    Point2D pA = mapView.getPoint2D(lastN);
+                    Point2D pB = mapView.getPoint2D(n);
+                    double c = pA.distanceSq(pB);
+                    double a = p.distanceSq(pB);
+                    double b = p.distanceSq(pA);
+
+                    double perDistSq = Double.longBitsToDouble(
+                            Double.doubleToLongBits(a - (a - b + c) * (a - b + c) / 4 / c)
+                            >> 32 << 32);
+
+                    if (perDistSq < snapDistanceSq && a < c + snapDistanceSq && b < c + snapDistanceSq) {
+                        nearestMap.computeIfAbsent(perDistSq, k -> new LinkedList<>()).add(new WaySegment(w, i));
+                    }
+
+                    lastN = n;
+                }
+            }
+        }
+
+        return nearestMap;
+    }
+    
+    private Map<Double, List<WaySegment>> getNearestWaySegmentsImpl(Point p, Predicate<OsmPrimitive> predicate, int snapDistance) {
+        Map<Double, List<WaySegment>> nearestMap = new TreeMap<>();
+        DataSet ds = MainApplication.getLayerManager().getActiveDataSet();
+
+        if (ds != null) {
+            MapView mapView = MainApplication.getMap().mapView;
+
+            double snapDistanceSq = snapDistance;
+            snapDistanceSq *= snapDistanceSq;
+
+            for (Way w : ds.searchWays(getBBox(p, snapDistance))) {
+                if (!predicate.test(w)) {
+                    continue;
+                }
+                Node lastN = null;
+                int i = -2;
+                for (Node n : w.getNodes()) {
+                    i++;
+                    if (n.isDeleted() || n.isIncomplete()) { 
                         continue;
                     }
                     if (lastN == null) {

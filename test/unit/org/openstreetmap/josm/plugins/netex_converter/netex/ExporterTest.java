@@ -7,7 +7,7 @@
  * of the License, or (at your option) any later version.
  *
  */
-package unit.org.openstreetmap.josm.plugins.netex_converter;
+package unit.org.openstreetmap.josm.plugins.netex_converter.netex;
 
 import com.netex.model.AccessFeatureEnumeration;
 import com.netex.model.AccessSpace;
