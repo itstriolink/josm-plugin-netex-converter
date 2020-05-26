@@ -112,7 +112,7 @@ public class ExporterTest {
                                 .withRef("ch:1:TypeOfPoint:dropped_kerb")));
 
         CrossingEquipment fussgaengerstreifen = new CrossingEquipment()
-                .withId("ch:1:CrossingEquipment:fussg�ngerstreifen")
+                .withId("ch:1:CrossingEquipment:fussgängerstreifen")
                 .withCrossingType(CrossingTypeEnumeration.ROAD_CROSSING)
                 .withZebraCrossing(true)
                 .withPedestrianLights(true)
@@ -199,7 +199,7 @@ public class ExporterTest {
                 .withStepFree(true);
 
         PassengerInformationEquipment audio_info_point = new PassengerInformationEquipment()
-                .withId("ch:1:PassengerInformationEquipment:S�V_abfahrten_dynamisch")
+                .withId("ch:1:PassengerInformationEquipment:SÜV_abfahrten_dynamisch")
                 .withPassengerInformationFacilityList(PassengerInformationFacilityEnumeration.STOP_ANNOUNCEMENTS)
                 .withAccessibilityInfoFacilityList(Arrays.asList(
                         AccessibilityInfoFacilityEnumeration.AUDIO_INFORMATION,
@@ -207,7 +207,7 @@ public class ExporterTest {
 
         StaircaseEquipment treppe_S_P0 = new StaircaseEquipment()
                 .withId("ch:1:StaircaseEquipment:S_P0")
-                .withDescription(new MultilingualString().withValue("Top: Overpass, Bottom: Max-D�twyler-Platz"))
+                .withDescription(new MultilingualString().withValue("Top: Overpass, Bottom: Max-Dätwyler-Platz"))
                 .withHandrailType(HandrailEnumeration.BOTH_SIDES)
                 .withTopEnd(new StairEndStructure().withTexturedSurface(true))
                 .withBottomEnd(new StairEndStructure().withTexturedSurface(true));
@@ -216,8 +216,8 @@ public class ExporterTest {
         Level level_2 = new Level();
 
         AccessSpace ueberfuehrung = new AccessSpace()
-                .withId("ch:1:AccessSpace:8516161:�berf�hrung")
-                .withDescription(new MultilingualString().withValue("�berf�hrung"))
+                .withId("ch:1:AccessSpace:8516161:Überführung")
+                .withDescription(new MultilingualString().withValue("Überführung"))
                 .withCentroid(new SimplePoint_VersionStructure()
                         .withLocation(new LocationStructure()
                                 .withLatitude(BigDecimal.valueOf(46.96675449))
