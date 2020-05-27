@@ -109,7 +109,7 @@ public class NeTExExporter {
             return;
         }
         else {
-            primitives = ds.allPrimitives();
+            primitives = ds.getPrimitives(p -> p.isTagged());
         }
 
         for (OsmPrimitive primitive : primitives) {
