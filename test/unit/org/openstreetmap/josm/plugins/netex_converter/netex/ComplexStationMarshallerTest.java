@@ -85,7 +85,7 @@ import org.junit.Test;
  *
  * @author Labian Gashi
  */
-public class ExporterTest {
+public class ComplexStationMarshallerTest {
 
     private static ObjectFactory neTExFactory;
     private static net.opengis.gml._3.ObjectFactory gmlFactory;

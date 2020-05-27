@@ -155,7 +155,29 @@ public final class OSMHelper {
         if (primitive != null) {
             TagMap keys = primitive.getKeys();
 
-            return keys.containsKey(OSMTags.RAILWAY_TAG) && keys.get(OSMTags.RAILWAY_TAG).equals(OSMTags.PLATFORM_TAG_VALUE);
+            return keys.containsKey(OSMTags.RAILWAY_TAG) && keys.get(OSMTags.RAILWAY_TAG).equals(OSMTags.PLATFORM_TAG_VALUE)
+                    && !isTram(primitive);
+        }
+
+        return false;
+    }
+
+    public static boolean isTramPlatform(OsmPrimitive primitive) {
+        if (primitive != null) {
+            TagMap keys = primitive.getKeys();
+
+            return keys.containsKey(OSMTags.RAILWAY_TAG) && keys.get(OSMTags.RAILWAY_TAG).equals(OSMTags.PLATFORM_TAG_VALUE)
+                    && isTram(primitive);
+        }
+
+        return false;
+    }
+
+    public static boolean isTram(OsmPrimitive primitive) {
+        if (primitive != null) {
+            TagMap keys = primitive.getKeys();
+
+            return keys.containsKey(OSMTags.TRAM_TAG) && keys.get(OSMTags.TRAM_TAG).equals(OSMTags.YES_TAG_VALUE);
         }
 
         return false;
@@ -173,7 +195,7 @@ public final class OSMHelper {
     public static boolean isSteps(Way way) {
         if (way != null) {
             TagMap keys = way.getKeys();
-            
+
             return keys.containsKey(OSMTags.HIGHWAY_TAG) && keys.get(OSMTags.HIGHWAY_TAG).equals(OSMTags.STEPS_TAG_VALUE);
         }
 
@@ -183,7 +205,7 @@ public final class OSMHelper {
     public static boolean isFootPath(Way way) {
         if (way != null) {
             TagMap keys = way.getKeys();
-            
+
             return keys.containsKey(OSMTags.HIGHWAY_TAG) && keys.get(OSMTags.HIGHWAY_TAG).equals(OSMTags.FOOTWAY_TAG_VALUE);
         }
 
@@ -283,6 +305,9 @@ public final class OSMHelper {
 
         if (OSMHelper.isRailwayPlatform(primitive)) {
             quayTypeEnumeration = QuayTypeEnumeration.RAIL_PLATFORM;
+        }
+        else if (OSMHelper.isTramPlatform(primitive)) {
+            quayTypeEnumeration = QuayTypeEnumeration.TRAM_PLATFORM;
         }
         else if (OSMHelper.isBusStop(primitive, false)) {
             quayTypeEnumeration = QuayTypeEnumeration.BUS_STOP;

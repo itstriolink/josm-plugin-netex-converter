@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 
 import com.netex.model.*;
-import com.netex.validation.NeTExValidator;
 
 import org.xml.sax.SAXException;
 
@@ -32,7 +31,6 @@ import java.util.TreeMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
-import javax.xml.transform.stream.StreamSource;
 
 import jaxb.CustomMarshaller;
 import net.opengis.gml._3.PolygonType;
@@ -52,6 +50,7 @@ import org.openstreetmap.josm.data.osm.WaySegment;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.tools.Geometry;
 
+import org.openstreetmap.josm.tools.Logging;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import org.openstreetmap.josm.plugins.netex_converter.model.netex.Elevator;
@@ -79,9 +78,9 @@ public class NeTExExporter {
     private final HashMap<Way, FootPath> footPaths;
 
     private final DataSet ds;
-    
+
     private static final List<PrimitiveLogMessage> LOG_MESSAGES = new ArrayList<>();
-    private static final int SNAP_DISTANCE = 20;
+    private static final int SNAP_DISTANCE = 25;
 
     public NeTExExporter() throws IOException, SAXException {
         neTExParser = new NeTExParser();
@@ -268,13 +267,15 @@ public class NeTExExporter {
 
             QuayTypeEnumeration quayType = QuayTypeEnumeration.OTHER;
 
-            Node firstNode;
+            Node firstNode = null;
+            Node lastNode = null;
 
             if (quayEntry.getKey() instanceof Node) {
                 firstNode = (Node) quayEntry.getKey();
             }
             else if (quayEntry.getKey() instanceof Way) {
                 firstNode = ((Way) quayEntry.getKey()).firstNode();
+                lastNode = ((Way) quayEntry.getKey()).lastNode();
             }
             else {
                 RelationMember firstMember = ((Relation) quayEntry.getKey()).firstMember();
@@ -284,15 +285,16 @@ public class NeTExExporter {
                 }
                 else if (firstMember.isWay()) {
                     firstNode = firstMember.getWay().firstNode();
+                    lastNode = firstMember.getWay().lastNode();
                 }
                 else {
                     continue; //implement while loop for relation inside relations until a node is found...
                 }
             }
 
-            LatLon coord = firstNode.getCoor();
+            LatLon firstCoord = firstNode.getCoor();
 
-            if (coord == null) {
+            if (firstCoord == null) {
                 logMessage(firstNode.getId(), firstNode.getType(), new HashMap<String, String>() {
                     {
                         put(PrimitiveLogMessage.Tags.UNKNOWN_COORDS_TAG, PrimitiveLogMessage.Messages.UNKNOWN_COORDS_MESSAGE);
@@ -301,7 +303,7 @@ public class NeTExExporter {
                 continue;
             }
 
-            Point p = MainApplication.getMap().mapView.getPoint(coord);
+            Point p = MainApplication.getMap().mapView.getPoint(firstCoord);
 
             List<Way> nearestWays = MainApplication.getMap().mapView.getNearestWays(p, OsmPrimitive::isTagged);
 
@@ -343,14 +345,14 @@ public class NeTExExporter {
                             currentQuays.replace(stopPlace, currentQuays.get(stopPlace).withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
                                     .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, modifiedQuayRef))
                                     .withPublicCode(modifiedQuayRef)
-                                    .withPolygon(polygonType)
+                                    .withPolygon(polygonType != null ? polygonType : quayEntry.getValue().getPolygon())
                                     .withQuayType(currentQuayType))));
                         }
                         else {
                             currentQuays.put(stopPlace, new Quays_RelStructure().withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
                                     .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, modifiedQuayRef))
                                     .withPublicCode(modifiedQuayRef)
-                                    .withPolygon(polygonType)
+                                    .withPolygon(polygonType != null ? polygonType : quayEntry.getValue().getPolygon())
                                     .withQuayType(currentQuayType))));
                         }
 
@@ -368,10 +370,13 @@ public class NeTExExporter {
                 OsmPrimitive closestStopPlace;
 
                 if (quayEntry.getValue().getQuayType().equals(QuayTypeEnumeration.RAIL_PLATFORM)) {
-                    closestStopPlace = findNearestTrainStation(coord);
+                    closestStopPlace = findNearestTrainStation(firstCoord);
+                    if (closestStopPlace == null && lastNode != null && lastNode.getCoor() != null) {
+                        closestStopPlace = findNearestTrainStation(lastNode.getCoor());
+                    }
                 }
                 else {
-                    closestStopPlace = findNearestStopPlace(coord);
+                    closestStopPlace = findNearestStopPlace(firstCoord);
                 }
 
                 if (closestStopPlace != null) {
@@ -452,31 +457,33 @@ public class NeTExExporter {
 
                 QuayTypeEnumeration currentQuayType = modifiedQuayType ? quayType : quayEntry.getValue().getQuayType();
 
-                StopPlace stopPlace = neTExParser.createStopPlace(quayEntry.getKey(), stopType);
+                if (OSMHelper.isBusStop(quayEntry.getKey(), false)) {
+                    StopPlace stopPlace = neTExParser.createStopPlace(quayEntry.getKey(), stopType);
 
-                if (!stopPlaces.containsKey(quayEntry.getKey())) {
-                    stopPlaces.put(quayEntry.getKey(), stopPlace);
+                    if (!stopPlaces.containsKey(quayEntry.getKey())) {
+                        stopPlaces.put(quayEntry.getKey(), stopPlace);
 
-                    if (stopPlace != null && stopPlace.getPublicCode() == null) {
-                        logMessage(quayEntry.getKey().getId(), quayEntry.getKey().getType(), new HashMap<String, String>() {
-                            {
-                                put(PrimitiveLogMessage.Tags.UIC_REF_TAG, PrimitiveLogMessage.Messages.NO_STOP_IN_VICINITY_MESSAGE);
-                            }
-                        });
+                        if (stopPlace != null && stopPlace.getPublicCode() == null) {
+                            logMessage(quayEntry.getKey().getId(), quayEntry.getKey().getType(), new HashMap<String, String>() {
+                                {
+                                    put(PrimitiveLogMessage.Tags.UIC_REF_TAG, PrimitiveLogMessage.Messages.NO_STOP_IN_VICINITY_MESSAGE);
+                                }
+                            });
+                        }
                     }
-                }
 
-                if (currentQuays.containsKey(stopPlace)) {
-                    currentQuays.replace(stopPlace, currentQuays.get(stopPlace).withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
-                            .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, modifiedQuayRef))
-                            .withPublicCode(modifiedQuayRef)
-                            .withQuayType(currentQuayType))));
-                }
-                else {
-                    currentQuays.put(stopPlace, new Quays_RelStructure().withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
-                            .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, modifiedQuayRef))
-                            .withPublicCode(modifiedQuayRef)
-                            .withQuayType(currentQuayType))));
+                    if (currentQuays.containsKey(stopPlace)) {
+                        currentQuays.replace(stopPlace, currentQuays.get(stopPlace).withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
+                                .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, modifiedQuayRef))
+                                .withPublicCode(modifiedQuayRef)
+                                .withQuayType(currentQuayType))));
+                    }
+                    else {
+                        currentQuays.put(stopPlace, new Quays_RelStructure().withQuayRefOrQuay(Arrays.asList(quayEntry.getValue()
+                                .withId(String.format("ch:1:Quay:%1$s:%2$s", quayUicRef, modifiedQuayRef))
+                                .withPublicCode(modifiedQuayRef)
+                                .withQuayType(currentQuayType))));
+                    }
                 }
 
                 it.remove();
@@ -530,12 +537,11 @@ public class NeTExExporter {
                             }
 
                             Quay quay = neTExParser.createQuay(member);
-
                             quays.put(member, quay);
 
                             boolean modifiedQuayType = false;
 
-                            if (quay.getQuayType().equals(QuayTypeEnumeration.OTHER)) {
+                            if (quay.getQuayType() != null && quay.getQuayType().equals(QuayTypeEnumeration.OTHER)) {
                                 modifiedQuayType = true;
                                 switch (stopPlace.getStopPlaceType()) {
                                     case ONSTREET_BUS:
@@ -815,24 +821,38 @@ public class NeTExExporter {
         PublicationDeliveryStructure publicationDeliveryStructure = neTExParser.createPublicationDeliveryStsructure(compositeFrame);
 
         customMarshaller.marshal(neTExFactory.createPublicationDelivery(publicationDeliveryStructure), neTExFile);
-        
+
         for (PrimitiveLogMessage logMessage : LOG_MESSAGES) {
+
             OsmPrimitive primitive = ds.getPrimitiveById(logMessage.getPrimitiveId(), logMessage.getPrimitiveType());
 
-            primitive.setHighlighted(true);
+            if (primitive != null) {
+                Logging.warn(tr("Warnings found for the {0} with the id: {1}",
+                        primitive.getType(), Long.toString(primitive.getId())));
 
-            for (Map.Entry<String, String> entry : logMessage.getKeys().entrySet()) {
-                primitive.put(entry.getKey(), entry.getValue());
+                primitive.setHighlighted(true);
+
+                for (Map.Entry<String, String> entry : logMessage.getKeys().entrySet()) {
+                    primitive.put(entry.getKey(), entry.getValue());
+                }
             }
         }
 
         MainApplication.getMap().mapView.repaint();
 
-        JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
-                tr("{0} {1} {2}",
-                        "NeTEx export has finished successfully.",
-                        "Objects that need improvement have been highlighted on the map,",
-                        "please correct them for a more accurate conversion."));
+        if (LOG_MESSAGES.isEmpty()) {
+            Logging.info(tr("NeTEx export has finished successfully."));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
+                    tr("NeTEx export has finished successfully."));
+        }
+        else {
+            Logging.warn(tr("NeTEx export has finished with warnings.They are highlighted on the JOSM map layer."));
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
+                    tr("{0} {1} {2}",
+                            "NeTEx export has finished successfully.",
+                            "Objects that need improvement have been highlighted on the map,",
+                            "please correct them for a more accurate conversion."));
+        }
     }
 
     private OsmPrimitive findNearestStopPlace(LatLon coord) {
@@ -976,7 +996,7 @@ public class NeTExExporter {
         if (ds != null) {
             MapView mapView = MainApplication.getMap().mapView;
 
-            int snapDistanceSq = 1300;
+            int snapDistanceSq = 1400;
             double dist = snapDistanceSq;
             snapDistanceSq *= snapDistanceSq;
 
@@ -1012,7 +1032,7 @@ public class NeTExExporter {
 
         return nearestMap;
     }
-    
+
     private Map<Double, List<Node>> getNearestNodesImpl(Point p, Predicate<OsmPrimitive> predicate, int snapDistance) {
         Map<Double, List<Node>> nearestMap = new TreeMap<>();
         DataSet ds = MainApplication.getLayerManager().getActiveDataSet();
@@ -1081,7 +1101,7 @@ public class NeTExExporter {
 
         return nearestMap;
     }
-    
+
     private Map<Double, List<WaySegment>> getNearestWaySegmentsImpl(Point p, Predicate<OsmPrimitive> predicate, int snapDistance) {
         Map<Double, List<WaySegment>> nearestMap = new TreeMap<>();
         DataSet ds = MainApplication.getLayerManager().getActiveDataSet();
@@ -1100,7 +1120,7 @@ public class NeTExExporter {
                 int i = -2;
                 for (Node n : w.getNodes()) {
                     i++;
-                    if (n.isDeleted() || n.isIncomplete()) { 
+                    if (n.isDeleted() || n.isIncomplete()) {
                         continue;
                     }
                     if (lastN == null) {
