@@ -718,7 +718,7 @@ public class NeTExExporter {
 
                 continue;
             }
-            if(footPathEntry.getKey().getId() == 485085739){
+            if (footPathEntry.getKey().getId() == 485085739) {
                 String a = "asd";
             }
             List<OsmPrimitive> nearestStopPlaces = findNearestStopPlaces(coordFirst);
@@ -833,13 +833,13 @@ public class NeTExExporter {
                             stopEntry.getValue().withPathJunctions(relStructure));
                 }
             }
-            
+
             for (Map.Entry<StopPlace, EquipmentPlaces_RelStructure> entry : equipmentPlaces.entrySet()) {
                 if (stopEntry.getValue() != null && stopEntry.getValue().equals(entry.getKey())) {
                     stopPlaces.replace(stopEntry.getKey(), stopEntry.getValue().withEquipmentPlaces(entry.getValue()));
                 }
             }
-            
+
             for (Map.Entry<StopPlace, SitePathLinks_RelStructure> entry : pathLinks.entrySet()) {
                 if (stopEntry.getValue() != null && stopEntry.getValue().equals(entry.getKey())) {
                     stopPlaces.replace(stopEntry.getKey(), stopEntry.getValue().withPathLinks(entry.getValue()));
@@ -964,7 +964,7 @@ public class NeTExExporter {
                 if (OSMHelper.isPlatform(node)) {
                     nearestPlatforms.put(distances_nodes[distanceIndex], node);
                 }
-                
+
                 allNearest.put(distances_nodes[distanceIndex], node);
             }
         }
@@ -982,16 +982,13 @@ public class NeTExExporter {
                     if (OSMHelper.isPlatform(ws.way)) {
                         nearestPlatforms.put(distance_ways[distanceIndex], ws.way);
                     }
-                    
+
                     allNearest.put(distance_ways[distanceIndex], ws.way);
                 }
             }
         }
 
         for (Map.Entry<Double, OsmPrimitive> entry : allNearest.entrySet()) {
-            if(entry.getValue().getId() == 244966453){
-                System.out.println(entry.getValue().getReferrers());
-            }
             for (OsmPrimitive r : entry.getValue().getReferrers()) {
                 if (r instanceof Relation && OSMHelper.isPlatform(r) && !nearestPlatforms.containsValue(r)) {
                     nearestPlatforms.put(entry.getKey(), r);
@@ -1140,7 +1137,7 @@ public class NeTExExporter {
                 int i = -2;
                 for (Node n : w.getNodes()) {
                     i++;
-                    
+
                     if (lastN == null) {
                         lastN = n;
                         continue;
