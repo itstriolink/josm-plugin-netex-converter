@@ -38,7 +38,8 @@ public final class OSMHelper {
         if (primitive != null) {
             TagMap keys = primitive.getKeys();
 
-            return (keys.containsKey(OSMTags.RAILWAY_TAG) && keys.get(OSMTags.RAILWAY_TAG).equals(OSMTags.STATION_TAG_VALUE))
+            return keys.containsKey(OSMTags.RAILWAY_TAG)
+                    && (keys.get(OSMTags.RAILWAY_TAG).equals(OSMTags.STATION_TAG_VALUE) || keys.get(OSMTags.RAILWAY_TAG).equals(OSMTags.HALT_TAG_VALUE))
                     && !(keys.containsKey(OSMTags.PUBLIC_TRANSPORT_TAG) && keys.get(OSMTags.PUBLIC_TRANSPORT_TAG).equals(OSMTags.PLATFORM_TAG_VALUE));
         }
 
@@ -50,11 +51,13 @@ public final class OSMHelper {
             TagMap keys = primitive.getKeys();
 
             if (checkIfPlatformToo) {
-                return keys.containsKey(OSMTags.RAILWAY_TAG) && keys.get(OSMTags.RAILWAY_TAG).equals(OSMTags.STATION_TAG_VALUE)
+                return keys.containsKey(OSMTags.RAILWAY_TAG)
+                        && (keys.get(OSMTags.RAILWAY_TAG).equals(OSMTags.STATION_TAG_VALUE) || keys.get(OSMTags.RAILWAY_TAG).equals(OSMTags.HALT_TAG_VALUE))
                         && !(keys.containsKey(OSMTags.PUBLIC_TRANSPORT_TAG) && keys.get(OSMTags.PUBLIC_TRANSPORT_TAG).equals(OSMTags.PLATFORM_TAG_VALUE));
             }
             else {
-                return keys.containsKey(OSMTags.RAILWAY_TAG) && keys.get(OSMTags.RAILWAY_TAG).equals(OSMTags.STATION_TAG_VALUE);
+                return keys.containsKey(OSMTags.RAILWAY_TAG)
+                        && (keys.get(OSMTags.RAILWAY_TAG).equals(OSMTags.STATION_TAG_VALUE) || keys.get(OSMTags.RAILWAY_TAG).equals(OSMTags.HALT_TAG_VALUE));
             }
         }
 
