@@ -371,14 +371,15 @@ public class NeTExParser {
                 PathJunction firstJunction = pathJunctions.get(i);
                 PathJunction secondJunction = pathJunctions.get(i + 1);
 
+                PathLinkEndStructure fromEndStructure = new PathLinkEndStructure().withPlaceRef(new PlaceRefStructure().
+                        withRef(firstJunction.getId()));
+
+                PathLinkEndStructure toEndStructure = new PathLinkEndStructure()
+                        .withPlaceRef(new PlaceRefStructure()
+                                .withRef(secondJunction.getId()));
+
                 SitePathLink sitePathLink = new SitePathLink()
                         .withId(String.format("ch:1:SitePathLink:%1$s%2$s", wayId, pathJunctions.size() > 2 ? "_" + (i + 1) : ""))
-                        .withFrom(new PathLinkEndStructure()
-                                .withPlaceRef(new PlaceRefStructure().
-                                        withRef(firstJunction.getId())))
-                        .withTo(new PathLinkEndStructure()
-                                .withPlaceRef(new PlaceRefStructure()
-                                        .withRef(secondJunction.getId())))
                         .withAccessibilityAssessment(new AccessibilityAssessment()
                                 .withLimitations(new AccessibilityLimitations_RelStructure()
                                         .withAccessibilityLimitation(new AccessibilityLimitation()
@@ -391,21 +392,21 @@ public class NeTExParser {
 
                 if (fromLevel != null && toLevel != null) {
                     if (i == 0) {
-                        sitePathLink.withFrom(new PathLinkEndStructure()
-                                .withLevelRef(new LevelRefStructure()
-                                        .withRef(fromLevel)));
+                        fromEndStructure.withLevelRef(new LevelRefStructure()
+                                .withRef(fromLevel));
                     }
 
                     if (i == pathJunctions.size() - 2) {
-                        sitePathLink.withTo(new PathLinkEndStructure()
-                                .withLevelRef(new LevelRefStructure()
-                                        .withRef(toLevel)));
+                        toEndStructure.withLevelRef(new LevelRefStructure()
+                                .withRef(toLevel));
                     }
                 }
                 else if (endLevel != null) {
                     sitePathLink.withLevelRef(new LevelRefStructure()
                             .withRef(endLevel));
                 }
+
+                sitePathLink.withFrom(fromEndStructure).withTo(toEndStructure);
 
                 sitePathLinks.add(sitePathLink);
             }
@@ -526,14 +527,15 @@ public class NeTExParser {
             PathJunction firstJunction = pathJunctions.get(i);
             PathJunction secondJunction = pathJunctions.get(i + 1);
 
+            PathLinkEndStructure fromEndStructure = new PathLinkEndStructure().withPlaceRef(new PlaceRefStructure().
+                    withRef(firstJunction.getId()));
+
+            PathLinkEndStructure toEndStructure = new PathLinkEndStructure()
+                    .withPlaceRef(new PlaceRefStructure()
+                            .withRef(secondJunction.getId()));
+
             SitePathLink sitePathLink = new SitePathLink()
                     .withId(String.format("ch:1:SitePathLink:%1$s%2$s", wayId, pathJunctions.size() > 2 ? "_" + (i + 1) : ""))
-                    .withFrom(new PathLinkEndStructure()
-                            .withPlaceRef(new PlaceRefStructure().
-                                    withRef(firstJunction.getId())))
-                    .withTo(new PathLinkEndStructure()
-                            .withPlaceRef(new PlaceRefStructure()
-                                    .withRef(secondJunction.getId())))
                     .withAccessibilityAssessment(new AccessibilityAssessment()
                             .withLimitations(new AccessibilityLimitations_RelStructure()
                                     .withAccessibilityLimitation(new AccessibilityLimitation()
@@ -546,21 +548,21 @@ public class NeTExParser {
 
             if (fromLevel != null && toLevel != null) {
                 if (i == 0) {
-                    sitePathLink.withFrom(new PathLinkEndStructure()
-                            .withLevelRef(new LevelRefStructure()
-                                    .withRef(fromLevel)));
+                    fromEndStructure.withLevelRef(new LevelRefStructure()
+                            .withRef(fromLevel));
                 }
 
                 if (i == pathJunctions.size() - 2) {
-                    sitePathLink.withTo(new PathLinkEndStructure()
-                            .withLevelRef(new LevelRefStructure()
-                                    .withRef(toLevel)));
+                    toEndStructure.withLevelRef(new LevelRefStructure()
+                            .withRef(toLevel));
                 }
             }
             else if (endLevel != null) {
                 sitePathLink.withLevelRef(new LevelRefStructure()
                         .withRef(endLevel));
             }
+
+            sitePathLink.withFrom(fromEndStructure).withTo(toEndStructure);
 
             sitePathLinks.add(sitePathLink);
         }
