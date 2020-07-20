@@ -1,8 +1,21 @@
-\begin{thebibliography}{0}
+\begin{thebibliography}{2}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Packt()]{AboutOSMPackt}
+Packt.
+\newblock What is openstreetmap?
+\newblock URL
+  \url{https://subscription.packtpub.com/book/hardware_and_creative/9781847197504/1/ch01lvl1sec06/what-is-openstreetmap}.
+\newblock [Last~Accessed: 18.07.2020].
+
+\bibitem[for Standardization~CEN()]{WhatIsNeTEx}
+European~Committee for Standardization~CEN.
+\newblock Overview | netex.
+\newblock URL \url{http://netex-cen.eu/?page_id=11}.
+\newblock [Last~Accessed: 20.07.2020].
 
 \end{thebibliography}

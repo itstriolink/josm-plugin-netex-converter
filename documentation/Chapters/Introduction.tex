@@ -1,12 +1,45 @@
 \chapter{Introduction}
-\lipsum[14-16]
+The documentation for this project is split into four main parts. 
+The first chapter gives an introduction to the goals and requirements that this project was initially set to meet. It also explains some of the important technologies \& tools, keywords and notations that are crucial to this project.\\
+\newline
+The second chapter has to do everything with the architecture and the design of the application. It explains about the technologies that were used, the reason why they were used and the benefits of using those technologies for this project.\\
+\newline
+After the things above have been clarified, the third chapter explains about the actual technical implementation aspects of the plugin. It mostly explains about some of the important methods/approaches that were used to achieve the goal of this plugin and the reason why those methods were decided to be used. It also explains about the main technical notations about the project, what they mean and how they were used in the benefit of this project work.\\
+\newline
+The fourth and final chapter presents the results that were achieved from this project work and the outlook of it. It also wraps up with a conclusion about the project and my personal reflection on this whole project work.
 \newpage
 \section{Requirements}
-\lipsum[10-12]
+The main objective for this project is creating an \href{https://en.wikipedia.org/wiki/OpenStreetMap}{OpenStreetMap (OSM)} plugin for the \href{https://josm.openstreetmap.de/}{Java OpenStreetMap Editor (JOSM)} editor that converts the OSM data into an XML format called \href{https://en.wikipedia.org/wiki/NeTEx}{NeTEx}, which stands for Network Timetable Exchange and is a \href{https://en.wikipedia.org/wiki/European_Committee_for_Standardization}{CEN} technical standard for exchanging public transport information.\\
+The plugin takes existing OSM data, converts it into NeTEx and then logs important information such as errors, warnings regarding the OSM transport data and the NeTEx conversion into the JOSM application map layer.\\
+\newline
+The main tasks include (priority sorted): 
+\begin{itemize}
+	\item Creating a JOSM friendly plugin that converts OSM data into the NeTEx format.
+	\item Improving further NeTEx conversions by suggesting different OSM edits that benefit the NeTEx conversion.
+	\item Incorporating the NeTEx conversion and the improvement suggestions with the JOSM default workflow.
+\end{itemize}
+The plugin sticks to the official NeTEx and OSM rules throughout its whole creation and workflow. It is also built under the official JOSM development guidelines and it maximally utilizes the native JOSM methods and libraries that are key to this plugin.
+TBD...(License)
 \newpage
 \section{OpenStreetMap - OSM}
-\lipsum[2-4]
+\href{https://www.openstreetmap.org/}{OpenStreetMap (OSM)} is a project to build a free geographic database of the world. Its aim is to eventually have a record of every single geographic feature on the planet. While this started with mapping streets, it has already gone far beyond that to include footpaths, buildings, waterways, pipelines, woodland, beaches, postboxes, and even individual trees. Along with physical geography, the project also includes administrative boundaries, details of land use, bus routes, and other abstract ideas that aren't apparent from the landscape itself. \cite{AboutOSMPackt}\\
+\newline
+OpenStreetMap is powered by open-source software such as editing software, various APIs etc. One can extract very sophisticated information from the geographical data the OSM consists of. Various users (end-users, developers, maintainers etc.) all around the world contribute daily to improving the geographical data in OSM and to improving the ease of use of such data and information. The OSM data can be used in multiple ways such as producing paper and electronic maps, integrating such data into your own applications and route planning.\\
+\newline
+There are already a lot of famous users that utilize OSM such as: \href{https://www.facebook.com/}{Facebook}, \href{https://www.craigslist.org/}{Craigslist}, \href{https://www.seznam.cz/}{Seznam} etc. OSM is \textit{community-driven} and the community of contributors mainly consists of enthusiast mappers, GIS professionals, humanitarians and many more. It is also \textit{open-data}, which means that anyone can freely use OSM for any purpose as long as OSM and its contributors are credited. The OSM map data can be used for web sites, mobile apps and various hardware devices.
+\newpage
 \section{Java OpenStreetMap Editor - JOSM}
-\lipsum[4-5]
+\href{https://josm.openstreetmap.de/}{Java OpenStreetMap Editor (JOSM)} is an extensible editor for OSM. It is open-source and developer using the Java programming language. It is a desktop application that offers a lot of options and is used for editing OSM data and their metadata tags. It has a steep learning curve and may look complex at first sight, but it's very popular because of its continuous contributions, its plugins and its stability. Eventhough OSM has many editors, JOSM is considered to be one of the most advanced and professional ones (hence the steep learning curve). It is maintainted under the \href{https://www.gnu.org/licenses/gpl-3.0.en.html}{GNU General Public License v3.0}.\\	
+\newline
+JOSM Plugins extend or modify the basic features of the JOSM editor. They are created from enthusiastic developers all around the world, under the JOSM application. There is a repository of plugins maintained in JOSM where users can pick and choose which plugin they want to add to their JOSM editor. If some plugin is not available in the repository (which it should be), it can be installed manually pretty easily.
 \section{Network Timetable Exchange - NeTEx}
-\lipsum[6-8]
+\href{http://netex-cen.eu/}{Network Timetable Exchange (NeTEx)} is a \href{https://www.cen.eu/Pages/default.aspx}{CEN} Technical Standard for exchanging Public Transport schedules and related data. It provides a means to exchange data for passenger information such as stops, routes timetables and fares, among different computer systems, together with related operational data. It can be used to collect and integrate date from many different stakeholders, and to reintegrate it as  it evolves through successive versions. \cite{WhatIsNeTEx}\\
+\newline
+It is divided into three parts:
+\begin{itemize}
+	\item \textbf{Part 1 - Network Topology}: Describes the Public Transport Network topology.
+	\item \textbf{Part 2 - Timing Information}: Describes Scheduled Timetables.
+	\item \textbf{Part 3 - Public Transport Fares}: Covers Fare information.
+\end{itemize}
+All parts covered by NeTEx use the same framework of reusable components defined in a NeTEx framework in Part 1. NeTEx data in XML documents must conform to the NeTEx schema and can automatically be checked by standard XML validator tools. \\
+The schema can also be used to create bindings to different programming languages to assist automating part of the implementation process for creating software that supports NeTEx formats. \cite{WhatIsNeTEx}
