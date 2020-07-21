@@ -1,4 +1,4 @@
-\begin{thebibliography}{3}
+\begin{thebibliography}{5}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -23,5 +23,18 @@ European~Committee for Standardization~CEN.
 \newblock Overview | netex.
 \newblock URL \url{http://netex-cen.eu/?page_id=11}.
 \newblock [Last~Accessed: 20.07.2020].
+
+\bibitem[Ltd.({\natexlab{a}})]{WhatIsJava}
+Parewa Labs~Pvt. Ltd.
+\newblock Learn java programming, {\natexlab{a}}.
+\newblock URL \url{https://www.programiz.com/java-programming}.
+\newblock [Last~Accessed: 21.07.2020].
+
+\bibitem[Ltd.({\natexlab{b}})]{JavaExampleQuadraticEquation}
+Parewa Labs~Pvt. Ltd.
+\newblock Java program to find all roots of a quadratic equation,
+  {\natexlab{b}}.
+\newblock URL
+  \url{https://www.programiz.com/java-programming/examples/quadratic-roots-equation}.
 
 \end{thebibliography}

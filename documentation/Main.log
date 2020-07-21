@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.20)  20 JUL 2020 18:46
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.20)  21 JUL 2020 16:37
 entering extended mode
 **./Main.tex
 (Main.tex
@@ -464,18 +464,141 @@ Package: longtable 2020/01/07 v4.13 Multi-page Table package (DPC)
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\helvet.sty
 Package: helvet 2020/03/25 PSNFSS-v9.3 (WaS) 
 )
+(C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/minted\minted.sty
+Package: minted 2017/07/19 v2.5 Yet another Pygments shim for LaTeX
+
+(C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/fvextra\fvextra.sty
+Package: fvextra 2019/02/04 v1.4 fvextra - extensions and patches for fancyvrb
+
+(C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty
+Package: etoolbox 2020/07/15 v2.5i e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count292
+) (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/fancyvrb\fancyvrb.st
+y
+Package: fancyvrb 2020/05/03 v3.6 verbatim text (tvz,hv)
+\FV@CodeLineNo=\count293
+\FV@InFile=\read2
+\FV@TabBox=\box54
+\c@FancyVerbLine=\count294
+\FV@StepNumber=\count295
+\FV@OutFile=\write3
+) (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/upquote\upquote.sty
+Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verba
+tim
+) (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/lineno\lineno.sty
+Package: lineno 2005/11/02 line numbers on paragraphs v4.41
+\linenopenalty=\count296
+\output=\toks31
+\linenoprevgraf=\count297
+\linenumbersep=\dimen182
+\linenumberwidth=\dimen183
+\c@linenumber=\count298
+\c@pagewiselinenumber=\count299
+\c@LN@truepage=\count300
+\c@internallinenumber=\count301
+\c@internallinenumbers=\count302
+\quotelinenumbersep=\dimen184
+\bframerule=\dimen185
+\bframesep=\dimen186
+\bframebox=\box55
+LaTeX Info: Redefining \\ on input line 3056.
+)
+\c@FV@TrueTabGroupLevel=\count303
+\c@FV@TrueTabCounter=\count304
+\FV@TabBox@Group=\box56
+\FV@TmpLength=\skip77
+\c@FV@HighlightLinesStart=\count305
+\c@FV@HighlightLinesStop=\count306
+\FV@LoopCount=\count307
+\FV@NCharsBox=\box57
+\FV@BreakIndent=\dimen187
+\FV@BreakIndentNChars=\count308
+\FV@BreakSymbolSepLeft=\dimen188
+\FV@BreakSymbolSepLeftNChars=\count309
+\FV@BreakSymbolSepRight=\dimen189
+\FV@BreakSymbolSepRightNChars=\count310
+\FV@BreakSymbolIndentLeft=\dimen190
+\FV@BreakSymbolIndentLeftNChars=\count311
+\FV@BreakSymbolIndentRight=\dimen191
+\FV@BreakSymbolIndentRightNChars=\count312
+\c@FancyVerbLineBreakLast=\count313
+\FV@LineBox=\box58
+\FV@LineIndentBox=\box59
+\FV@LineWidth=\dimen192
+)
+(C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/tools\calc.sty
+Package: calc 2017/05/25 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count314
+\calc@Bcount=\count315
+\calc@Adimen=\dimen193
+\calc@Bdimen=\dimen194
+\calc@Askip=\skip78
+\calc@Bskip=\skip79
+LaTeX Info: Redefining \setlength on input line 80.
+LaTeX Info: Redefining \addtolength on input line 81.
+\calc@Ccount=\count316
+\calc@Cskip=\skip80
+)
+(C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/tools\shellesc.sty
+Package: shellesc 2019/11/08 v1.0c unified shell escape interface for LaTeX
+Package shellesc Info: Unrestricted shell escape enabled on input line 75.
+)
+(C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ifplatform\ifplatform.
+sty
+Package: ifplatform 2017/10/13 v0.4a Testing for the operating system
+
+(C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/catchfile\catchfile.
+sty
+Package: catchfile 2019/12/09 v1.8 Catch the contents of a file (HO)
+)
+(C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifluatex.sty
+Package: ifluatex 2019/10/25 v1.5 ifluatex legacy package. Use iftex instead.
+)) (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/xstring\xstring.sty
+
+(C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/xstring\xstring.tex
+\integerpart=\count317
+\decimalpart=\count318
+)
+Package: xstring 2019/02/06 v1.83 String manipulations (CT)
+) (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/framed\framed.sty
+Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
+\OuterFrameSep=\skip81
+\fb@frw=\dimen195
+\fb@frh=\dimen196
+\FrameRule=\dimen197
+\FrameSep=\dimen198
+)
+(C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count319
+\float@exts=\toks32
+\float@box=\box60
+\@float@everytoks=\toks33
+\@floatcapt=\box61
+)
+\minted@appexistsfile=\read3
+\minted@bgbox=\box62
+\minted@code=\write4
+\c@minted@FancyVerbLineTemp=\count320
+\c@minted@pygmentizecounter=\count321
+\@float@every@listing=\toks34
+\c@listing=\count322
+)
+runsystem(if not exist _minted-Main mkdir _minted-Main)...executed.
+
+
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/natbib\natbib.sty
 Package: natbib 2010/09/13 8.31b (PWD, AO)
-\bibhang=\skip77
-\bibsep=\skip78
+\bibhang=\skip82
+\bibsep=\skip83
 LaTeX Info: Redefining \cite on input line 694.
-\c@NAT@ctr=\count292
+\c@NAT@ctr=\count323
 )
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/tools\verbatim.sty
 Package: verbatim 2019/11/10 v1.5r LaTeX2e package for verbatim enhancements
-\every@verbatim=\toks31
-\verbatim@line=\toks32
-\verbatim@in@stream=\read2
+\every@verbatim=\toks35
+\verbatim@line=\toks36
+\verbatim@in@stream=\read4
 )
 Package hyperref Info: Option `colorlinks' set `true' on input line 10.
 
@@ -487,15 +610,15 @@ Package hyperref Info: Option `colorlinks' set `true' on input line 10.
 ty
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfuti
 l-common.tex
-\pgfutil@everybye=\toks33
-\pgfutil@tempdima=\dimen182
-\pgfutil@tempdimb=\dimen183
+\pgfutil@everybye=\toks37
+\pgfutil@tempdima=\dimen199
+\pgfutil@tempdimb=\dimen256
 
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfuti
 l-common-lists.tex))
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfuti
 l-latex.def
-\pgfutil@abb=\box54
+\pgfutil@abb=\box63
 
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ms\everyshi.sty
 Package: everyshi 2001/05/15 v3.00 EveryShipout Package (MS)
@@ -518,33 +641,33 @@ Package: pgfsys 2020/01/08 v3.1.5b (3.1.5b)
 
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkey
 s.code.tex
-\pgfkeys@pathtoks=\toks34
-\pgfkeys@temptoks=\toks35
+\pgfkeys@pathtoks=\toks38
+\pgfkeys@temptoks=\toks39
 
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkey
 sfiltered.code.tex
-\pgfkeys@tmptoks=\toks36
+\pgfkeys@tmptoks=\toks40
 ))
-\pgf@x=\dimen184
-\pgf@y=\dimen185
-\pgf@xa=\dimen186
-\pgf@ya=\dimen187
-\pgf@xb=\dimen188
-\pgf@yb=\dimen189
-\pgf@xc=\dimen190
-\pgf@yc=\dimen191
-\pgf@xd=\dimen192
-\pgf@yd=\dimen193
-\w@pgf@writea=\write3
-\r@pgf@reada=\read3
-\c@pgf@counta=\count293
-\c@pgf@countb=\count294
-\c@pgf@countc=\count295
-\c@pgf@countd=\count296
-\t@pgf@toka=\toks37
-\t@pgf@tokb=\toks38
-\t@pgf@tokc=\toks39
-\pgf@sys@id@count=\count297
+\pgf@x=\dimen257
+\pgf@y=\dimen258
+\pgf@xa=\dimen259
+\pgf@ya=\dimen260
+\pgf@xb=\dimen261
+\pgf@yb=\dimen262
+\pgf@xc=\dimen263
+\pgf@yc=\dimen264
+\pgf@xd=\dimen265
+\pgf@yd=\dimen266
+\w@pgf@writea=\write5
+\r@pgf@reada=\read5
+\c@pgf@counta=\count324
+\c@pgf@countb=\count325
+\c@pgf@countc=\count326
+\c@pgf@countd=\count327
+\t@pgf@toka=\toks41
+\t@pgf@tokb=\toks42
+\t@pgf@tokc=\toks43
+\pgf@sys@id@count=\count328
 
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgf.
 cfg
@@ -563,8 +686,8 @@ File: pgfsys-common-pdf.def 2020/01/08 v3.1.5b (3.1.5b)
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfs
 yssoftpath.code.tex
 File: pgfsyssoftpath.code.tex 2020/01/08 v3.1.5b (3.1.5b)
-\pgfsyssoftpath@smallbuffer@items=\count298
-\pgfsyssoftpath@bigbuffer@items=\count299
+\pgfsyssoftpath@smallbuffer@items=\count329
+\pgfsyssoftpath@bigbuffer@items=\count330
 )
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfs
 ysprotocol.code.tex
@@ -599,12 +722,12 @@ e.tex
 .code.tex)
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathpars
 er.code.tex
-\pgfmath@dimen=\dimen194
-\pgfmath@count=\count300
-\pgfmath@box=\box55
-\pgfmath@toks=\toks40
-\pgfmath@stack@operand=\toks41
-\pgfmath@stack@operation=\toks42
+\pgfmath@dimen=\dimen267
+\pgfmath@count=\count331
+\pgfmath@box=\box64
+\pgfmath@toks=\toks44
+\pgfmath@stack@operand=\toks45
+\pgfmath@stack@operation=\toks46
 )
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunc
 tions.code.tex
@@ -626,59 +749,59 @@ tions.misc.code.tex)
 tions.integerarithmetics.code.tex)))
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfloa
 t.code.tex
-\c@pgfmathroundto@lastzeros=\count301
+\c@pgfmathroundto@lastzeros=\count332
 ))
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfint.code
 .tex)
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 repoints.code.tex
 File: pgfcorepoints.code.tex 2020/01/08 v3.1.5b (3.1.5b)
-\pgf@picminx=\dimen195
-\pgf@picmaxx=\dimen196
-\pgf@picminy=\dimen197
-\pgf@picmaxy=\dimen198
-\pgf@pathminx=\dimen199
-\pgf@pathmaxx=\dimen256
-\pgf@pathminy=\dimen257
-\pgf@pathmaxy=\dimen258
-\pgf@xx=\dimen259
-\pgf@xy=\dimen260
-\pgf@yx=\dimen261
-\pgf@yy=\dimen262
-\pgf@zx=\dimen263
-\pgf@zy=\dimen264
+\pgf@picminx=\dimen268
+\pgf@picmaxx=\dimen269
+\pgf@picminy=\dimen270
+\pgf@picmaxy=\dimen271
+\pgf@pathminx=\dimen272
+\pgf@pathmaxx=\dimen273
+\pgf@pathminy=\dimen274
+\pgf@pathmaxy=\dimen275
+\pgf@xx=\dimen276
+\pgf@xy=\dimen277
+\pgf@yx=\dimen278
+\pgf@yy=\dimen279
+\pgf@zx=\dimen280
+\pgf@zy=\dimen281
 )
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 repathconstruct.code.tex
 File: pgfcorepathconstruct.code.tex 2020/01/08 v3.1.5b (3.1.5b)
-\pgf@path@lastx=\dimen265
-\pgf@path@lasty=\dimen266
+\pgf@path@lastx=\dimen282
+\pgf@path@lasty=\dimen283
 )
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 repathusage.code.tex
 File: pgfcorepathusage.code.tex 2020/01/08 v3.1.5b (3.1.5b)
-\pgf@shorten@end@additional=\dimen267
-\pgf@shorten@start@additional=\dimen268
+\pgf@shorten@end@additional=\dimen284
+\pgf@shorten@start@additional=\dimen285
 )
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 rescopes.code.tex
 File: pgfcorescopes.code.tex 2020/01/08 v3.1.5b (3.1.5b)
-\pgfpic=\box56
-\pgf@hbox=\box57
-\pgf@layerbox@main=\box58
-\pgf@picture@serial@count=\count302
+\pgfpic=\box65
+\pgf@hbox=\box66
+\pgf@layerbox@main=\box67
+\pgf@picture@serial@count=\count333
 )
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 regraphicstate.code.tex
 File: pgfcoregraphicstate.code.tex 2020/01/08 v3.1.5b (3.1.5b)
-\pgflinewidth=\dimen269
+\pgflinewidth=\dimen286
 )
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 retransformations.code.tex
 File: pgfcoretransformations.code.tex 2020/01/08 v3.1.5b (3.1.5b)
-\pgf@pt@x=\dimen270
-\pgf@pt@y=\dimen271
-\pgf@pt@temp=\dimen272
+\pgf@pt@x=\dimen287
+\pgf@pt@y=\dimen288
+\pgf@pt@temp=\dimen289
 )
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 requick.code.tex
@@ -695,14 +818,14 @@ File: pgfcorepathprocessing.code.tex 2020/01/08 v3.1.5b (3.1.5b)
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 rearrows.code.tex
 File: pgfcorearrows.code.tex 2020/01/08 v3.1.5b (3.1.5b)
-\pgfarrowsep=\dimen273
+\pgfarrowsep=\dimen290
 )
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 reshade.code.tex
 File: pgfcoreshade.code.tex 2020/01/08 v3.1.5b (3.1.5b)
-\pgf@max=\dimen274
-\pgf@sys@shading@range@num=\count303
-\pgf@shadingcount=\count304
+\pgf@max=\dimen291
+\pgf@sys@shading@range@num=\count334
+\pgf@shadingcount=\count335
 )
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 reimage.code.tex
@@ -711,7 +834,7 @@ File: pgfcoreimage.code.tex 2020/01/08 v3.1.5b (3.1.5b)
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 reexternal.code.tex
 File: pgfcoreexternal.code.tex 2020/01/08 v3.1.5b (3.1.5b)
-\pgfexternal@startupbox=\box59
+\pgfexternal@startupbox=\box68
 ))
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
 relayers.code.tex
@@ -732,7 +855,7 @@ File: pgfcorerdf.code.tex 2020/01/08 v3.1.5b (3.1.5b)
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodul
 eshapes.code.tex
 File: pgfmoduleshapes.code.tex 2020/01/08 v3.1.5b (3.1.5b)
-\pgfnodeparttextbox=\box60
+\pgfnodeparttextbox=\box69
 )
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodul
 eplot.code.tex
@@ -741,8 +864,8 @@ File: pgfmoduleplot.code.tex 2020/01/08 v3.1.5b (3.1.5b)
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pgf/compatibility\pgfc
 omp-version-0-65.sty
 Package: pgfcomp-version-0-65 2020/01/08 v3.1.5b (3.1.5b)
-\pgf@nodesepstart=\dimen275
-\pgf@nodesepend=\dimen276
+\pgf@nodesepstart=\dimen292
+\pgf@nodesepend=\dimen293
 )
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pgf/compatibility\pgfc
 omp-version-1-18.sty
@@ -763,10 +886,10 @@ Package: pgffor 2020/01/08 v3.1.5b (3.1.5b)
 
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmath.cod
 e.tex)
-\pgffor@iter=\dimen277
-\pgffor@skip=\dimen278
-\pgffor@stack=\toks43
-\pgffor@toks=\toks44
+\pgffor@iter=\dimen294
+\pgffor@skip=\dimen295
+\pgffor@stack=\toks47
+\pgffor@toks=\toks48
 ))
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/ti
 kz\tikz.code.tex
@@ -775,34 +898,34 @@ Package: tikz 2020/01/08 v3.1.5b (3.1.5b)
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries\pgflib
 raryplothandlers.code.tex
 File: pgflibraryplothandlers.code.tex 2020/01/08 v3.1.5b (3.1.5b)
-\pgf@plot@mark@count=\count305
-\pgfplotmarksize=\dimen279
+\pgf@plot@mark@count=\count336
+\pgfplotmarksize=\dimen296
 )
-\tikz@lastx=\dimen280
-\tikz@lasty=\dimen281
-\tikz@lastxsaved=\dimen282
-\tikz@lastysaved=\dimen283
-\tikz@lastmovetox=\dimen284
-\tikz@lastmovetoy=\dimen285
-\tikzleveldistance=\dimen286
-\tikzsiblingdistance=\dimen287
-\tikz@figbox=\box61
-\tikz@figbox@bg=\box62
-\tikz@tempbox=\box63
-\tikz@tempbox@bg=\box64
-\tikztreelevel=\count306
-\tikznumberofchildren=\count307
-\tikznumberofcurrentchild=\count308
-\tikz@fig@count=\count309
+\tikz@lastx=\dimen297
+\tikz@lasty=\dimen298
+\tikz@lastxsaved=\dimen299
+\tikz@lastysaved=\dimen300
+\tikz@lastmovetox=\dimen301
+\tikz@lastmovetoy=\dimen302
+\tikzleveldistance=\dimen303
+\tikzsiblingdistance=\dimen304
+\tikz@figbox=\box70
+\tikz@figbox@bg=\box71
+\tikz@tempbox=\box72
+\tikz@tempbox@bg=\box73
+\tikztreelevel=\count337
+\tikznumberofchildren=\count338
+\tikznumberofcurrentchild=\count339
+\tikz@fig@count=\count340
 
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodul
 ematrix.code.tex
 File: pgfmodulematrix.code.tex 2020/01/08 v3.1.5b (3.1.5b)
-\pgfmatrixcurrentrow=\count310
-\pgfmatrixcurrentcolumn=\count311
-\pgf@matrix@numberofcolumns=\count312
+\pgfmatrixcurrentrow=\count341
+\pgfmatrixcurrentcolumn=\count342
+\pgf@matrix@numberofcolumns=\count343
 )
-\tikz@expandcount=\count313
+\tikz@expandcount=\count344
 
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/ti
 kz/libraries\tikzlibrarytopaths.code.tex
@@ -816,10 +939,10 @@ Package: xkeyval 2014/12/03 v2.7a package option processing (HA)
 
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\xkeyval.tex
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\xkvutils.tex
-\XKV@toks=\toks45
-\XKV@tempa@toks=\toks46
+\XKV@toks=\toks49
+\XKV@tempa@toks=\toks50
 )
-\XKV@depth=\count314
+\XKV@depth=\count345
 File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
 ))
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/adjustbox\adjcalc.sty
@@ -832,55 +955,47 @@ Package: trimclip 2018/04/08 v1.1 Trim and clip general TeX material
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/collectbox\collectbox.
 sty
 Package: collectbox 2012/05/17 v0.4b Collect macro arguments as boxes
-\collectedbox=\box65
+\collectedbox=\box74
 )
-\tc@llx=\dimen288
-\tc@lly=\dimen289
-\tc@urx=\dimen290
-\tc@ury=\dimen291
+\tc@llx=\dimen305
+\tc@lly=\dimen306
+\tc@urx=\dimen307
+\tc@ury=\dimen308
 Package trimclip Info: Using driver 'tc-pdftex.def'.
 
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/adjustbox\tc-pdftex.de
 f
 File: tc-pdftex.def 2019/01/04 v2.2 Clipping driver for pdftex
 ))
-\adjbox@Width=\dimen292
-\adjbox@Height=\dimen293
-\adjbox@Depth=\dimen294
-\adjbox@Totalheight=\dimen295
-\adjbox@pwidth=\dimen296
-\adjbox@pheight=\dimen297
-\adjbox@pdepth=\dimen298
-\adjbox@ptotalheight=\dimen299
+\adjbox@Width=\dimen309
+\adjbox@Height=\dimen310
+\adjbox@Depth=\dimen311
+\adjbox@Totalheight=\dimen312
+\adjbox@pwidth=\dimen313
+\adjbox@pheight=\dimen314
+\adjbox@pdepth=\dimen315
+\adjbox@ptotalheight=\dimen316
 
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ifoddpage\ifoddpage.st
 y
 Package: ifoddpage 2016/04/23 v1.1 Conditionals for odd/even page detection
-\c@checkoddpage=\count315
+\c@checkoddpage=\count346
 )
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/varwidth\varwidth.sty
 Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
-\@vwid@box=\box66
-\sift@deathcycles=\count316
-\@vwid@loff=\dimen300
-\@vwid@roff=\dimen301
-)) (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty
-Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count317
-\float@exts=\toks47
-\float@box=\box67
-\@float@everytoks=\toks48
-\@floatcapt=\box68
-)
-(C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/lipsum\lipsum.sty
+\@vwid@box=\box75
+\sift@deathcycles=\count347
+\@vwid@loff=\dimen317
+\@vwid@roff=\dimen318
+)) (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/lipsum\lipsum.sty
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/l3kernel\expl3.sty
 Package: expl3 2020-07-17 L3 programming layer (loader) 
 
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pd
 fmode.def
 File: l3backend-pdfmode.def 2020-06-29 L3 backend support: PDF mode
-\l__kernel_color_stack_int=\count318
-\l__pdf_internal_box=\box69
+\l__kernel_color_stack_int=\count348
+\l__pdf_internal_box=\box76
 ))
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/xparse\xpar
 se.sty
@@ -888,16 +1003,22 @@ Package: xparse 2020-05-15 L3 Experimental document command parser
 
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/xparse\xpar
 se-generic.tex
-\l__xparse_current_arg_int=\count319
-\g__xparse_grabber_int=\count320
-\l__xparse_m_args_int=\count321
-\l__xparse_v_nesting_int=\count322
+\l__xparse_current_arg_int=\count349
+\g__xparse_grabber_int=\count350
+\l__xparse_m_args_int=\count351
+\l__xparse_v_nesting_int=\count352
 ))
 Package: lipsum 2019/01/02 v2.2 150 paragraphs of Lorem Ipsum dummy text
 
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/lipsum\lipsum.ltd.tex
 File: lipsum.ltd.tex 2019/01/02 v2.2 The Lorem ipsum dummy text
-)) (Main.aux)
+))
+runsystem(for ^%i in (pygmentize.exe pygmentize.bat pygmentize.cmd) do set > Ma
+in.aex <nul: /p x=^%~$PATH:i>> Main.aex)...executed.
+
+runsystem(del Main.aex)...executed.
+
+ (Main.aux)
 \openout1 = `Main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
@@ -940,23 +1061,27 @@ Package caption Info: End \AtBeginDocument code.
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.m
 kii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count323
-\scratchdimen=\dimen302
-\scratchbox=\box70
-\nofMPsegments=\count324
-\nofMParguments=\count325
-\everyMPshowfont=\toks49
-\MPscratchCnt=\count326
-\MPscratchDim=\dimen303
-\MPnumerator=\count327
-\makeMPintoPDFobject=\count328
-\everyMPtoPDFconversion=\toks50
+\scratchcounter=\count353
+\scratchdimen=\dimen319
+\scratchbox=\box77
+\nofMPsegments=\count354
+\nofMParguments=\count355
+\everyMPshowfont=\toks51
+\MPscratchCnt=\count356
+\MPscratchDim=\dimen320
+\MPnumerator=\count357
+\makeMPintoPDFobject=\count358
+\everyMPtoPDFconversion=\toks52
+) (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/base\textcomp.sty
+Package: textcomp 2020/02/02 v2.0n Standard LaTeX package
 )
-\c@lstlisting=\count329
-\AtBeginShipoutBox=\box71
+\c@lstlisting=\count359
+\AtBeginShipoutBox=\box78
 Package hyperref Info: Link coloring ON on input line 22.
- (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
+
+(C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
 Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
+
 (C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty
 Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 )
@@ -964,14 +1089,14 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 tlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count330
+\c@section@level=\count360
 )
 LaTeX Info: Redefining \ref on input line 22.
 LaTeX Info: Redefining \pageref on input line 22.
 LaTeX Info: Redefining \nameref on input line 22.
  (Main.out) (Main.out)
-\@outlinefile=\write4
-\openout4 = `Main.out'.
+\@outlinefile=\write6
+\openout6 = `Main.out'.
 
  ABD: EveryShipout initializing macros
 (Titlepage/Titlepage.tex
@@ -1069,8 +1194,8 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 [4
 
 ])
-\tf@toc=\write5
-\openout5 = `Main.toc'.
+\tf@toc=\write7
+\openout7 = `Main.toc'.
 
  [5] (Chapters/Introduction.tex
 Chapter 1.
@@ -1125,9 +1250,36 @@ Underfull \hbox (badness 10000) in paragraph at lines 37--40
 
 ) (Chapters/ArchitectureDesign.tex [4]
 Chapter 2.
+
+Underfull \hbox (badness 10000) in paragraph at lines 5--8
+
+ []
+
+\openout3 = `Main.pyg'.
+
+(_minted-Main/default-pyg-prefix.pygstyle) (_minted-Main/default.pygstyle)
+(_minted-Main/B752350689034BFD80A317C043D49DB2155EB3CE70C3ED74340D332E0F600455.
+pygtex
+Underfull \hbox (badness 10000) in paragraph at lines 10--1
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 10--1
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 10--1
+
+ []
+
 [5
 
-] [6]) (Chapters/Implementation.tex [7]
+]
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 2.
+) [6]) (Chapters/Implementation.tex [7]
 Chapter 3.
 [8
 
@@ -1167,6 +1319,18 @@ Underfull \hbox (badness 10000) in paragraph at lines 9--14
 h01lvl1sec06 /
  []
 
+
+Underfull \hbox (badness 2698) in paragraph at lines 34--39
+[]\OT1/phv/m/n/12 Parewa Labs Pvt. Ltd.  Java pro-gram to find all roots of a q
+uadratic
+ []
+
+
+Underfull \hbox (badness 1331) in paragraph at lines 34--39
+\OT1/phv/m/n/12 equa-tion, .  URL [][]$\OT1/cmtt/m/n/12 https : / / www . progr
+amiz . com / java-[]programming / examples /
+ []
+
 ) [24
 
 
@@ -1177,26 +1341,28 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 73.
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 73.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 73.
 Package rerunfilecheck Info: File `Main.out' has not changed.
-(rerunfilecheck)             Checksum: 9C4A8BF8CFBFD915D5751D69949C90BE;4837.
+(rerunfilecheck)             Checksum: B932D8120032BEC002C574520A31E9A2;4850.
+runsystem(del Main.pyg)...executed.
+
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 73.
  ) 
 Here is how much of TeX's memory you used:
- 25437 strings out of 481225
- 454346 string characters out of 2905705
- 928796 words of memory out of 3000000
- 40408 multiletter control sequences out of 15000+200000
+ 28501 strings out of 481225
+ 518178 string characters out of 2905705
+ 1039358 words of memory out of 3000000
+ 43400 multiletter control sequences out of 15000+200000
  556405 words of font info for 68 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 60i,11n,60p,801b,644s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 60i,11n,60p,959b,648s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/lenovo/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}<C
 :/Users/lenovo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmt
 t12.pfb><C:/Users/lenovo/AppData/Local/Programs/MiKTeX/fonts/type1/urw/helvetic
 /uhvb8a.pfb><C:/Users/lenovo/AppData/Local/Programs/MiKTeX/fonts/type1/urw/helv
 etic/uhvr8a.pfb><C:/Users/lenovo/AppData/Local/Programs/MiKTeX/fonts/type1/urw/
 helvetic/uhvro8a.pfb>
-Output written on Main.pdf (30 pages, 152990 bytes).
+Output written on Main.pdf (30 pages, 158514 bytes).
 PDF statistics:
- 377 PDF objects out of 1000 (max. 8388607)
- 69 named destinations out of 1000 (max. 500000)
+ 388 PDF objects out of 1000 (max. 8388607)
+ 71 named destinations out of 1000 (max. 500000)
  279 words of extra memory for PDF output out of 10000 (max. 10000000)
 
