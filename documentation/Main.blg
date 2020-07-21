@@ -1,9 +1,5 @@
-This is BibTeX, Version 0.99d
-Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
-The top-level auxiliary file: Main.aux
-Reallocating 'name_of_file' (item size: 1) to 9 items.
+This is BibTeX, Version 0.99dThe top-level auxiliary file: Main.aux
 The style file: unsrtnat.bst
-Reallocating 'name_of_file' (item size: 1) to 13 items.
 Database file #1: Bibliography.bib
 Warning--empty journal in AboutOSMPackt
 Warning--empty year in AboutOSMPackt
@@ -12,45 +8,5 @@ Warning--empty year in WhatIsJOSMIntro
 Warning--empty year in WhatIsNeTEx
 Warning--empty year in WhatIsJava
 Warning--empty year in JavaExampleQuadraticEquation
-You've used 5 entries,
-            2481 wiz_defined-function locations,
-            578 strings with 5157 characters,
-and the built_in function-call counts, 1376 in all, are:
-= -- 116
-> -- 35
-< -- 5
-+ -- 21
-- -- 10
-* -- 69
-:= -- 216
-add.period$ -- 19
-call.type$ -- 5
-change.case$ -- 10
-chr.to.int$ -- 4
-cite$ -- 12
-duplicate$ -- 74
-empty$ -- 149
-format.name$ -- 15
-if$ -- 290
-int.to.chr$ -- 2
-int.to.str$ -- 6
-missing$ -- 1
-newline$ -- 37
-num.names$ -- 15
-pop$ -- 67
-preamble$ -- 1
-purify$ -- 5
-quote$ -- 0
-skip$ -- 47
-stack$ -- 0
-substring$ -- 10
-swap$ -- 11
-text.length$ -- 0
-text.prefix$ -- 0
-top$ -- 0
-type$ -- 35
-warning$ -- 7
-while$ -- 10
-width$ -- 0
-write$ -- 72
-(There were 7 warnings)
+Warning--empty year in JOSMPlugins
+(There were 8 warnings)
