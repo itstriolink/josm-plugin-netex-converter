@@ -45,7 +45,7 @@ There exist plugins for improving the look \& feel of drawing different shapes o
 This plugin is a single executable .jar file which runs under JOSM and is executed within it. It is developed by following the official JOSM development guidelines and OSM rules. The plugin, if installed on the JOSM environment, is first executed using a JOSM native library which takes care of plugin initialization, execution and error handling. After loaded into JOSM, depending on the nature of the plugin, it can interact with any component within JOSM, in this case, the plugin is a single option on the toolbar menu that simply takes the currently loaded map data in the main map layer and converts it into the NeTEx format. \\
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{./Images/ArchitectureDesign/netex_converter_toolbar.png}
-	\caption{The location of the NeTEx Converter plugin within the JOSM toolbar}
+	\caption{The location of the NeTEx Converter plugin menu item in the JOSM toolbar}
 \end{figure}
 After the conversion is completed, any log information (warning, error) will be displayed within the JOSM map layer by highlighting the intended object, may that be a node, a way or even a relation.
 \begin{figure}[H]

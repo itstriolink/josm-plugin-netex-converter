@@ -1,6 +1,14 @@
 This is BibTeX, Version 0.99dThe top-level auxiliary file: Main.aux
 The style file: unsrtnat.bst
 Database file #1: Bibliography.bib
+Repeated entry---line 63 of file Bibliography.bib
+ : @misc{WhatIsLaTeX
+ :                  ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 70 of file Bibliography.bib
+ : @misc{WhatIsTeXStudio
+ :                      ,
+I'm skipping whatever remains of this entry
 Warning--empty journal in AboutOSMPackt
 Warning--empty year in AboutOSMPackt
 Warning--empty year in AboutOSMPackt
@@ -10,4 +18,6 @@ Warning--empty year in WhatIsJava
 Warning--empty year in JavaExampleQuadraticEquation
 Warning--empty year in JOSMPlugins
 Warning--empty year in OSMElements
-(There were 9 warnings)
+Warning--empty year in WhatIsLaTeX
+Warning--empty year in WhatIsTeXStudio
+(There were 2 error messages)
