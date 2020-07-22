@@ -8,7 +8,7 @@ documentation:
   stage: "build"
   script: [
       "cd documentation",
-      "pdflatex Main.tex"
+      "pdflatex -synctex=1 --shell-escape -interaction=nonstopmode Main.tex"
       ]
   artifacts:
     paths:
