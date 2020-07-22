@@ -1,15 +1,9 @@
-before_script: []
-stages: [
-  "build",
-]
-
 documentation:
-  image: "timnn/texlive"
-  stage: "build"
-  script: [
-      "cd documentation",
-      "pdflatex -synctex=1 --shell-escape -interaction=nonstopmode Main.tex"
-      ]
+  stage: deploy
+  script:
+    - mkdir public
+    - cp documentation/Main.pdf public
   artifacts:
     paths:
-      - documentation/Main.pdf
+      - public
+
