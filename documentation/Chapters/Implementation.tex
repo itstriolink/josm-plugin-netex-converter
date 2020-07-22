@@ -1,12 +1,12 @@
 \chapter{Implementation}
 \section{Overview}
-This part of the documentation describes how the project was implemented in more-detailed and technical manner. It shows some of the key approaches that were used to solve some of the major conversion obstacles. It explains what kind of data OSM contains and how that data was used in conjunction with the plugin to produce an XML document compliant with the NeTEx schema. As we know, OSM data is not very consistent, since it's updated by the community, which means that a lot of extra measures and conditions had to be taken in order to avoid and solve problems of data inconsistency. Another important aspect of the conversion is the XML Binding Framework which is necessary for mapping Java classes to XML representations.\\
+This part of the documentation describes how the project was implemented in more-detailed and technical manner. It shows some of the key approaches that were used to solve some of the major conversion obstacles. It explains what kind of data OSM contains and how that data was used in conjunction with the plugin to produce an XML document compliant with the NeTEx schema. As we know, OSM data is not very consistent, since it's updated by the community, which means that a lot of extra measures and conditions had to be taken in order to avoid and solve problems of data inconsistency.\\
 This section will also cover some of the important techniques and tools that were used to test, document the plugin, generate artifacts from the plugin etc. It will also cover the code repository and the CI/CD aspects, which for this application, were hosted/maintained on project called \href{https://gitlab.com/}{GitLab}, which is hosted under an open-source license.
 \section{OpenStreetMap Data}
 Elements (or objects) are the basic components of OpenStreetMap's conceptual data model of the physical world. They consist of:
 \begin{itemize}
-	\item Nodes (defining points in space),
-	\item Ways (defining linear features and area boundaries), and
+	\item Nodes (defining points in space)
+	\item Ways (defining linear features and area boundaries)
 	\item Relations (which are sometimes used to explain how other elements work together).
 \end{itemize}
 All of the above can have one or more associated tags (which describe the meaning of a particular element). \cite{OSMElements}
@@ -15,7 +15,7 @@ All of the above can have one or more associated tags (which describe the meanin
 \subsubsection{Node}
 A node represents a specific point on the earth's surface defined by its latitude and longitude. Each node comprises at least an id number and a pair of coordinates.\\
 Nodes can be used to define standalone point features. For example, a node could represent a park bench or a water well.\\
-Nodes are also used to define the shape of a way. When used as points along ways, nodes usually have no tags, though some of them could. For example, highway=traffic_signals marks traffic signals on a road, and power=tower represents a pylon along an electric power line.\\
+Nodes are also used to define the shape of a way. When used as points along ways, nodes usually have no tags, though some of them could. For example, \textit{highway=traffic\_signals} marks traffic signals on a road, and \textit{power=tower} represents a pylon along an electric power line.\\
 A node can be included as member of relation. The relation also may indicate the member's role: that is, the node's function in this particular set of related data elements. \cite{OSMElements}
 \subsubsection{Way}
 A way is an ordered list of between 2 and 2,000 nodes that define a polyline. Ways are used to represent linear features such as rivers and roads.\\
