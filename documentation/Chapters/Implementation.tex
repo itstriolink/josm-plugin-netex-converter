@@ -1,22 +1,61 @@
 \chapter{Implementation}
 \section{Overview}
-\lipsum[4-5]
+This part of the documentation describes how the project was implemented in more-detailed and technical manner. It shows some of the key approaches that were used to solve some of the major conversion obstacles. It explains what kind of data OSM contains and how that data was used in conjunction with the plugin to produce an XML document compliant with the NeTEx schema. As we know, OSM data is not very consistent, since it's updated by the community, which means that a lot of extra measures and conditions had to be taken in order to avoid and solve problems of data inconsistency. Another important aspect of the conversion is the XML Binding Framework which is necessary for mapping Java classes to XML representations.\\
+This section will also cover some of the important techniques and tools that were used to test, document the plugin, generate artifacts from the plugin etc. It will also cover the code repository and the CI/CD aspects, which for this application, were hosted/maintained on project called \href{https://gitlab.com/}{GitLab}, which is hosted under an open-source license.
+\section{OpenStreetMap Data}
+Elements (or objects) are the basic components of OpenStreetMap's conceptual data model of the physical world. They consist of:
+\begin{itemize}
+	\item Nodes (defining points in space),
+	\item Ways (defining linear features and area boundaries), and
+	\item Relations (which are sometimes used to explain how other elements work together).
+\end{itemize}
+All of the above can have one or more associated tags (which describe the meaning of a particular element). \cite{OSMElements}
+\subsection{Data Types}
+\label{sec:OSMDataTypes}
+\subsubsection{Node}
+A node represents a specific point on the earth's surface defined by its latitude and longitude. Each node comprises at least an id number and a pair of coordinates.\\
+Nodes can be used to define standalone point features. For example, a node could represent a park bench or a water well.\\
+Nodes are also used to define the shape of a way. When used as points along ways, nodes usually have no tags, though some of them could. For example, highway=traffic_signals marks traffic signals on a road, and power=tower represents a pylon along an electric power line.\\
+A node can be included as member of relation. The relation also may indicate the member's role: that is, the node's function in this particular set of related data elements. \cite{OSMElements}
+\subsubsection{Way}
+A way is an ordered list of between 2 and 2,000 nodes that define a polyline. Ways are used to represent linear features such as rivers and roads.\\
+Ways can also represent the boundaries of areas (solid polygons) such as buildings or forests. In this case, the way's first and last node will be the same. This is called a "closed way".\\
+Note that closed ways occasionally represent loops, such as roundabouts on highways, rather than solid areas. The way's tags must be examined to discover which it is.\\
+Areas with holes, or with boundaries of more than 2,000 nodes, cannot be represented by a single way. Instead, the feature will require a more complex multipolygon relation data structure. \cite{OSMElements}
+\subsubsection{Relation}
+A relation is a multi-purpose data structure that documents a relationship between two or more data elements (nodes, ways, and/or other relations). Examples include:
 
-\section{JOSM}
+\begin{itemize}
+	\item A route relation, which lists the ways that form a major (numbered) highway, a cycle route, or a bus route.
+	\item A turn restriction that says you can't turn from one way into another way.
+	\item A multipolygon that describes an area (whose boundary is the 'outer way') with holes (the 'inner ways').
+\end{itemize}
+Thus, relations can have different meanings. The relation's meaning is defined by its tags. Typically, the relation will have a 'type' tag. The relation's other tags need to be interpreted in light of the type tag.\\
+The relation is primarily an ordered list of nodes, ways, or other relations. These objects are known as the relation's members.\\
+Each element can optionally have a role within the relation. For example, a turn restriction would have members with "from" and "to" roles, describing the particular turn that is forbidden.\\
+A single element such as a particular way may appear multiple times in a relation. \cite{OSMElements}
+
+\subsection{Usage of OpenStreetMap Data}
+All the OpenStreetMap data types explained in the \hyperref[sec:OSMDataTypes]{Data Types} can represent various transport-related objects. These data types can represent various transport-related information for the plugin:
+\begin{itemize}
+	\item {A node can represent a bus station, a bus stop, a train station, elevators near train stations etc. }
+	\item {A way (be that closed or open ways), can represent footpaths near stations, various steps or ramps that are located in the train station that lead to train platforms, bus platforms etc. They can also represent bus platforms or even train platforms in some cases.}
+	\item {A relation has children, those children can be of any type, they can even be relations themselves. Relations represent train platforms, bus routes, train routes and require special care from the plugin in order to serve their purpose.}
+\end{itemize}
+All of this OSM data is contained in the JOSM editor and the plugin has access to JOSM interfaces in order to manipulate such data, which is of course, necessary for the conversion.\\
+The plugin initially checks every visible element within the JOSM map layer and checks their tags. Their tags then represent what kind of an element that is and if it is relative to our plugin. After that, the plugin finds the relative elements and their type, and then depending on the type, different NeTEx objects are created. While the NeTEx objects are being created, the conversion algorithm adds various attributes to those objects depending on the tags that they contain, what they are close to and their importance to the related transport information. Different elements that are found at later stages can be related to previously identified relative elements, when that happens, the algorithm finds the connection of those elements and relates/fixes them accordingly.
+\section{Java OpenStreetMap Editor}
 \lipsum[4-6]
-
-\section{OSM Data}
-\lipsum[7-9]
-
 \section{NeTEx Conversion}
 \lipsum[10-13]
-
+\section{XML Binding Framework}
+\lipsum[10-11]
 \section{Testing}
 \lipsum[7-8]
 \subsection{Unit Testing}
 \lipsum[5-6]
 \newpage
-\section{Code Repository and the CI/CD Feature}
+\section{Code Repository and the CI/CD Pipeline Feature}
 \label{sec:GitLab}
 \lipsum[7-8]	
 \section{Document Preparation System}

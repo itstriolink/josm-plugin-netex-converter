@@ -13,25 +13,26 @@
 \contentsline {section}{\numberline {2.1}Overview}{5}{section.11}%
 \contentsline {section}{\numberline {2.2}Design Decision - Programming Language}{6}{section.12}%
 \contentsline {section}{\numberline {2.3}The Plugin}{7}{section.13}%
-\contentsline {chapter}{\numberline {3}Implementation}{9}{chapter.16}%
-\contentsline {section}{\numberline {3.1}Overview}{9}{section.17}%
-\contentsline {section}{\numberline {3.2}JOSM}{9}{section.18}%
-\contentsline {section}{\numberline {3.3}OSM Data}{10}{section.19}%
-\contentsline {section}{\numberline {3.4}NeTEx Conversion}{11}{section.20}%
-\contentsline {section}{\numberline {3.5}Testing}{12}{section.21}%
-\contentsline {subsection}{\numberline {3.5.1}Unit Testing}{12}{subsection.22}%
-\contentsline {section}{\numberline {3.6}Code Repository and the CI/CD Feature}{13}{section.23}%
-\contentsline {section}{\numberline {3.7}Document Preparation System}{13}{section.24}%
-\contentsline {chapter}{\numberline {4}Results}{14}{chapter.25}%
-\contentsline {section}{\numberline {4.1}Achievements}{14}{section.26}%
-\contentsline {section}{\numberline {4.2}Reflection}{15}{section.27}%
-\contentsline {section}{\numberline {4.3}Results \& Conclusion}{15}{section.28}%
+\contentsline {chapter}{\numberline {3}Implementation}{11}{chapter.17}%
+\contentsline {section}{\numberline {3.1}Overview}{11}{section.18}%
+\contentsline {section}{\numberline {3.2}JOSM}{11}{section.19}%
+\contentsline {section}{\numberline {3.3}OSM Data}{12}{section.20}%
+\contentsline {section}{\numberline {3.4}NeTEx Conversion}{13}{section.21}%
+\contentsline {section}{\numberline {3.5}XML Binding Framework - JAXB}{13}{section.22}%
+\contentsline {section}{\numberline {3.6}Testing}{14}{section.23}%
+\contentsline {subsection}{\numberline {3.6.1}Unit Testing}{14}{subsection.24}%
+\contentsline {section}{\numberline {3.7}Code Repository and the CI/CD Feature}{16}{section.25}%
+\contentsline {section}{\numberline {3.8}Document Preparation System}{16}{section.26}%
+\contentsline {chapter}{\numberline {4}Results}{17}{chapter.27}%
+\contentsline {section}{\numberline {4.1}Achievements}{17}{section.28}%
+\contentsline {section}{\numberline {4.2}Reflection}{18}{section.29}%
+\contentsline {section}{\numberline {4.3}Results \& Conclusion}{18}{section.30}%
 \vspace {2em}
-\contentsline {chapter}{\numberline {A}Installation}{17}{appendix.29}%
-\contentsline {chapter}{\numberline {B}OSM Data}{19}{appendix.30}%
-\contentsline {chapter}{\numberline {C}NeTEx Data}{21}{appendix.31}%
-\contentsline {chapter}{\numberline {D}Project Management}{23}{appendix.32}%
-\contentsline {section}{\numberline {D.1}Organization}{23}{section.33}%
-\contentsline {section}{\numberline {D.2}Planning and Coordination}{23}{section.34}%
-\contentsline {section}{\numberline {D.3}Workflow}{24}{section.35}%
-\contentsline {chapter}{Bibliography}{25}{dummy.36}%
+\contentsline {chapter}{\numberline {A}Installation}{20}{appendix.31}%
+\contentsline {chapter}{\numberline {B}OSM Data}{22}{appendix.32}%
+\contentsline {chapter}{\numberline {C}NeTEx Data}{24}{appendix.33}%
+\contentsline {chapter}{\numberline {D}Project Management}{26}{appendix.34}%
+\contentsline {section}{\numberline {D.1}Organization}{26}{section.35}%
+\contentsline {section}{\numberline {D.2}Planning and Coordination}{26}{section.36}%
+\contentsline {section}{\numberline {D.3}Workflow}{27}{section.37}%
+\contentsline {chapter}{Bibliography}{28}{dummy.38}%
