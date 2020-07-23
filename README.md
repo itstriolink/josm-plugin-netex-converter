@@ -2,7 +2,7 @@
 
 Description
 ------
-A JOSM Plugin that converts OpenStreetMap data into the Network Timetable Exchange (NeTEx) format, which is an XML format designed for the efficient exchange of complex tranpsort data.
+A JOSM Plugin that converts OpenStreetMap data into the Network Timetable Exchange (NeTEx) format, which is a CEN Technical Standard that is represented using XML, designed for the efficient exchange of complex transport data.
 
 Installation
 ------
