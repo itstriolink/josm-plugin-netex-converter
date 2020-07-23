@@ -1,4 +1,4 @@
-\begin{thebibliography}{9}
+\begin{thebibliography}{11}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -49,16 +49,30 @@ OSM Community.
 \newblock URL \url{https://wiki.openstreetmap.org/wiki/Elements}.
 \newblock [Last~Accessed: 22.07.2020].
 
+\bibitem[Corporation()]{WhatIsJAXB}
+Oracle Corporation.
+\newblock Lesson: Introduction to jaxb.
+\newblock URL
+  \url{https://docs.oracle.com/javase/tutorial/jaxb/intro/index.html}.
+\newblock [Last~Accessed: 23.07.2020].
+
 \bibitem[Project()]{WhatIsLaTeX}
 LaTeX3 Project.
 \newblock Latex – a document preparation system.
 \newblock URL \url{https://www.latex-project.org/}.
-\newblock [Last~Accessed: 12.05.2019].
+\newblock [Last~Accessed: 22.07.2020].
 
 \bibitem[Texmaker()]{WhatIsTeXStudio}
 Texmaker.
 \newblock Welcome to texstudio.
 \newblock URL \url{http://texstudio.sourceforge.net/}.
-\newblock [Last~Accessed: 12.05.2019].
+\newblock [Last~Accessed: 22.07.2020].
+
+\bibitem[Freiburg()]{LaTExExample}
+Sascha Frank~Uni Freiburg.
+\newblock Examples of latex.
+\newblock URL
+  \url{http://www2.informatik.uni-freiburg.de/~frank/ENG/latex-course/latex-course-1/examples_en.html}.
+\newblock [Last~Accessed: 23.07.2020].
 
 \end{thebibliography}

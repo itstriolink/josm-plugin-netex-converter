@@ -45,15 +45,45 @@ All the OpenStreetMap data types explained in the \hyperref[sec:OSMDataTypes]{Da
 All of this OSM data is contained in the JOSM editor and the plugin has access to JOSM interfaces in order to manipulate such data, which is of course, necessary for the conversion.\\
 The plugin initially checks every visible element within the JOSM map layer and checks their tags. Their tags then represent what kind of an element that is and if it is relative to our plugin. After that, the plugin finds the relative elements and their type, and then depending on the type, different NeTEx objects are created. While the NeTEx objects are being created, the conversion algorithm adds various attributes to those objects depending on the tags that they contain, what they are close to and their importance to the related transport information. Different elements that are found at later stages can be related to previously identified relative elements, when that happens, the algorithm finds the connection of those elements and relates/fixes them accordingly.
 \section{Java OpenStreetMap Editor}
-\lipsum[4-6]
-\section{NeTEx Conversion}
-\lipsum[10-13]
+Java OpenStreetMap Editor is an open-source desktop application written in Java that is used in order to edit OSM content in a more advanced/professional manner. The source code of JOSM is hosted in the \href{https://subversion.apache.org/}{Apache Subversion (SVN)} version control system and is compiled and built using the \href{https://ant.apache.org/}{Apache Ant} Java library and command-line tool.\\
+\newline
+First, The project must be cloned in the target machine using SVN or Git and then must be compiled using Ant, which will create a .jar file, containing the JOSM application, hosted locally on your machine. The JOSM project has a directory called \textit{\textbackslash plugins} which contains all of the available JOSM plugins. Every plugin contains a \textit{build.xml} file which contains the common Ant building information, plus some mandatory fields for the plugin, such as: The plugins version, the entry point (main class) of the plugin, its minimum Java verison, the plugin icon etc. If you want to register and publish a plugin in the official JOSM plugin repository, a set of procedures must be followed before that is possible. The benefit of that is that the plugin will be available to the whole JOSM community and other developers might fix bugs or improve the code.\\
+\newline
+JOSM has a plugin API that must be imported as a package from your plugins main class and then there are specific methods and entry points that the plugin must implement in order for JOSM to take the necessary steps into initializing the plugin. These methods can specify anything, some of them are required and some of them are optional.
+With the help of this API, you can set the plugins location, its icon, its name, whether its disabled/enabled initially etc. After that is done, then you can use different JOSM core classes (or even helper classes) along with your own code in order to achieve what the plugin does. The JOSM source code has useful comments for almost every important method, including \textit{javadoc} comments as well, which turnout to be very helpful for other developers.
+TBD...(Some picture)
 \section{XML Binding Framework}
-\lipsum[10-11]
+NeTEx is a general purpose XML format designed for the efficient exchange of complex transport data among distributed systems. In order to write such XML in a programmatic manner, there must exist a model which is written in the intended language that represents the components of such format, their attributes and their interrelations.\\
+In this case, since the plugin is written in Java, a Java model of the NeTEx schema is required for coding. To achieve such a thing, the \href{https://en.wikipedia.org/wiki/Jakarta_XML_Binding}{Jakarta XML Binding (JAXB)} framework was used.\\
+\newline
+Java Architecture for XML Binding (JAXB) provides a fast and convenient way to bind XML schemas and Java representations, making it easy for Java developers to incorporate XML data and processing functions in Java applications. As part of this process, JAXB provides methods for unmarshalling (reading) XML instance documents into Java content trees, and then marshalling (writing) Java content trees back into XML instance documents. JAXB also provides a way to generate XML schema from Java objects . \cite{WhatIsJAXB}\\ 
+It simplifies access to an XML document from a Java program by presenting the XML document to the program in a Java format.
+\subsection{The Binding Procedure}
+The official NeTEx schema is taken from the official NeTEx \href{https://github.com/NeTEx-CEN/NeTEx}{GitHub Repository} using a batch file which downloads the schema (.xsd file) and using the JAXB files and configuration, creates the corresponding Java classes for each NeTEx object and it's relations.\\
+After this whole set of classes are generated (which are put into a Java package), they are bundled together with the plugin code in order to generate a single .jar file at the end, which is of course, executable using the JOSM editor.\\
+The framework generates a lot of Java classes and sub-packages that lead to pretty heavy content, which implies that the ultimate .jar file is not a light-weight .jar file but rather a relatively heavy one (~10MB). This package of generated classes is then imported by the plugins main conversion classes and used accordingly in order to enable the conversion process. After the conversion is completed, the whole NeTEx content is then "marshalled" into XML content and written in an XML file that is compliant with the official NeTEx schema.\\
+TBD... (Insert picture of the generated classes, just as a snippet)
+\newpage
+\section{NeTEx Conversion}
+The main technical approaches and key points used to convert OSM data into NeTEx are described in this section.\\
+\newline
+The plugin initially processes and reads all of the loaded elements in the JOSM map layer (Nodes, Ways, Relations) and carefully checks if any element is relative to any NeTEx object. When that happens, the plugin creates a NeTEx object from it using a separate "parser" class (but not all of the relative elements initially). The algorithm for converting the data into NeTEx is contained in the \textit{NeTExExport.java} class, which is the class containing the heavy logic of the conversion process. \\
+This class contains logic such as: 
+\begin{itemize}
+	\item Finding the relative OSM elements for NeTEx.
+	\item Calling the appropriate methods for parsing such objects into NeTEx.
+	\item Logging different relative information during the NeTEx conversion.
+	\item Accumulating them so that at the end of the conversion, they are appended to the JOSM objects, which are then highlighted after the conversion is completed.
+\end{itemize}
+First, the plugin identifies only the OSM elements that correspond to NeTEx \textit{StopPlace} objects. After all of these are created (which are the top parent nodes), then we re-iterate through the OSM elements, trying to find other important elements such as: platforms, elevators, footpaths, steps etc. A lot of ambiguities and discrepancies are resolved while these loops are being executed. All the relevant information and children of a \textit{StopPlace} are mapped and resolved here, accumulating them all together and then assigning them to their corresponding \textit{StopPlace} using the generated NeTEx classes from the JAXB framework.\\
+TBD... Insert some code here
+\newline
+A lot of conditions are available in the algorithm because of the OSM data inconsistency. The plugin tries to "solve" or "mitigate" such inconsistency by providing log messages at the end of the conversion, which, if fixed, make the data more consistent in general and benefit the NeTEx conversion a lot. Some warnings are more critical than the others.
+TBD... Insert some code here
 \section{Testing}
-\lipsum[7-8]
+TBD...(Insert Testing introduction, details and framework)
 \subsection{Unit Testing}
-\lipsum[5-6]
+TBD...(Insert Unit testing examples and approach)
 \newpage
 \section{Code Repository and the CI/CD Pipeline Feature}
 \label{sec:GitLab}
@@ -75,8 +105,7 @@ LaTeX is a high-quality typesetting system; it includes features designed for th
 The application that was used in conjunction with LaTeX was \href{http://texstudio.sourceforge.net/}{TeXstudio}.
 TeXstudio is an integrated writing environment for creating LaTeX documents. Our goal is to make writing LaTeX as easy and comfortable as possible. Therefore TeXstudio has numerous features like syntax-highlighting, integrated viewer, reference checking and various assistants. \cite{WhatIsTeXStudio}\\
 The reason why LaTeX was used is that it is very convenient to developers, since they can get used to the syntax very quickly and are familiar with "coding" approaches. Another big reason is that it provides a lot of packages for displaying code in a nice formatted way, it has the ability of displaying web links in a nice manner and also the figures and figure alignments are very appropriate and easy to create \& maintain.\\
-\newpage
-A taste of LaTEx:
+A taste of LaTEx: \cite{LaTExExample}
 \begin{minted}{latex}
 \documentclass[12pt,twoside,a4paper]{article} 
 \begin{document} 
@@ -94,6 +123,8 @@ A & B & C \\
 \end{minted}
 This would produce the following output:
 \begin{figure}[H]
-	\includegraphics[scale=1]{./Images/Implementation/latex_example.png}
-	\caption{LaTEx document produced}
+	\begin{center}
+		\includegraphics[scale=1]{./Images/Implementation/latex_example.png}
+		\caption{LaTEx document output example \cite{LaTExExample}}
+	\end{center}
 \end{figure}
