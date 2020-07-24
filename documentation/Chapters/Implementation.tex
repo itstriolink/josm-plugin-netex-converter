@@ -62,7 +62,13 @@ It simplifies access to an XML document from a Java program by presenting the XM
 The official NeTEx schema is taken from the official NeTEx \href{https://github.com/NeTEx-CEN/NeTEx}{GitHub Repository} using a batch file which downloads the schema (.xsd file) and using the JAXB files and configuration, creates the corresponding Java classes for each NeTEx object and it's relations.\\
 After this whole set of classes are generated (which are put into a Java package), they are bundled together with the plugin code in order to generate a single .jar file at the end, which is of course, executable using the JOSM editor.\\
 The framework generates a lot of Java classes and sub-packages that lead to pretty heavy content, which implies that the ultimate .jar file is not a light-weight .jar file but rather a relatively heavy one (~10MB). This package of generated classes is then imported by the plugins main conversion classes and used accordingly in order to enable the conversion process. After the conversion is completed, the whole NeTEx content is then "marshalled" into XML content and written in an XML file that is compliant with the official NeTEx schema.\\
-TBD... (Insert picture of the generated classes, just as a snippet)
+As of now, there are a total of 2,704 generated files from JAXB.
+\newpage
+Some of the generated classes from JAXB (for the Stop Place):
+\begin{figure}[H]
+\includegraphics[width=\linewidth]{./Images/Implementation/jaxb_generated_classes.png}
+	\caption{Some of the JAXB generated NeTEx model classes (Stop Place)}
+\end{figure}
 \newpage
 \section{NeTEx Conversion}
 The main technical approaches and key points used to convert OSM data into NeTEx are described in this section.\\
@@ -76,10 +82,51 @@ This class contains logic such as:
 	\item Accumulating them so that at the end of the conversion, they are appended to the JOSM objects, which are then highlighted after the conversion is completed.
 \end{itemize}
 First, the plugin identifies only the OSM elements that correspond to NeTEx \textit{StopPlace} objects. After all of these are created (which are the top parent nodes), then we re-iterate through the OSM elements, trying to find other important elements such as: platforms, elevators, footpaths, steps etc. A lot of ambiguities and discrepancies are resolved while these loops are being executed. All the relevant information and children of a \textit{StopPlace} are mapped and resolved here, accumulating them all together and then assigning them to their corresponding \textit{StopPlace} using the generated NeTEx classes from the JAXB framework.\\
-TBD... Insert some code here
-\newline
-A lot of conditions are available in the algorithm because of the OSM data inconsistency. The plugin tries to "solve" or "mitigate" such inconsistency by providing log messages at the end of the conversion, which, if fixed, make the data more consistent in general and benefit the NeTEx conversion a lot. Some warnings are more critical than the others.
-TBD... Insert some code here
+\newpage
+Portion of code loop that iterates through all of the visible OSM elements and tries to identify the relevant elements:
+\begin{minted}[tabsize=2,breaklines]{java}
+for (OsmPrimitive primitive : primitives) {
+	if (primitive instanceof Node) {
+	Node node = (Node) primitive;
+
+	if (OSMHelper.isTrainStation(node)) {
+		stopPlaces.put(node, neTExParser.createStopPlace(node, StopTypeEnumeration.RAIL_STATION));
+	}
+	else if (OSMHelper.isBusStation(node)) {
+		stopPlaces.put(node, neTExParser.createStopPlace(node, StopTypeEnumeration.BUS_STATION));
+	}
+	else if (OSMHelper.isBusStop(node)) {
+		stopPlaces.put(node, neTExParser.createStopPlace(node, StopTypeEnumeration.ONSTREET_BUS));
+	}
+	else if (OSMHelper.isPlatform(node)) {
+		quays.put(node, neTExParser.createQuay(node));
+	}
+	else if (OSMHelper.isElevator(node)) {
+		elevators.put(node, neTExParser.createElevator(node));
+	}
+...
+}
+\end{minted}
+A lot of conditions are available in the algorithm because of the OSM data inconsistency. The plugin tries to "solve" or "mitigate" such inconsistency by providing log messages at the end of the conversion, which, if fixed, make the data more consistent in general and benefit the NeTEx conversion a lot. Some warnings are more critical than the others.\\
+\newpage
+Portion of code extracted that shows the generation of the accumulated warning messages:
+\begin{minted}[tabsize=2,breaklines]{java}
+for (PrimitiveLogMessage logMessage : LOG_MESSAGES) {
+
+	OsmPrimitive primitive = ds.getPrimitiveById(logMessage.getPrimitiveId(), logMessage.getPrimitiveType());
+
+	if (primitive != null) {
+		Logging.warn(tr("Warnings found for the {0} with the id: {1}",
+			primitive.getType(), Long.toString(primitive.getId())));
+
+		primitive.setHighlighted(true);
+
+		for (Map.Entry<String, String> entry : logMessage.getKeys().entrySet()) {
+			primitive.put(entry.getKey(), entry.getValue());
+		}
+	}
+}
+\end{minted}
 \section{Testing}
 TBD...(Insert Testing introduction, details and framework)
 \subsection{Unit Testing}
