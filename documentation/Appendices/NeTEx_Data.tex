@@ -1,2 +1,113 @@
 \chapter{NeTEx Data}
-\lipsum[10-14]
+Here are some samples of NeTEx data, displayed using code highlighting (in XML).
+\section{Examples of NeTEx Data}
+\subsection{Base Schema Example (No Stop Places)}
+\begin{minted}[linenos,tabsize=2,breaklines]{xml}
+<PublicationDelivery xmlns="http://www.netex.org.uk/netex" xmlns:ns2="http://www.opengis.net/gml/3.2" xmlns:ns3="http://www.siri.org.uk/siri">
+  <PublicationTimestamp>1900-01-01T00:00:01</PublicationTimestamp>
+  <ParticipantRef>participantRef</ParticipantRef>
+  <Description lang="en">OSM to NeTEx</Description>
+  <dataObjects>
+    <CompositeFrame id="foo:1:CompositeFrame">
+      <frames>
+        <ResourceFrame id="foo:1:ResourceFrame" />
+        <SiteFrame id="foo:1:SiteFrame">
+          <stopPlaces>
+          </stopPlaces>
+        </SiteFrame>
+      </frames>
+    </CompositeFrame>
+  </dataObjects>
+</PublicationDelivery>
+\end{minted}
+\newpage
+\subsection{Stop Place Example (StopPlace)}
+The following Stop Place is taken from a bus stop in Chur, Switzerland:
+\begin{minted}[linenos,tabsize=2,breaklines]{xml}
+<StopPlace id="ch:1:StopPlace:8581896">
+  <Name>Giacomettistrasse</Name>
+  <PrivateCode>org:osm:node:984713668</PrivateCode>
+  <Centroid>
+    <Location>
+      <Longitude>9.5299602</Longitude>
+      <Latitude>46.8638106</Latitude>
+    </Location>
+  </Centroid>
+  <AccessibilityAssessment>
+    <limitations>
+      <AccessibilityLimitation>
+        <WheelchairAccess>false</WheelchairAccess>
+      </AccessibilityLimitation>
+    </limitations>
+  </AccessibilityAssessment>
+  <PublicCode>8581896</PublicCode>
+  <StopPlaceType>onstreetBus</StopPlaceType>
+  <quays>
+    <Quay id="ch:1:Quay:8581896:984713668">
+      <PrivateCode>org:osm:node:984713668</PrivateCode>
+      <Centroid>
+        <Location>
+          <Longitude>9.5299602</Longitude>
+          <Latitude>46.8638106</Latitude>
+        </Location>
+      </Centroid>
+      <PublicCode>984713668</PublicCode>
+      <QuayType>busStop</QuayType>
+    </Quay>
+  </quays>
+</StopPlace>
+\end{minted}
+\newpage
+\subsection{Platforms Example (Quay)}
+The following bus platforms are taken from a bus stop in Chur, Switzerland:
+\begin{minted}[linenos,tabsize=2,breaklines]{xml}
+<quays>
+  <Quay id="ch:1:Quay:8594421:6106925323">
+    <PrivateCode>org:osm:node:6106925323</PrivateCode>
+    <Centroid>
+      <Location>
+        <Longitude>9.5163354</Longitude>
+        <Latitude>46.8521078</Latitude>
+      </Location>
+    </Centroid>
+    <PublicCode>6106925323</PublicCode>
+    <QuayType>busStop</QuayType>
+  </Quay>
+  <Quay id="ch:1:Quay:8594421:2446137127">
+    <PrivateCode>org:osm:node:2446137127</PrivateCode>
+    <Centroid>
+      <Location>
+        <Longitude>9.5164318</Longitude>
+        <Latitude>46.8519792</Latitude>
+      </Location>
+    </Centroid>
+    <PublicCode>2446137127</PublicCode>
+    <QuayType>busStop</QuayType>
+  </Quay>
+</quays>
+\end{minted}
+\newpage
+\subsection{Stairs Example (SitePathLink)}
+The following stairs are taken from a bus station in Chur, Switzerland:
+\begin{minted}[linenos,tabsize=2,breaklines]{xml}
+<SitePathLink id="ch:1:SitePathLink:464925429">
+  <From>
+    <PlaceRef ref="ch:1:PathJunction:4778556657" />
+  </From>
+  <To>
+    <PlaceRef ref="ch:1:PathJunction:4599739661" />
+  </To>
+  <AccessibilityAssessment>
+    <limitations>
+      <AccessibilityLimitation>
+        <WheelchairAccess>false</WheelchairAccess>
+        <StepFreeAccess>false</StepFreeAccess>
+      </AccessibilityLimitation>
+    </limitations>
+  </AccessibilityAssessment>
+  <AccessFeatureType>stairs</AccessFeatureType>
+  <equipmentPlaces>
+    <EquipmentPlaceRef ref="ch:1:EquipmentPlace:464925429" />
+  </equipmentPlaces>
+</SitePathLink>
+\end{minted}

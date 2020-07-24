@@ -1,2 +1,37 @@
 \chapter{Installation}
-\lipsum[7-10]
+There are two ways to install this plugin. Install it as a plugin into JOSM or install it in a development environment for developing further features, bug fixes or code refactoring.\\
+\newline
+To install it as a plugin for your JOSM environment (major cases), there are two approaches:
+\begin{itemize}
+	\item Installing them from within JOSM (when they are officially published plugins) or
+	\item Manually installing them
+\end{itemize}
+
+The below portion of text has been taken directly from the JOSM plugins wiki \href{https://wiki.openstreetmap.org/wiki/JOSM/Plugins#Installation}{page} instructions: \cite{JOSMPlugins}\
+\paragraph{Usual, easy method}\mbox{}\\
+You can easily install plugins from within JOSM as follows
+\begin{enumerate}
+	\item Start JOSM, open the preferences window (Edit→Preferences or use the toolbar icon) and select the plugins tab.
+	\item Click on "Download List" to download the list of available plugins.
+	\item Check the plugins you want installed.
+	\item Click the update button. All new plugins should start downloading and installing.
+	\item Restart JOSM. (Some Plugins work even without a restart. You will be notified, if a restart is required.)
+\end{enumerate}
+\paragraph{Manually install JOSM plugins}\mbox{}\\
+\label{par:ManuallyInstall}
+Usually you don't need to install plugins manually! If you do need to install manually:
+
+\begin{itemize}
+	\item{Save plugin jar files in the plugins directory in the JOSM settings directory:
+		\begin{itemize}
+			\item \mintinline{bash}{~/.josm/plugins}, or \mintinline{bash}{Users/<YourName>/AppData/Roaming/JOSM/plugins} for Windows.
+			\item \mintinline{bash}{/home/\$USER/.josm/plugins} for Linux, or
+			\item \mintinline{bash}{Users/<YourName>/Library/JOSM/plugins} on MacOS.
+		\end{itemize}  }
+\end{itemize}
+\subsection{Building the .jar file}
+In order to build the .jar file, the repository of the plugin must first be cloned into your local machine. After that, when in the repository, the following commands need to be run:
+\mint{shell}{ant clean}
+\mint{shell}{ant dist}
+This will build the plugin and generate a single .jar file at the end.\\
+This .jar file then needs to be added to the directory mentioned above (\hyperref[par:ManuallyInstall]{how to manually install JOSM plugins}). After that, the plugin will be available at the preferences window and ready to be activated.

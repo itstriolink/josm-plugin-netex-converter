@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.20)  23 JUL 2020 17:21
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.20)  24 JUL 2020 17:43
 entering extended mode
 **./Main.tex
 (Main.tex
@@ -1404,18 +1404,80 @@ Underfull \hbox (badness 10000) in paragraph at lines 20--27
 
 [20]) (Appendices/Installation.tex [21]
 Appendix A.
-) (Appendices/OSM_Data.tex [22
 
-] [23]
+Underfull \hbox (badness 10000) in paragraph at lines 2--5
+
+ []
+
+Package textcomp Info: Symbol \textrightarrow not provided by
+(textcomp)             font family phv in TS1 encoding.
+(textcomp)             Default family used instead on input line 14.
+LaTeX Font Info:    Trying to load font information for TS1+cmss on input line 
+14.
+(C:\Users\lenovo\AppData\Local\Programs\MiKTeX\tex/latex/base\ts1cmss.fd
+File: ts1cmss.fd 2019/12/16 v2.5j Standard LaTeX font definitions
+)
+\openout4 = `Main.pyg'.
+
+
+(_minted-Main/1629921DB36161DF97156A838D8258C31FB7A63F278795F3148E60ED45A6B278.
+pygtex)
+\openout4 = `Main.pyg'.
+
+
+(_minted-Main/EC4A2DF0069376F08A3D8BBEB43E563B1FB7A63F278795F3148E60ED45A6B278.
+pygtex)
+Overfull \hbox (7.55443pt too wide) in paragraph at lines 1--28
+[][]\OT1/phv/m/n/12 , or [] for
+ []
+
+[22
+
+]
+\openout4 = `Main.pyg'.
+
+
+(_minted-Main/219490A19DD85548E8553E73847E62131FB7A63F278795F3148E60ED45A6B278.
+pygtex)
+\openout4 = `Main.pyg'.
+
+
+(_minted-Main/C1A2A87B0BEDF41EC2551EE247B32F021FB7A63F278795F3148E60ED45A6B278.
+pygtex)
+\openout4 = `Main.pyg'.
+
+
+(_minted-Main/EE5EA931C01D284A43D1EBDF358DF7EE4EEE172A3F9296B31A282D9AFEF27B06.
+pygtex)
+\openout4 = `Main.pyg'.
+
+
+(_minted-Main/DB66359762491DD09D6FBEC5137ABF5D4EEE172A3F9296B31A282D9AFEF27B06.
+pygtex)) (Appendices/NeTEx_Data.tex [23]
 Appendix B.
-) [24
+\openout3 = `Main.pyg'.
 
-] (Appendices/NeTEx_Data.tex [25]
+
+(_minted-Main/CFB09E18588B28802611C4A43BBE8E5E4E8A7278A3C4B3C8D56367CE08D527C8.
+pygtex) [24
+
+]
+\openout3 = `Main.pyg'.
+
+
+(_minted-Main/900DAF736164B7889B473F89E14A3B974E8A7278A3C4B3C8D56367CE08D527C8.
+pygtex) [25]
+\openout3 = `Main.pyg'.
+
+
+(_minted-Main/DA83BE6B81C2CE0D548F48E12CB813C34E8A7278A3C4B3C8D56367CE08D527C8.
+pygtex) [26]
+\openout3 = `Main.pyg'.
+
+
+(_minted-Main/C7905E01E3008CD848978ED435F2714F4E8A7278A3C4B3C8D56367CE08D527C8.
+pygtex)) (Appendices/Project_Management.tex [27]
 Appendix C.
-) (Appendices/Project_Management.tex [26
-
-] [27]
-Appendix D.
 
 Underfull \hbox (badness 10000) in paragraph at lines 3--9
 
@@ -1429,25 +1491,25 @@ Underfull \hbox (badness 10000) in paragraph at lines 3--9
 [28
 
 ]
-<./Images/Appendices/gitlab_commit_stats.png, id=423, 958.3303pt x 403.5075pt>
+<./Images/Appendices/gitlab_commit_stats.png, id=443, 958.3303pt x 403.5075pt>
 File: ./Images/Appendices/gitlab_commit_stats.png Graphic file (type png)
 <use ./Images/Appendices/gitlab_commit_stats.png>
 Package pdftex.def Info: ./Images/Appendices/gitlab_commit_stats.png  used on i
-nput line 19.
+nput line 20.
 (pdftex.def)             Requested size: 453.60808pt x 190.99078pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 15--21
+Underfull \hbox (badness 10000) in paragraph at lines 16--22
 
  []
 
-<./Images/Appendices/gitlab_cicd_stats.png, id=424, 941.76843pt x 353.06906pt>
+<./Images/Appendices/gitlab_cicd_stats.png, id=444, 941.76843pt x 353.06906pt>
 File: ./Images/Appendices/gitlab_cicd_stats.png Graphic file (type png)
 <use ./Images/Appendices/gitlab_cicd_stats.png>
 Package pdftex.def Info: ./Images/Appendices/gitlab_cicd_stats.png  used on inp
-ut line 23.
+ut line 24.
 (pdftex.def)             Requested size: 453.60808pt x 170.05844pt.
-) [29 <./Images/Appendices/gitlab_commit_stats.png> <./Images/Appendices/gitlab
-_cicd_stats.png>]
+) [29 <./Images/Appendices/gitlab_commit_stats.png>] [30 <./Images/Appendices/g
+itlab_cicd_stats.png>]
 ------------------------------------------------------------------------------
  Bibliography
 ------------------------------------------------------------------------------
@@ -1469,39 +1531,43 @@ Underfull \hbox (badness 10000) in paragraph at lines 72--77
 ]course-[]1 / examples _ en .
  []
 
-) [30
+) [31
 
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 73.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 73.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 72.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 72.
  (Main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 73.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 73.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 72.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 72.
 Package rerunfilecheck Info: File `Main.out' has not changed.
-(rerunfilecheck)             Checksum: D87A5B035F3780A28467BDBDEC27BADA;5248.
+(rerunfilecheck)             Checksum: BC02F4947AC746FB1405DE89936A9B04;5344.
 runsystem(del Main.pyg)...executed.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 73.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 72.
  ) 
 Here is how much of TeX's memory you used:
- 28650 strings out of 481225
- 522629 string characters out of 2905705
- 1039253 words of memory out of 3000000
- 43500 multiletter control sequences out of 15000+200000
- 559979 words of font info for 72 fonts, out of 3000000 for 9000
+ 28750 strings out of 481225
+ 528350 string characters out of 2905705
+ 955303 words of memory out of 3000000
+ 43552 multiletter control sequences out of 15000+200000
+ 562048 words of font info for 79 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  60i,11n,79p,988b,648s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Users/lenovo/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}<C
-:/Users/lenovo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cms
-y10.pfb><C:/Users/lenovo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
-nts/cm/cmtt12.pfb><C:/Users/lenovo/AppData/Local/Programs/MiKTeX/fonts/type1/ur
-w/helvetic/uhvb8a.pfb><C:/Users/lenovo/AppData/Local/Programs/MiKTeX/fonts/type
-1/urw/helvetic/uhvr8a.pfb><C:/Users/lenovo/AppData/Local/Programs/MiKTeX/fonts/
-type1/urw/helvetic/uhvro8a.pfb>
-Output written on Main.pdf (36 pages, 500922 bytes).
+ <C:\Users\lenovo\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcs
+s1200.pk>{C:/Users/lenovo/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r
+.enc}<C:/Users/lenovo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
+/cm/cmmi6.pfb><C:/Users/lenovo/AppData/Local/Programs/MiKTeX/fonts/type1/public
+/amsfonts/cm/cmr6.pfb><C:/Users/lenovo/AppData/Local/Programs/MiKTeX/fonts/type
+1/public/amsfonts/cm/cmsy10.pfb><C:/Users/lenovo/AppData/Local/Programs/MiKTeX/
+fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/lenovo/AppData/Local/Program
+s/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt12.pfb><C:/Users/lenovo/AppData/Loc
+al/Programs/MiKTeX/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Users/lenovo/AppData
+/Local/Programs/MiKTeX/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Users/lenovo/App
+Data/Local/Programs/MiKTeX/fonts/type1/urw/helvetic/uhvro8a.pfb>
+Output written on Main.pdf (37 pages, 528207 bytes).
 PDF statistics:
- 501 PDF objects out of 1000 (max. 8388607)
- 97 named destinations out of 1000 (max. 500000)
+ 544 PDF objects out of 1000 (max. 8388607)
+ 110 named destinations out of 1000 (max. 500000)
  322 words of extra memory for PDF output out of 10000 (max. 10000000)
 
