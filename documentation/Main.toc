@@ -25,27 +25,27 @@
 \contentsline {section}{\numberline {3.4}XML Binding Framework}{14}{section.27}%
 \contentsline {subsection}{\numberline {3.4.1}The Binding Procedure}{14}{subsection.28}%
 \contentsline {section}{\numberline {3.5}NeTEx Conversion}{16}{section.30}%
-\contentsline {section}{\numberline {3.6}Testing}{18}{section.31}%
-\contentsline {subsection}{\numberline {3.6.1}Unit Testing}{18}{subsection.32}%
-\contentsline {section}{\numberline {3.7}Code Repository and the CI/CD Pipeline Feature}{19}{section.33}%
-\contentsline {section}{\numberline {3.8}Document Preparation System}{20}{section.35}%
-\contentsline {chapter}{\numberline {4}Results}{21}{chapter.37}%
-\contentsline {section}{\numberline {4.1}Achievements}{21}{section.38}%
-\contentsline {section}{\numberline {4.2}Reflection}{22}{section.39}%
-\contentsline {section}{\numberline {4.3}Results \& Conclusion}{23}{section.40}%
+\contentsline {section}{\numberline {3.6}Testing}{19}{section.31}%
+\contentsline {subsection}{\numberline {3.6.1}Unit Testing}{19}{subsection.32}%
+\contentsline {section}{\numberline {3.7}Code Repository and the CI/CD Pipeline Feature}{20}{section.34}%
+\contentsline {section}{\numberline {3.8}Document Preparation System}{21}{section.36}%
+\contentsline {chapter}{\numberline {4}Results}{22}{chapter.38}%
+\contentsline {section}{\numberline {4.1}Achievements}{22}{section.39}%
+\contentsline {section}{\numberline {4.2}Reflection}{23}{section.40}%
+\contentsline {section}{\numberline {4.3}Results \& Conclusion}{24}{section.41}%
 \vspace {2em}
-\contentsline {chapter}{\numberline {A}Installation}{24}{appendix.41}%
-\contentsline {paragraph}{Usual, easy method}{24}{section*.42}%
-\contentsline {paragraph}{Manually install JOSM plugins}{25}{section*.48}%
-\contentsline {subsection}{\numberline {A.0.1}Building the .jar file}{25}{subsection.49}%
-\contentsline {chapter}{\numberline {B}NeTEx Data}{26}{appendix.50}%
-\contentsline {section}{\numberline {B.1}Examples of NeTEx Data}{26}{section.51}%
-\contentsline {subsection}{\numberline {B.1.1}Base Schema Example (No Stop Places)}{26}{subsection.52}%
-\contentsline {subsection}{\numberline {B.1.2}Stop Place Example (StopPlace)}{27}{subsection.53}%
-\contentsline {subsection}{\numberline {B.1.3}Platforms Example (Quay)}{28}{subsection.54}%
-\contentsline {subsection}{\numberline {B.1.4}Stairs Example (SitePathLink)}{29}{subsection.55}%
-\contentsline {chapter}{\numberline {C}Project Management}{30}{appendix.56}%
-\contentsline {section}{\numberline {C.1}Organization}{30}{section.57}%
-\contentsline {section}{\numberline {C.2}Planning and Coordination}{31}{section.58}%
-\contentsline {section}{\numberline {C.3}Workflow}{31}{section.59}%
-\contentsline {chapter}{Bibliography}{33}{dummy.62}%
+\contentsline {chapter}{\numberline {A}Installation}{25}{appendix.42}%
+\contentsline {paragraph}{Usual, easy method}{25}{section*.43}%
+\contentsline {paragraph}{Manually install JOSM plugins}{26}{section*.49}%
+\contentsline {subsection}{\numberline {A.0.1}Building the .jar file}{26}{subsection.50}%
+\contentsline {chapter}{\numberline {B}NeTEx Data}{27}{appendix.51}%
+\contentsline {section}{\numberline {B.1}Examples of NeTEx Data}{27}{section.52}%
+\contentsline {subsection}{\numberline {B.1.1}Base Schema Example (No Stop Places)}{27}{subsection.53}%
+\contentsline {subsection}{\numberline {B.1.2}Stop Place Example (StopPlace)}{28}{subsection.54}%
+\contentsline {subsection}{\numberline {B.1.3}Platforms Example (Quay)}{29}{subsection.55}%
+\contentsline {subsection}{\numberline {B.1.4}Stairs Example (SitePathLink)}{30}{subsection.56}%
+\contentsline {chapter}{\numberline {C}Project Management}{31}{appendix.57}%
+\contentsline {section}{\numberline {C.1}Organization}{31}{section.58}%
+\contentsline {section}{\numberline {C.2}Planning and Coordination}{32}{section.59}%
+\contentsline {section}{\numberline {C.3}Workflow}{32}{section.60}%
+\contentsline {chapter}{Bibliography}{34}{dummy.63}%

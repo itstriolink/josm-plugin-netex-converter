@@ -1,4 +1,4 @@
-\begin{thebibliography}{11}
+\begin{thebibliography}{12}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -55,6 +55,13 @@ Oracle Corporation.
 \newblock URL
   \url{https://docs.oracle.com/javase/tutorial/jaxb/intro/index.html}.
 \newblock [Last~Accessed: 23.07.2020].
+
+\bibitem[Dorota~Huizinga(2007)]{WhatIsUnitTesting}
+Adam~Kolawa Dorota~Huizinga.
+\newblock \emph{Automated Defect Prevention: Best Practices in Software
+  Management}.
+\newblock Wiley-IEEE Computer Society Press, 2007.
+\newblock ISBN 0471491101.
 
 \bibitem[Project()]{WhatIsLaTeX}
 LaTeX3 Project.

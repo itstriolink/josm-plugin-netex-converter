@@ -129,10 +129,26 @@ for (PrimitiveLogMessage logMessage : LOG_MESSAGES) {
 	}
 }
 \end{minted}
+\newpage
 \section{Testing}
-TBD...(Insert Testing introduction, details and framework)
+This plugin has been unit tested with the \href{https://junit.org/junit5/}{JUnit} testing framework.\\
+The unit testing that was done here mainly consisted of testing the JAXB marshaller, the NeTEx java model classes, some XML validations etc.
 \subsection{Unit Testing}
-TBD...(Insert Unit testing examples and approach)
+In computer programming, unit testing is a software testing method by which individual units of source code—sets of one or more computer program modules together with associated control data, usage procedures, and operating procedures—are tested to determine whether they are fit for use. \cite{WhatIsUnitTesting} \\
+The Unit Testing for this project has been done using the \href{https://junit.org/junit5/}{JUnit} testing framework. JUnit is a framework to write repeatable unit tests. It is an instance of the \href{https://en.wikipedia.org/wiki/XUnit}{xUnit} architecture. It is one of the most popular unit testing frameworks for Java.\\
+\newline
+The unit testing for this plugin was mainly done to test features such as:
+\begin{itemize}
+\item{Marshalling and unmarshalling of Java objects into XML (for NeTEx)}
+\item{Validating the XML content at the end of the conversion}
+\item{Creating a complex dummy train station and testing the Java classes generated from JAXB}
+\item{Writing XML content into a file etc.}
+\end{itemize}
+The unit testing classes are stored in a separate package (possibly complete folder separation in IDE) and have some other commands compared to the normal Java packages. It is very important and efficient to let the IDE know what your test folder is and what your main folder is, so that the IDE knows how to treat them accordingly.
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{./Images/Implementation/junit_testing_example.png}
+	\caption{An example of results after running some JUnit tests}
+\end{figure}
 \newpage
 \section{Code Repository and the CI/CD Pipeline Feature}
 \label{sec:GitLab}
