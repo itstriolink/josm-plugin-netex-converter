@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="netex_converter" default="dist" basedir=".">
-    <property name="commit.message" value="Commit message"/>
+<project name="NeTExConverter" default="dist" basedir=".">
+    <property name="commit.message" value="Initial commit"/>
 	
-    <property name="plugin.main.version" value="14153"/>
-    <property name="plugin.author" value="Labian Gashi"/>
-    <property name="plugin.class" value="org.openstreetmap.josm.plugins.netex_converter.NeTExConverterPlugin"/>
+    <property name="plugin.main.version" value="14960"/>
+    <property name="plugin.author" value="labiangashi@gmail.com"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.netexconverter.NeTExConverterPlugin"/>
     <property name="plugin.description" value="Convert OSM to NeTEx"/>
-    <property name="plugin.icon" value="images/netex_converter.png"/>
+    <property name="plugin.icon" value="images/NeTExConverter.png"/>
     <property name="plugin.link" value="..."/>
-	<property name="plugin.requires" value="log4j"/>
 	
     <import file="../build-common.xml"/>
-	
-	
-    <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
-        <include name="log4j.jar"/>
-    </fileset>
 </project>
