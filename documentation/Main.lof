@@ -4,14 +4,14 @@
 \contentsline {figure}{\numberline {2.2}{\ignorespaces An example of the plugin highlighting objects that need attention after a conversion (Location of the map layer - Bern, Switzerland)\relax }}{8}{figure.caption.15}%
 \contentsline {figure}{\numberline {2.3}{\ignorespaces A snippet of an exported NeTEx document from the plugin (Location of the exported data - Chur, Switzerland)\relax }}{9}{figure.caption.16}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces A taste of the JOSM editor\relax }}{13}{figure.caption.26}%
-\contentsline {figure}{\numberline {3.2}{\ignorespaces Some of the JAXB generated NeTEx model classes (Stop Place)\relax }}{15}{figure.caption.29}%
-\contentsline {figure}{\numberline {3.3}{\ignorespaces An example of results after running some JUnit tests\relax }}{19}{figure.caption.33}%
-\contentsline {figure}{\numberline {3.4}{\ignorespaces A sneak peek of the GitLab interface\relax }}{20}{figure.caption.35}%
-\contentsline {figure}{\numberline {3.5}{\ignorespaces LaTEx document output example \cite {LaTExExample}\relax }}{21}{figure.caption.37}%
+\contentsline {figure}{\numberline {3.1}{\ignorespaces A taste of the JOSM editor\relax }}{14}{figure.caption.26}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Some of the JAXB generated NeTEx model classes (Stop Place)\relax }}{16}{figure.caption.29}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces An example of results after running some JUnit tests\relax }}{20}{figure.caption.33}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces A sneak peek of the GitLab interface\relax }}{21}{figure.caption.35}%
+\contentsline {figure}{\numberline {3.5}{\ignorespaces LaTEx document output example \cite {LaTExExample}\relax }}{22}{figure.caption.37}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {C.1}{\ignorespaces Some statistics about GitLab code commits (Commits per day are a little outdated)\relax }}{33}{figure.caption.63}%
-\contentsline {figure}{\numberline {C.2}{\ignorespaces Some statistics about GitLab CI/CD pipelines\relax }}{34}{figure.caption.64}%
+\contentsline {figure}{\numberline {C.1}{\ignorespaces Some statistics about GitLab code commits (Commits per day are a little outdated)\relax }}{34}{figure.caption.63}%
+\contentsline {figure}{\numberline {C.2}{\ignorespaces Some statistics about GitLab CI/CD pipelines\relax }}{35}{figure.caption.64}%

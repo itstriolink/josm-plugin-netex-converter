@@ -33,19 +33,20 @@
 \contentsline {section}{\numberline {4.1}Achievements}{23}{section.39}%
 \contentsline {section}{\numberline {4.2}Reflection}{24}{section.40}%
 \contentsline {section}{\numberline {4.3}Results \& Conclusion}{25}{section.41}%
+\contentsline {chapter}{List of Figures}{25}{dummy.42}%
 \vspace {2em}
-\contentsline {chapter}{\numberline {A}Installation}{26}{appendix.42}%
-\contentsline {paragraph}{Usual, easy method}{26}{section*.43}%
-\contentsline {paragraph}{Manually install JOSM plugins}{27}{section*.49}%
-\contentsline {subsection}{\numberline {A.0.1}Building the .jar file}{27}{subsection.50}%
-\contentsline {chapter}{\numberline {B}NeTEx Data}{28}{appendix.51}%
-\contentsline {section}{\numberline {B.1}Examples of NeTEx Data}{28}{section.52}%
-\contentsline {subsection}{\numberline {B.1.1}Base Schema Example (No Stop Places)}{28}{subsection.53}%
-\contentsline {subsection}{\numberline {B.1.2}Stop Place Example (StopPlace)}{29}{subsection.54}%
-\contentsline {subsection}{\numberline {B.1.3}Platforms Example (Quay)}{30}{subsection.55}%
-\contentsline {subsection}{\numberline {B.1.4}Stairs Example (SitePathLink)}{31}{subsection.56}%
-\contentsline {chapter}{\numberline {C}Project Management}{32}{appendix.57}%
-\contentsline {section}{\numberline {C.1}Organization}{32}{section.58}%
-\contentsline {section}{\numberline {C.2}Planning and Coordination}{33}{section.59}%
-\contentsline {section}{\numberline {C.3}Workflow}{33}{section.60}%
-\contentsline {chapter}{Bibliography}{35}{dummy.63}%
+\contentsline {chapter}{\numberline {A}Installation}{27}{appendix.44}%
+\contentsline {paragraph}{Usual, easy method}{27}{section*.45}%
+\contentsline {paragraph}{Manually install JOSM plugins}{28}{section*.51}%
+\contentsline {subsection}{\numberline {A.0.1}Building the .jar file}{28}{subsection.52}%
+\contentsline {chapter}{\numberline {B}NeTEx Data}{29}{appendix.53}%
+\contentsline {section}{\numberline {B.1}Examples of NeTEx Data}{29}{section.54}%
+\contentsline {subsection}{\numberline {B.1.1}Base Schema Example (No Stop Places)}{29}{subsection.55}%
+\contentsline {subsection}{\numberline {B.1.2}Stop Place Example (StopPlace)}{30}{subsection.56}%
+\contentsline {subsection}{\numberline {B.1.3}Platforms Example (Quay)}{31}{subsection.57}%
+\contentsline {subsection}{\numberline {B.1.4}Stairs Example (SitePathLink)}{32}{subsection.58}%
+\contentsline {chapter}{\numberline {C}Project Management}{33}{appendix.59}%
+\contentsline {section}{\numberline {C.1}Organization}{33}{section.60}%
+\contentsline {section}{\numberline {C.2}Planning and Coordination}{34}{section.61}%
+\contentsline {section}{\numberline {C.3}Workflow}{34}{section.62}%
+\contentsline {chapter}{Bibliography}{36}{dummy.65}%
