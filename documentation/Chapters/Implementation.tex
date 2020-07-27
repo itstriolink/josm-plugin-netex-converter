@@ -1,7 +1,9 @@
 \chapter{Implementation}
 \section{Overview}
 This part of the documentation describes how the project was implemented in more-detailed and technical manner. It shows some of the key approaches that were used to solve some of the major conversion obstacles. It explains what kind of data OSM contains and how that data was used in conjunction with the plugin to produce an XML document compliant with the NeTEx schema. As we know, OSM data is not very consistent, since it's updated by the community, which means that a lot of extra measures and conditions had to be taken in order to avoid and solve problems of data inconsistency.\\
-This section will also cover some of the important techniques and tools that were used to test, document the plugin, generate artifacts from the plugin etc. It will also cover the code repository and the CI/CD aspects, which for this application, were hosted/maintained on project called \href{https://gitlab.com/}{GitLab}, which is hosted under an open-source license.
+\newline
+This section will also cover some of the important techniques and tools that were used to test, document the plugin, generate artifacts from the plugin etc. It will display the code repository features and the issue tracking tools, which for this application were hosted/maintained on project called \href{https://gitlab.com/}{GitLab}, which is hosted under an open-source license. Lastly, it will show the document preparation system that was used to create this very document.
+\newpage
 \section{OpenStreetMap Data}
 Elements (or objects) are the basic components of OpenStreetMap's conceptual data model of the physical world. They consist of:
 \begin{itemize}
@@ -150,20 +152,16 @@ The unit testing classes are stored in a separate package (possibly complete fol
 	\caption{An example of results after running some JUnit tests}
 \end{figure}
 \newpage
-\section{Code Repository and the CI/CD Pipeline Feature}
+\section{Code Repository and Software Lifecycle}
 \label{sec:GitLab}
-The code repository and the CI/CD pipeline features for this project were provided by \href{https://gitlab.com/}{GitLab}.\\
+The code repository and software lifecycle features for this project were provided by \href{https://gitlab.com/}{GitLab}.\\
 GitLab is a DevOps lifecycle tool that provides a lot of things like: Git-repository manager providing wiki, issue-tracking and CI/CD pipeline features, it uses an open-source license and is developed by \href{https://about.gitlab.com/company/}{GitLab Inc}.
-It has a very nice web interface and lots of different features that make application lifecycle much easier. The features GitLab offers that were used for this project were the project repository and the CI/CD feature.\\
-\newline
-CI/CD, or continuous integration and continuous delivery (aka continuous deployment), combines the values of these two practices in order to provide precise integration and delivery.
-GitLab has a feature of writing a CI/CD file (.yaml format), which does various operations for you each and every commit, to make sure that the CI/CD configuration still works with the committed changes.\\
-TBD... (FIX) In this case, CI/CD was used to test the project (run the unit tests) and then generate and upload the documentation PDF into an artifact which can be downloaded from the CI/CD pipeline itself.
+It has a very nice web interface and lots of different features that make application lifecycle much easier. The features GitLab offers that were used for this project were the code repository host, issue tracking tools etc.\\
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{./Images/Implementation/gitlab_view.png}
 	\caption{A sneak peek of the GitLab interface}
 \end{figure}	
-	
+\newpage
 \section{Document Preparation System}
 The typesetting system that was used in order to document this project was \href{https://www.LaTeX-project.org/}{LaTeX}.\\
 LaTeX is a high-quality typesetting system; it includes features designed for the production of technical and scientific documentation. LaTeX is the de facto standard for the communication and publication of scientific documents. LaTeX is available as free software. \cite{WhatIsLaTeX}\\

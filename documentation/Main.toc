@@ -15,37 +15,37 @@
 \contentsline {section}{\numberline {2.3}The Plugin}{7}{section.13}%
 \contentsline {chapter}{\numberline {3}Implementation}{10}{chapter.17}%
 \contentsline {section}{\numberline {3.1}Overview}{10}{section.18}%
-\contentsline {section}{\numberline {3.2}OpenStreetMap Data}{10}{section.19}%
+\contentsline {section}{\numberline {3.2}OpenStreetMap Data}{11}{section.19}%
 \contentsline {subsection}{\numberline {3.2.1}Data Types}{11}{subsection.20}%
 \contentsline {subsubsection}{\numberline {3.2.1.1}Node}{11}{subsubsection.21}%
 \contentsline {subsubsection}{\numberline {3.2.1.2}Way}{11}{subsubsection.22}%
-\contentsline {subsubsection}{\numberline {3.2.1.3}Relation}{11}{subsubsection.23}%
+\contentsline {subsubsection}{\numberline {3.2.1.3}Relation}{12}{subsubsection.23}%
 \contentsline {subsection}{\numberline {3.2.2}Usage of OpenStreetMap Data}{12}{subsection.24}%
 \contentsline {section}{\numberline {3.3}Java OpenStreetMap Editor}{13}{section.25}%
 \contentsline {section}{\numberline {3.4}XML Binding Framework}{14}{section.27}%
-\contentsline {subsection}{\numberline {3.4.1}The Binding Procedure}{14}{subsection.28}%
-\contentsline {section}{\numberline {3.5}NeTEx Conversion}{16}{section.30}%
-\contentsline {section}{\numberline {3.6}Testing}{19}{section.31}%
-\contentsline {subsection}{\numberline {3.6.1}Unit Testing}{19}{subsection.32}%
-\contentsline {section}{\numberline {3.7}Code Repository and the CI/CD Pipeline Feature}{20}{section.34}%
-\contentsline {section}{\numberline {3.8}Document Preparation System}{21}{section.36}%
-\contentsline {chapter}{\numberline {4}Results}{22}{chapter.38}%
-\contentsline {section}{\numberline {4.1}Achievements}{22}{section.39}%
-\contentsline {section}{\numberline {4.2}Reflection}{23}{section.40}%
-\contentsline {section}{\numberline {4.3}Results \& Conclusion}{24}{section.41}%
+\contentsline {subsection}{\numberline {3.4.1}The Binding Procedure}{15}{subsection.28}%
+\contentsline {section}{\numberline {3.5}NeTEx Conversion}{17}{section.30}%
+\contentsline {section}{\numberline {3.6}Testing}{20}{section.31}%
+\contentsline {subsection}{\numberline {3.6.1}Unit Testing}{20}{subsection.32}%
+\contentsline {section}{\numberline {3.7}Code Repository and Software Lifecycle}{21}{section.34}%
+\contentsline {section}{\numberline {3.8}Document Preparation System}{22}{section.36}%
+\contentsline {chapter}{\numberline {4}Results}{23}{chapter.38}%
+\contentsline {section}{\numberline {4.1}Achievements}{23}{section.39}%
+\contentsline {section}{\numberline {4.2}Reflection}{24}{section.40}%
+\contentsline {section}{\numberline {4.3}Results \& Conclusion}{25}{section.41}%
 \vspace {2em}
-\contentsline {chapter}{\numberline {A}Installation}{25}{appendix.42}%
-\contentsline {paragraph}{Usual, easy method}{25}{section*.43}%
-\contentsline {paragraph}{Manually install JOSM plugins}{26}{section*.49}%
-\contentsline {subsection}{\numberline {A.0.1}Building the .jar file}{26}{subsection.50}%
-\contentsline {chapter}{\numberline {B}NeTEx Data}{27}{appendix.51}%
-\contentsline {section}{\numberline {B.1}Examples of NeTEx Data}{27}{section.52}%
-\contentsline {subsection}{\numberline {B.1.1}Base Schema Example (No Stop Places)}{27}{subsection.53}%
-\contentsline {subsection}{\numberline {B.1.2}Stop Place Example (StopPlace)}{28}{subsection.54}%
-\contentsline {subsection}{\numberline {B.1.3}Platforms Example (Quay)}{29}{subsection.55}%
-\contentsline {subsection}{\numberline {B.1.4}Stairs Example (SitePathLink)}{30}{subsection.56}%
-\contentsline {chapter}{\numberline {C}Project Management}{31}{appendix.57}%
-\contentsline {section}{\numberline {C.1}Organization}{31}{section.58}%
-\contentsline {section}{\numberline {C.2}Planning and Coordination}{32}{section.59}%
-\contentsline {section}{\numberline {C.3}Workflow}{32}{section.60}%
-\contentsline {chapter}{Bibliography}{34}{dummy.63}%
+\contentsline {chapter}{\numberline {A}Installation}{26}{appendix.42}%
+\contentsline {paragraph}{Usual, easy method}{26}{section*.43}%
+\contentsline {paragraph}{Manually install JOSM plugins}{27}{section*.49}%
+\contentsline {subsection}{\numberline {A.0.1}Building the .jar file}{27}{subsection.50}%
+\contentsline {chapter}{\numberline {B}NeTEx Data}{28}{appendix.51}%
+\contentsline {section}{\numberline {B.1}Examples of NeTEx Data}{28}{section.52}%
+\contentsline {subsection}{\numberline {B.1.1}Base Schema Example (No Stop Places)}{28}{subsection.53}%
+\contentsline {subsection}{\numberline {B.1.2}Stop Place Example (StopPlace)}{29}{subsection.54}%
+\contentsline {subsection}{\numberline {B.1.3}Platforms Example (Quay)}{30}{subsection.55}%
+\contentsline {subsection}{\numberline {B.1.4}Stairs Example (SitePathLink)}{31}{subsection.56}%
+\contentsline {chapter}{\numberline {C}Project Management}{32}{appendix.57}%
+\contentsline {section}{\numberline {C.1}Organization}{32}{section.58}%
+\contentsline {section}{\numberline {C.2}Planning and Coordination}{33}{section.59}%
+\contentsline {section}{\numberline {C.3}Workflow}{33}{section.60}%
+\contentsline {chapter}{Bibliography}{35}{dummy.63}%
