@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7250 64-bit) (preloaded format=pdflatex 2019.11.19)  26 JUL 2020 12:05
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7250 64-bit) (preloaded format=pdflatex 2019.11.19)  27 JUL 2020 12:52
 entering extended mode
 **./Main.tex
 (Main.tex
@@ -1504,13 +1504,13 @@ Package epstopdf Info: Source file: <Logos/HSR_Logo_CMYK.eps>
 verted-to.pdf Logos/HSR_Logo_CMYK.eps>
 (epstopdf)             \includegraphics on input line 10.
 Package epstopdf Info: Output file is already uptodate.
-<Logos/HSR_Logo_CMYK-eps-converted-to.pdf, id=138, 184.69pt x 72.27pt>
+<Logos/HSR_Logo_CMYK-eps-converted-to.pdf, id=142, 184.69pt x 72.27pt>
 File: Logos/HSR_Logo_CMYK-eps-converted-to.pdf Graphic file (type pdf)
 <use Logos/HSR_Logo_CMYK-eps-converted-to.pdf>
 Package pdftex.def Info: Logos/HSR_Logo_CMYK-eps-converted-to.pdf  used on inpu
 t line 10.
 (pdftex.def)             Requested size: 127.7772pt x 50.0pt.
-<Logos/MSE.jpg, id=139, 258.9675pt x 30.1125pt>
+<Logos/MSE.jpg, id=143, 258.9675pt x 30.1125pt>
 File: Logos/MSE.jpg Graphic file (type jpg)
 <use Logos/MSE.jpg>
 Package pdftex.def Info: Logos/MSE.jpg  used on input line 10.
@@ -1681,7 +1681,7 @@ LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
 
 (_minted-Main/1EBB79CA58D8DD68FAC02FA1537F09821FB7A63F278795F3148E60ED45A6B278.
 pygtex) [6]
-<./Images/ArchitectureDesign/netex_converter_toolbar.png, id=277, 393.8715pt x 
+<./Images/ArchitectureDesign/netex_converter_toolbar.png, id=282, 393.8715pt x 
 260.172pt>
 File: ./Images/ArchitectureDesign/netex_converter_toolbar.png Graphic file (typ
 e png)
@@ -1699,7 +1699,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 41--49
 
  []
 
-<./Images/ArchitectureDesign/highlight_example.png, id=279, 392.06474pt x 374.5
+<./Images/ArchitectureDesign/highlight_example.png, id=284, 392.06474pt x 374.5
 995pt>
 File: ./Images/ArchitectureDesign/highlight_example.png Graphic file (type png)
 
@@ -1708,7 +1708,7 @@ Package pdftex.def Info: ./Images/ArchitectureDesign/highlight_example.png  use
 d on input line 52.
 (pdftex.def)             Requested size: 453.60808pt x 433.39825pt.
 [7 <./Images/ArchitectureDesign/netex_converter_toolbar.png>]
-<./Images/ArchitectureDesign/netex_doc_example.png, id=288, 445.665pt x 198.742
+<./Images/ArchitectureDesign/netex_doc_example.png, id=293, 445.665pt x 198.742
 5pt>
 File: ./Images/ArchitectureDesign/netex_doc_example.png Graphic file (type png)
 
@@ -1732,7 +1732,7 @@ File: omsphv.fd
 )
 LaTeX Font Info:    Font shape `OMS/phv/m/it' in size <12> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 50.
-<./Images/Implementation/josm_view.png, id=322, 1156.32pt x 621.522pt>
+<./Images/Implementation/josm_view.png, id=327, 1156.32pt x 621.522pt>
 File: ./Images/Implementation/josm_view.png Graphic file (type png)
 <use ./Images/Implementation/josm_view.png>
 Package pdftex.def Info: ./Images/Implementation/josm_view.png  used on input l
@@ -1754,7 +1754,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 58--63
  []
 
 [13 <./Images/Implementation/josm_view.png>] [14]
-<./Images/Implementation/jaxb_generated_classes.png, id=345, 285.4665pt x 207.1
+<./Images/Implementation/jaxb_generated_classes.png, id=350, 285.4665pt x 207.1
 74pt>
 File: ./Images/Implementation/jaxb_generated_classes.png Graphic file (type png
 )
@@ -1792,7 +1792,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 137--141
 
  []
 
-<./Images/Implementation/junit_testing_example.png, id=370, 570.933pt x 160.800
+<./Images/Implementation/junit_testing_example.png, id=375, 570.933pt x 160.800
 75pt>
 File: ./Images/Implementation/junit_testing_example.png Graphic file (type png)
 
@@ -1801,7 +1801,7 @@ Package pdftex.def Info: ./Images/Implementation/junit_testing_example.png  use
 d on input line 149.
 (pdftex.def)             Requested size: 453.60808pt x 127.7599pt.
 [19 <./Images/Implementation/junit_testing_example.png>]
-<./Images/Implementation/gitlab_view.png, id=382, 1047.915pt x 831.105pt>
+<./Images/Implementation/gitlab_view.png, id=387, 1047.915pt x 831.105pt>
 File: ./Images/Implementation/gitlab_view.png Graphic file (type png)
 <use ./Images/Implementation/gitlab_view.png>
 Package pdftex.def Info: ./Images/Implementation/gitlab_view.png  used on input
@@ -1817,7 +1817,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 155--165
 
 (_minted-Main/9AD7704E575FCE6B1DB4ED16575B873377E4E4EC534B3AA5075C5A2D807C0285.
 pygtex [20 <./Images/Implementation/gitlab_view.png>])
-<./Images/Implementation/latex_example.png, id=394, 111.41624pt x 86.12175pt>
+<./Images/Implementation/latex_example.png, id=399, 111.41624pt x 86.12175pt>
 File: ./Images/Implementation/latex_example.png Graphic file (type png)
 <use ./Images/Implementation/latex_example.png>
 Package pdftex.def Info: ./Images/Implementation/latex_example.png  used on inp
@@ -1848,7 +1848,17 @@ Underfull \hbox (badness 10000) in paragraph at lines 20--27
 
  []
 
-[23]) (Appendices/Installation.tex [24]
+[23])
+------------------------------------------------------------------------------
+ List of Figures
+------------------------------------------------------------------------------
+[24] (Main.lof)
+\tf@lof=\write8
+\openout8 = `Main.lof'.
+
+ [25
+
+] (Appendices/Installation.tex
 Appendix A.
 
 Underfull \hbox (badness 10000) in paragraph at lines 2--5
@@ -1869,7 +1879,8 @@ Overfull \hbox (7.55443pt too wide) in paragraph at lines 1--28
 [][]\OT1/phv/m/n/12 , or [] for
  []
 
-[25
+[26
+
 
 ]
 \openout4 = `Main.pyg'.
@@ -1891,40 +1902,40 @@ pygtex)
 
 
 (_minted-Main/DB66359762491DD09D6FBEC5137ABF5D4EEE172A3F9296B31A282D9AFEF27B06.
-pygtex)) (Appendices/NeTEx_Data.tex [26]
+pygtex)) (Appendices/NeTEx_Data.tex [27]
 Appendix B.
 \openout3 = `Main.pyg'.
 
 
 (_minted-Main/CFB09E18588B28802611C4A43BBE8E5E4E8A7278A3C4B3C8D56367CE08D527C8.
-pygtex) [27
+pygtex) [28
 
 ]
 \openout3 = `Main.pyg'.
 
 
 (_minted-Main/900DAF736164B7889B473F89E14A3B974E8A7278A3C4B3C8D56367CE08D527C8.
-pygtex) [28]
-\openout3 = `Main.pyg'.
-
-
-(_minted-Main/DA83BE6B81C2CE0D548F48E12CB813C34E8A7278A3C4B3C8D56367CE08D527C8.
 pygtex) [29]
 \openout3 = `Main.pyg'.
 
 
+(_minted-Main/DA83BE6B81C2CE0D548F48E12CB813C34E8A7278A3C4B3C8D56367CE08D527C8.
+pygtex) [30]
+\openout3 = `Main.pyg'.
+
+
 (_minted-Main/C7905E01E3008CD848978ED435F2714F4E8A7278A3C4B3C8D56367CE08D527C8.
-pygtex)) (Appendices/Project_Management.tex [30]
+pygtex)) (Appendices/Project_Management.tex [31]
 Appendix C.
 
 Underfull \hbox (badness 10000) in paragraph at lines 3--9
 
  []
 
-[31
+[32
 
 ]
-<./Images/Appendices/gitlab_commit_stats.png, id=471, 958.3303pt x 403.5075pt>
+<./Images/Appendices/gitlab_commit_stats.png, id=498, 958.3303pt x 403.5075pt>
 File: ./Images/Appendices/gitlab_commit_stats.png Graphic file (type png)
 <use ./Images/Appendices/gitlab_commit_stats.png>
 Package pdftex.def Info: ./Images/Appendices/gitlab_commit_stats.png  used on i
@@ -1935,13 +1946,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 16--22
 
  []
 
-<./Images/Appendices/gitlab_cicd_stats.png, id=472, 941.76843pt x 353.06906pt>
+<./Images/Appendices/gitlab_cicd_stats.png, id=499, 941.76843pt x 353.06906pt>
 File: ./Images/Appendices/gitlab_cicd_stats.png Graphic file (type png)
 <use ./Images/Appendices/gitlab_cicd_stats.png>
 Package pdftex.def Info: ./Images/Appendices/gitlab_cicd_stats.png  used on inp
 ut line 24.
 (pdftex.def)             Requested size: 453.60808pt x 170.05844pt.
-) [32 <./Images/Appendices/gitlab_commit_stats.png>] [33 <./Images/Appendices/g
+) [33 <./Images/Appendices/gitlab_commit_stats.png>] [34 <./Images/Appendices/g
 itlab_cicd_stats.png>]
 ------------------------------------------------------------------------------
  Bibliography
@@ -1964,26 +1975,26 @@ Underfull \hbox (badness 10000) in paragraph at lines 79--84
 ]course-[]1 / examples _ en .
  []
 
-[34
+[35
 
 
-]) [35]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 72.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 72.
+]) [36]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 74.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 74.
  (Main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 72.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 72.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 74.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 74.
 Package rerunfilecheck Info: File `Main.out' has not changed.
-(rerunfilecheck)             Checksum: 0293DD1FEC1CA66EC31E39B9BB79DD1C;5344.
+(rerunfilecheck)             Checksum: 61ED66F73A5A9AC2627E4FAD51367C39;5468.
 runsystem(del Main.pyg)...executed.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 72.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 74.
  ) 
 Here is how much of TeX's memory you used:
- 39502 strings out of 492450
- 739778 string characters out of 3120004
+ 39511 strings out of 492450
+ 739960 string characters out of 3120004
  943548 words of memory out of 3000000
- 43074 multiletter control sequences out of 15000+200000
+ 43077 multiletter control sequences out of 15000+200000
  558648 words of font info for 72 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  65i,11n,79p,988b,659s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -1998,9 +2009,9 @@ ppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Users/
 labia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvr8a.pfb><C:
 /Users/labia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvro8a
 .pfb>
-Output written on Main.pdf (41 pages, 1001674 bytes).
+Output written on Main.pdf (42 pages, 1006682 bytes).
 PDF statistics:
- 572 PDF objects out of 1000 (max. 8388607)
- 118 named destinations out of 1000 (max. 500000)
- 337 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 598 PDF objects out of 1000 (max. 8388607)
+ 121 named destinations out of 1000 (max. 500000)
+ 345 words of extra memory for PDF output out of 10000 (max. 10000000)
 
