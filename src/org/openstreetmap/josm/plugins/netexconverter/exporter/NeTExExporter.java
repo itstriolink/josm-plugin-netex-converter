@@ -7,13 +7,29 @@
  * of the License, or (at your option) any later version.
  *
  */
-package org.openstreetmap.josm.plugins.netex_converter.exporter;
+package org.openstreetmap.josm.plugins.netexconverter.exporter;
 
+import com.netex.model.CompositeFrame;
+import com.netex.model.EquipmentPlaces_RelStructure;
+import com.netex.model.ObjectFactory;
+import com.netex.model.PathJunction;
+import com.netex.model.PathJunctions_RelStructure;
+import com.netex.model.PublicationDeliveryStructure;
+import com.netex.model.Quay;
+import com.netex.model.QuayTypeEnumeration;
+import com.netex.model.Quays_RelStructure;
+import com.netex.model.ResourceFrame;
+import com.netex.model.SiteFrame;
+import com.netex.model.SitePathLink;
+import com.netex.model.SitePathLinks_RelStructure;
+import com.netex.model.StopPlace;
+import com.netex.model.StopTypeEnumeration;
+import com.netex.model.TypeOfPointRefStructure;
+import com.netex.model.TypeOfPointRefs_RelStructure;
+import com.netex.model.ZoneRefStructure;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-
-import com.netex.model.*;
 
 import org.xml.sax.SAXException;
 
@@ -23,7 +39,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -58,13 +73,13 @@ import org.openstreetmap.josm.tools.Geometry;
 import org.openstreetmap.josm.tools.Logging;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import org.openstreetmap.josm.plugins.netex_converter.model.netex.Elevator;
-import org.openstreetmap.josm.plugins.netex_converter.model.netex.FootPath;
-import org.openstreetmap.josm.plugins.netex_converter.model.netex.Steps;
+import org.openstreetmap.josm.plugins.netexconverter.model.netex.Elevator;
+import org.openstreetmap.josm.plugins.netexconverter.model.netex.FootPath;
+import org.openstreetmap.josm.plugins.netexconverter.model.netex.Steps;
 
-import org.openstreetmap.josm.plugins.netex_converter.model.josm.PrimitiveLogMessage;
+import org.openstreetmap.josm.plugins.netexconverter.model.josm.PrimitiveLogMessage;
 
-import org.openstreetmap.josm.plugins.netex_converter.util.OSMHelper;
+import org.openstreetmap.josm.plugins.netexconverter.util.OSMHelper;
 
 /**
  *

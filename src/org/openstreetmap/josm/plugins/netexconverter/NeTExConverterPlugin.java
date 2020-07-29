@@ -7,7 +7,7 @@
  * of the License, or (at your option) any later version.
  *
  */
-package org.openstreetmap.josm.plugins.netex_converter;
+package org.openstreetmap.josm.plugins.netexconverter;
 
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MainMenu;

@@ -7,12 +7,12 @@
  * of the License, or (at your option) any later version.
  *
  */
-package org.openstreetmap.josm.plugins.netex_converter.model.josm;
+package org.openstreetmap.josm.plugins.netexconverter.model.josm;
 
 import java.util.Map;
 import java.util.Objects;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
-import org.openstreetmap.josm.plugins.netex_converter.util.OSMTags;
+import org.openstreetmap.josm.plugins.netexconverter.util.OSMTags;
 
 /**
  *

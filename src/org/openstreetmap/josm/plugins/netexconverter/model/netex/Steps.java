@@ -7,7 +7,7 @@
  * of the License, or (at your option) any later version.
  *
  */
-package org.openstreetmap.josm.plugins.netex_converter.model.netex;
+package org.openstreetmap.josm.plugins.netexconverter.model.netex;
 
 import com.netex.model.EquipmentPlace;
 import com.netex.model.PathJunction;

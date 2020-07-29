@@ -2,12 +2,12 @@
 <project name="NeTExConverter" default="dist" basedir=".">
     <property name="commit.message" value="Initial commit"/>
 	
-    <property name="plugin.main.version" value="14960"/>
-    <property name="plugin.author" value="labiangashi@gmail.com"/>
+    <property name="plugin.main.version" value="14153"/>
+    <property name="plugin.author" value="Labian Gashi"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.netexconverter.NeTExConverterPlugin"/>
-    <property name="plugin.description" value="Convert OSM to NeTEx"/>
-    <property name="plugin.icon" value="images/NeTExConverter.png"/>
-    <property name="plugin.link" value="..."/>
+    <property name="plugin.description" value="Convert OSM data into the NeTEx XML format"/>
+    <property name="plugin.icon" value="images/netex_converter.png"/>
+	<property name="plugin.canloadatruntime" value="true"/>
 	
     <import file="../build-common.xml"/>
 </project>

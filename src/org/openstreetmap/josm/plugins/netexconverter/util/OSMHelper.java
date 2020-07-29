@@ -7,7 +7,7 @@
  * of the License, or (at your option) any later version.
  *
  */
-package org.openstreetmap.josm.plugins.netex_converter.util;
+package org.openstreetmap.josm.plugins.netexconverter.util;
 
 import com.netex.model.LimitationStatusEnumeration;
 import com.netex.model.QuayTypeEnumeration;

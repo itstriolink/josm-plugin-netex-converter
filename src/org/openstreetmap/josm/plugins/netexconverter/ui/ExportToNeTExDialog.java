@@ -7,7 +7,7 @@
  * of the License, or (at your option) any later version.
  *
  */
-package org.openstreetmap.josm.plugins.netex_converter.ui;
+package org.openstreetmap.josm.plugins.netexconverter.ui;
 
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
@@ -23,7 +23,7 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.openstreetmap.josm.gui.MainApplication;
-import org.openstreetmap.josm.plugins.netex_converter.exporter.NeTExExporter;
+import org.openstreetmap.josm.plugins.netexconverter.exporter.NeTExExporter;
 import org.xml.sax.SAXException;
 
 /**

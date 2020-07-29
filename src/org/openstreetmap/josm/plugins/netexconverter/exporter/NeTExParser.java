@@ -7,7 +7,7 @@
  * of the License, or (at your option) any later version.
  *
  */
-package org.openstreetmap.josm.plugins.netex_converter.exporter;
+package org.openstreetmap.josm.plugins.netexconverter.exporter;
 
 import com.netex.model.AccessFeatureEnumeration;
 import com.netex.model.AccessibilityAssessment;
@@ -63,12 +63,12 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.TagMap;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.plugins.netex_converter.model.josm.PrimitiveLogMessage;
-import org.openstreetmap.josm.plugins.netex_converter.model.netex.Elevator;
-import org.openstreetmap.josm.plugins.netex_converter.model.netex.FootPath;
-import org.openstreetmap.josm.plugins.netex_converter.model.netex.Steps;
-import org.openstreetmap.josm.plugins.netex_converter.util.OSMHelper;
-import org.openstreetmap.josm.plugins.netex_converter.util.OSMTags;
+import org.openstreetmap.josm.plugins.netexconverter.model.josm.PrimitiveLogMessage;
+import org.openstreetmap.josm.plugins.netexconverter.model.netex.Elevator;
+import org.openstreetmap.josm.plugins.netexconverter.model.netex.FootPath;
+import org.openstreetmap.josm.plugins.netexconverter.model.netex.Steps;
+import org.openstreetmap.josm.plugins.netexconverter.util.OSMHelper;
+import org.openstreetmap.josm.plugins.netexconverter.util.OSMTags;
 
 /**
  *

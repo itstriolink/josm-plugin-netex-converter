@@ -7,9 +7,9 @@
  * of the License, or (at your option) any later version.
  *
  */
-package org.openstreetmap.josm.plugins.netex_converter;
+package org.openstreetmap.josm.plugins.netexconverter;
 
-import org.openstreetmap.josm.plugins.netex_converter.ui.ExportToNeTExDialog;
+import org.openstreetmap.josm.plugins.netexconverter.ui.ExportToNeTExDialog;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
@@ -20,16 +20,13 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.SAXException;
 
-/**
- * Loads a PDF file into a new layer.
- *
- */
+
 public class NeTExConverterAction extends JosmAction {
 
     public NeTExConverterAction() {
         super(tr("Export to NeTEx..."), "netex_converter",
                 tr("Export to NeTEx..."),
-                Shortcut.registerShortcut("tools:netex_converter", tr("Tool: {0}", tr("Export to NeTEx...")),
+                Shortcut.registerShortcut("tools:NeTExConverter", tr("Tool: {0}", tr("Export to NeTEx...")),
                         KeyEvent.VK_N, Shortcut.ALT_CTRL_SHIFT), true);
 
     }
