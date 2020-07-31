@@ -7,7 +7,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.netexconverter.NeTExConverterPlugin"/>
     <property name="plugin.description" value="Convert OSM data into the NeTEx XML format"/>
     <property name="plugin.icon" value="images/netex_converter.png"/>
-	<property name="plugin.canloadatruntime" value="true"/>
+    <property name="plugin.canloadatruntime" value="true"/>
 	
     <import file="../build-common.xml"/>
 </project>
