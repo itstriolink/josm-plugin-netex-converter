@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
 public class NeTExConverterAction extends JosmAction {
 
     public NeTExConverterAction() {
-        super(tr("Export to NeTEx..."), "netex_converter",
+        super(tr("Export to NeTEx..."), "netexconverter",
                 tr("Export to NeTEx..."),
                 Shortcut.registerShortcut("tools:NeTExConverter", tr("Tool: {0}", tr("Export to NeTEx...")),
                         KeyEvent.VK_N, Shortcut.ALT_CTRL_SHIFT), true);
