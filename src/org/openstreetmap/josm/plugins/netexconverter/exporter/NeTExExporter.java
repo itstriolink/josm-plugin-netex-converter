@@ -87,12 +87,6 @@ public class NeTExExporter {
 	private final ObjectFactory neTExFactory;
 	private final CustomMarshaller customMarshaller;
 
-	private final HashMap<OsmPrimitive, StopPlace> stopPlaces;
-	private final HashMap<OsmPrimitive, Quay> quays;
-	private final HashMap<Node, Elevator> elevators;
-	private final HashMap<Way, Steps> steps;
-	private final HashMap<Way, FootPath> footPaths;
-
 	private DataSet ds = null;
 
 	private static List<PrimitiveLogMessage> LOG_MESSAGES = new ArrayList<>();
@@ -102,16 +96,17 @@ public class NeTExExporter {
 		neTExParser = new NeTExParser();
 		neTExFactory = new ObjectFactory();
 		customMarshaller = new CustomMarshaller(PublicationDeliveryStructure.class);
-
-		stopPlaces = new HashMap<>();
-		quays = new HashMap<>();
-		elevators = new HashMap<>();
-		steps = new HashMap<>();
-		footPaths = new HashMap<>();
 	}
 
 	public void exportToNeTEx(File neTExFile) throws IOException, org.xml.sax.SAXException, org.xml.sax.SAXException {
 		LOG_MESSAGES = new ArrayList<>();
+
+		HashMap<OsmPrimitive, StopPlace> stopPlaces = new HashMap<>();
+		HashMap<OsmPrimitive, Quay> quays = new HashMap<>();
+		HashMap<Node, Elevator> elevators = new HashMap<>();
+		HashMap<Way, Steps> steps = new HashMap<>();
+		HashMap<Way, FootPath> footPaths = new HashMap<>();
+
 		ds = MainApplication.getLayerManager().getEditDataSet();
 
 		Collection<OsmPrimitive> primitives = ds.allPrimitives();
