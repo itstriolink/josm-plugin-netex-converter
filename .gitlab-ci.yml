@@ -1,9 +1,18 @@
+before_script: []
+stages: [
+  "build",
+]
+
 documentation:
-  stage: deploy
-  script:
-    - mkdir public
-    - cp documentation/Main.pdf public
+  image: "timnn/texlive"
+  stage: "build"
+  script: [
+      "apt-get update && apt-get install -y python3-pip",
+      "pip3 install Pygments",
+      "cd documentation",
+      "pdflatex -synctex=1 --shell-escape -interaction=nonstopmode Main.tex"
+      ]
   artifacts:
     paths:
-      - public
+      - documentation/Main.pdf
 
