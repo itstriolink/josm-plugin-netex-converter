@@ -18,22 +18,70 @@ Integrating OpenStreetMap with Public Transport Network Format "NeTEx" using the
 \newpage
 \section{Product Results}
 The only type of data needed to deliver the results for the plugin is only OSM data. This data is converted and checked carefully during the conversion in order to find out what it really represents in transport and in the NeTEx format. The simplicity of running this plugin and converting the loaded OSM data into NeTEx is a powerful attribute that it possesses.\\
+\newline
 Here's a bus stop, consisting of two platforms (on both sides) and the way it looks on JOSM (with the OSM data):
-% \begin{figure}[H]
-% 	\includegraphics[width=\linewidth]{./Images/Results/osm_results_example.png}
-% 	\caption{An example of a bus stop in OpenStreetMap}
-% \end{figure}
-And here's that same bus stop, represented as NeTEx, with the help of this plugin.
-% \begin{figure}[H]
-%	\includegraphics[width=\linewidth]{./Images/Results/netex_results_example.png}
-%	\caption{An example of a bus stop represented in NeTEx after its conversion from OSM using this plugin}
-% \end{figure}
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{./Images/Results/results_osm_example_1.png}
+	\caption{An example of a bus stop in OpenStreetMap (Location - Chur, Switzerland)}
+\end{figure}
+And its tags:
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{./Images/Results/results_osm_example_2.png}
+	\caption{An example of a bus stop tags in OpenStreetMap (Location - Chur, Switzerland)}
+\end{figure}
+And here's that same bus stop, after being converted to NeTEx using this plugin:
+\begin{minted}[tabsize=2,breaklines]{xml}
+<StopPlace id="ch:1:StopPlace:8594419">
+<Name>Grischunaweg</Name>
+<PrivateCode>org:osm:node:6104311285</PrivateCode>
+<Centroid>
+<Location>
+  <Longitude>9.5139936</Longitude>
+  <Latitude>46.8527028</Latitude>
+</Location>
+</Centroid>
+<AccessibilityAssessment>
+<limitations>
+  <AccessibilityLimitation>
+    <WheelchairAccess>false</WheelchairAccess>
+  </AccessibilityLimitation>
+</limitations>
+</AccessibilityAssessment>
+<PublicCode>8594419</PublicCode>
+<StopPlaceType>onstreetBus</StopPlaceType>
+<quays>
+<Quay id="ch:1:Quay:8594419:6104311285">
+  <PrivateCode>org:osm:node:6104311285</PrivateCode>
+  <Centroid>
+    <Location>
+      <Longitude>9.5139936</Longitude>
+      <Latitude>46.8527028</Latitude>
+    </Location>
+  </Centroid>
+  <PublicCode>6104311285</PublicCode>
+  <QuayType>busStop</QuayType>
+</Quay>
+<Quay id="ch:1:Quay:8594419:2446137123">
+  <PrivateCode>org:osm:node:2446137123</PrivateCode>
+  <Centroid>
+    <Location>
+      <Longitude>9.5139237</Longitude>
+      <Latitude>46.8528536</Latitude>
+    </Location>
+  </Centroid>
+  <PublicCode>2446137123</PublicCode>
+  <QuayType>busStop</QuayType>
+</Quay>
+</quays>
+</StopPlace>
+\end{minted}
 \begin{itemize}
 \item{The \textit{StopPlace} node represents the bus stop and contains all of the other data such as: ID, name, location, public code, its type etc.}
 \item{The \textit{Quay} node represents the platform of the bus stop along with the other attributes such as: ID, location, platform type etc.}
-\item{TBD...}
+\item{The \textit{AccessibilityAssessment} node represents accessibility features for the bus stop, in this case only whether it is accessible with a wheelchair or not, and if no info about that is found from the tags, it falls back to a "false" value.}
 \end{itemize}
 More information on what all of the NeTEx objects represent can be found on the official NeTEx schema documentation.
+\newpage
 \section{Reflection}
 I have never used OpenStreetMap before, let alone JOSM. This project made me learn a lot of key factors that drive OSM and make OSM such a successful project for the community. It also improved my ability to work in an open-source project and know the approaches that are used by developers when developing open-source projects.\\
 \newline
