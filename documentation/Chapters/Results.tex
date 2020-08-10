@@ -16,6 +16,24 @@ Integrating OpenStreetMap with Public Transport Network Format "NeTEx" using the
 	\item{Publish the plugin in the official JOSM plugins repository.}
 \end{itemize}
 \newpage
+\section{Product Results}
+The only type of data needed to deliver the results for the plugin is only OSM data. This data is converted and checked carefully during the conversion in order to find out what it really represents in transport and in the NeTEx format. The simplicity of running this plugin and converting the loaded OSM data into NeTEx is a powerful attribute that it possesses.\\
+Here's a bus stop, consisting of two platforms (on both sides) and the way it looks on JOSM (with the OSM data):
+% \begin{figure}[H]
+% 	\includegraphics[width=\linewidth]{./Images/Results/osm_results_example.png}
+% 	\caption{An example of a bus stop in OpenStreetMap}
+% \end{figure}
+And here's that same bus stop, represented as NeTEx, with the help of this plugin.
+% \begin{figure}[H]
+%	\includegraphics[width=\linewidth]{./Images/Results/netex_results_example.png}
+%	\caption{An example of a bus stop represented in NeTEx after its conversion from OSM using this plugin}
+% \end{figure}
+\begin{itemize}
+\item{The \textit{StopPlace} node represents the bus stop and contains all of the other data such as: ID, name, location, public code, its type etc.}
+\item{The \textit{Quay} node represents the platform of the bus stop along with the other attributes such as: ID, location, platform type etc.}
+\item{TBD...}
+\end{itemize}
+More information on what all of the NeTEx objects represent can be found on the official NeTEx schema documentation.
 \section{Reflection}
 I have never used OpenStreetMap before, let alone JOSM. This project made me learn a lot of key factors that drive OSM and make OSM such a successful project for the community. It also improved my ability to work in an open-source project and know the approaches that are used by developers when developing open-source projects.\\
 \newline
@@ -23,4 +41,4 @@ I wasn't very informed about transport data either and never heard of NeTEx befo
 \newline
 I have had a lot of experience with working with Java before, but not that much experience of coding in open-source projects where you have to code by following "protocol". I had to do a lot of research within the code, but after a while, I understood how the whole thing worked and then after that, everything in the code made sense and was straight-forward to reach in the code.\\
 \newline
-I have also never worked with an XML binding framework either and it was wonderful to see how such things are configured and implemented, without such frameworks, this would be impossible! A lot of technologies and approaches used here were a new experience for me and even though it was overwhelming sometimes, it was definitely worth it!
+I had also never worked with an XML binding framework before either and it was wonderful to see how such things are made possible in the programming world; without such frameworks, this would be hardly possible! A lot of technologies and approaches used here were a new experience for me and even though it was overwhelming sometimes, it was definitely worth it!
