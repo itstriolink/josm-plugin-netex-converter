@@ -18,7 +18,7 @@ Integrating OpenStreetMap with Public Transport Network Format "NeTEx" using the
 \newpage
 \section{Product Results}
 The only type of data needed to deliver the results for the plugin is only OSM data. This data is converted and checked carefully during the conversion in order to find out what it really represents in transport and in the NeTEx format. The simplicity of running this plugin and converting the loaded OSM data into NeTEx is a powerful attribute that it possesses.\\
-\newline
+\subsection{XML Results}
 Here's a bus stop, consisting of two platforms (on both sides) and the way it looks on JOSM (with the OSM data):
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{./Images/Results/results_osm_example_1.png}
@@ -82,6 +82,17 @@ And here's that same bus stop, after being converted to NeTEx using this plugin:
 \end{itemize}
 More information on what all of the NeTEx objects represent can be found on the official NeTEx schema documentation.
 \newpage
+\subsection{Visual Results}
+Below is a view of JOSM and the normal map layer before doing the NeTEx conversion. All of the OSM elements are visible here, including those who have no sort of importance/relevance for the NeTEx conversion.
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{./Images/Results/visual_result_before_export.png}
+	\caption{JOSM Map Layer view before the NeTEx conversion (Location - Chur, Switzerland)}
+\end{figure}
+After the conversion, a new map layer is added which is called "NeTEx Export Layer" and it includes only the OSM elements that are relevant for the NeTEx conversion (transport objects, paths leading to platforms, elevators etc.).
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{./Images/Results/visual_result_after_export.png}
+	\caption{JOSM Map Layer view after the NeTEx conversion (Location - Chur, Switzerland)}
+\end{figure}
 \section{Reflection}
 I have never used OpenStreetMap before, let alone JOSM. This project made me learn a lot of key factors that drive OSM and make OSM such a successful project for the community. It also improved my ability to work in an open-source project and know the approaches that are used by developers when developing open-source projects.\\
 \newline

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7250 64-bit) (preloaded format=pdflatex 2019.11.19)  10 AUG 2020 21:17
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7250 64-bit) (preloaded format=pdflatex 2019.11.19)  18 AUG 2020 20:10
 entering extended mode
 **./Main.tex
 (Main.tex
@@ -1855,8 +1855,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 114--115
 
 
 (_minted-Main/38EC0886DDD6F51FD0549CCE252D2A23155EB3CE70C3ED74340D332E0F600455.
-pygtex) [19]
-Underfull \hbox (badness 10000) in paragraph at lines 139--143
+pygtex)
+Underfull \hbox (badness 10000) in paragraph at lines 134--135
+
+ []
+
+[19]
+Underfull \hbox (badness 10000) in paragraph at lines 140--144
 
  []
 
@@ -1866,17 +1871,17 @@ File: ./Images/Implementation/junit_testing_example.png Graphic file (type png)
 
 <use ./Images/Implementation/junit_testing_example.png>
 Package pdftex.def Info: ./Images/Implementation/junit_testing_example.png  use
-d on input line 151.
+d on input line 152.
 (pdftex.def)             Requested size: 453.60808pt x 127.7599pt.
 [20 <./Images/Implementation/junit_testing_example.png>]
 <./Images/Implementation/gitlab_view.png, id=417, 1047.915pt x 831.105pt>
 File: ./Images/Implementation/gitlab_view.png Graphic file (type png)
 <use ./Images/Implementation/gitlab_view.png>
 Package pdftex.def Info: ./Images/Implementation/gitlab_view.png  used on input
- line 161.
+ line 162.
 (pdftex.def)             Requested size: 453.60808pt x 359.75232pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 157--163
+Underfull \hbox (badness 10000) in paragraph at lines 158--164
 
  []
 
@@ -1890,7 +1895,7 @@ pygtex)
 File: ./Images/Implementation/latex_example.png Graphic file (type png)
 <use ./Images/Implementation/latex_example.png>
 Package pdftex.def Info: ./Images/Implementation/latex_example.png  used on inp
-ut line 190.
+ut line 191.
 (pdftex.def)             Requested size: 111.41597pt x 86.12154pt.
 ) (Chapters/Results.tex [22 <./Images/Implementation/latex_example.png>]
 Chapter 4.
@@ -1902,6 +1907,10 @@ Underfull \hbox (badness 10000) in paragraph at lines 3--6
 [23
 
 ]
+Underfull \hbox (badness 10000) in paragraph at lines 20--21
+
+ []
+
 <./Images/Results/results_osm_example_1.png, id=446, 316.18124pt x 292.09125pt>
 
 File: ./Images/Results/results_osm_example_1.png Graphic file (type png)
@@ -1909,11 +1918,6 @@ File: ./Images/Results/results_osm_example_1.png Graphic file (type png)
 Package pdftex.def Info: ./Images/Results/results_osm_example_1.png  used on in
 put line 24.
 (pdftex.def)             Requested size: 453.60808pt x 419.07785pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 20--26
-
- []
-
 <./Images/Results/results_osm_example_2.png, id=447, 473.3685pt x 227.6505pt>
 File: ./Images/Results/results_osm_example_2.png Graphic file (type png)
 <use ./Images/Results/results_osm_example_2.png>
@@ -1925,29 +1929,46 @@ put line 29.
 
 
 (_minted-Main/95061DB292860819C2F5890709635A9E4E8A7278A3C4B3C8D56367CE08D527C8.
-pygtex [25 <./Images/Results/results_osm_example_2.png>]) [26])
-Underfull \hbox (badness 10000) in paragraph at lines 86--58
+pygtex [25 <./Images/Results/results_osm_example_2.png>]) [26]
+<./Images/Results/visual_result_before_export.png, id=464, 1156.32pt x 587.796p
+t>
+File: ./Images/Results/visual_result_before_export.png Graphic file (type png)
+<use ./Images/Results/visual_result_before_export.png>
+Package pdftex.def Info: ./Images/Results/visual_result_before_export.png  used
+ on input line 88.
+(pdftex.def)             Requested size: 453.60808pt x 230.58487pt.
+<./Images/Results/visual_result_after_export.png, id=465, 1156.32pt x 589.60275
+pt>
+File: ./Images/Results/visual_result_after_export.png Graphic file (type png)
+<use ./Images/Results/visual_result_after_export.png>
+Package pdftex.def Info: ./Images/Results/visual_result_after_export.png  used 
+on input line 93.
+(pdftex.def)             Requested size: 453.60808pt x 231.29364pt.
+)
+Underfull \hbox (badness 10000) in paragraph at lines 97--58
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 86--58
+Underfull \hbox (badness 10000) in paragraph at lines 97--58
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 86--58
+Underfull \hbox (badness 10000) in paragraph at lines 97--58
 
  []
 
+[27 <./Images/Results/visual_result_before_export.png> <./Images/Results/visual
+_result_after_export.png>]
 ------------------------------------------------------------------------------
  List of Figures
 ------------------------------------------------------------------------------
-[27] (Main.lof)
+[28] (Main.lof)
 \tf@lof=\write8
 \openout8 = `Main.lof'.
 
- [28
+ [29
 
 ] (Appendices/Installation.tex
 Appendix A.
@@ -1970,7 +1991,7 @@ Overfull \hbox (7.55443pt too wide) in paragraph at lines 1--28
 [][]\OT1/phv/m/n/12 , or [] for
  []
 
-[29
+[30
 
 
 ]
@@ -1993,40 +2014,40 @@ pygtex)
 
 
 (_minted-Main/DB66359762491DD09D6FBEC5137ABF5D4EEE172A3F9296B31A282D9AFEF27B06.
-pygtex)) (Appendices/NeTEx_Data.tex [30]
+pygtex)) (Appendices/NeTEx_Data.tex [31]
 Appendix B.
 \openout3 = `Main.pyg'.
 
 
 (_minted-Main/CFB09E18588B28802611C4A43BBE8E5E4E8A7278A3C4B3C8D56367CE08D527C8.
-pygtex) [31
+pygtex) [32
 
 ]
 \openout3 = `Main.pyg'.
 
 
 (_minted-Main/900DAF736164B7889B473F89E14A3B974E8A7278A3C4B3C8D56367CE08D527C8.
-pygtex) [32]
-\openout3 = `Main.pyg'.
-
-
-(_minted-Main/DA83BE6B81C2CE0D548F48E12CB813C34E8A7278A3C4B3C8D56367CE08D527C8.
 pygtex) [33]
 \openout3 = `Main.pyg'.
 
 
+(_minted-Main/DA83BE6B81C2CE0D548F48E12CB813C34E8A7278A3C4B3C8D56367CE08D527C8.
+pygtex) [34]
+\openout3 = `Main.pyg'.
+
+
 (_minted-Main/C7905E01E3008CD848978ED435F2714F4E8A7278A3C4B3C8D56367CE08D527C8.
-pygtex)) (Appendices/Project_Management.tex [34]
+pygtex)) (Appendices/Project_Management.tex [35]
 Appendix C.
 
 Underfull \hbox (badness 10000) in paragraph at lines 3--9
 
  []
 
-[35
+[36
 
-] [36]
-<./Images/Appendices/gitlab_commit_stats.png, id=552, 958.3303pt x 403.5075pt>
+] [37]
+<./Images/Appendices/gitlab_commit_stats.png, id=568, 958.3303pt x 403.5075pt>
 File: ./Images/Appendices/gitlab_commit_stats.png Graphic file (type png)
 <use ./Images/Appendices/gitlab_commit_stats.png>
 Package pdftex.def Info: ./Images/Appendices/gitlab_commit_stats.png  used on i
@@ -2037,13 +2058,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 17--23
 
  []
 
-<./Images/Appendices/gitlab_cicd_stats.png, id=553, 941.76843pt x 353.06906pt>
+<./Images/Appendices/gitlab_cicd_stats.png, id=569, 941.76843pt x 353.06906pt>
 File: ./Images/Appendices/gitlab_cicd_stats.png Graphic file (type png)
 <use ./Images/Appendices/gitlab_cicd_stats.png>
 Package pdftex.def Info: ./Images/Appendices/gitlab_cicd_stats.png  used on inp
 ut line 25.
 (pdftex.def)             Requested size: 453.60808pt x 170.05844pt.
-) [37 <./Images/Appendices/gitlab_commit_stats.png> <./Images/Appendices/gitlab
+) [38 <./Images/Appendices/gitlab_commit_stats.png> <./Images/Appendices/gitlab
 _cicd_stats.png>]
 ------------------------------------------------------------------------------
  Bibliography
@@ -2066,29 +2087,29 @@ Underfull \hbox (badness 10000) in paragraph at lines 79--84
 ]course-[]1 / examples _ en .
  []
 
-[38
+[39
 
 
-]) [39]
+]) [40]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 74.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 74.
  (Main.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 74.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 74.
 Package rerunfilecheck Info: File `Main.out' has not changed.
-(rerunfilecheck)             Checksum: 2232662163F289E8DB4246D76B59387E;5535.
+(rerunfilecheck)             Checksum: A66AA3FAD6B0E57BD186358370AC7CB6;5535.
 runsystem(del Main.pyg)...executed.
 
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 74.
  ) 
 Here is how much of TeX's memory you used:
- 39554 strings out of 492450
- 741613 string characters out of 3120004
+ 39571 strings out of 492450
+ 742254 string characters out of 3120004
  943548 words of memory out of 3000000
- 43096 multiletter control sequences out of 15000+200000
+ 43106 multiletter control sequences out of 15000+200000
  558648 words of font info for 72 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 65i,12n,79p,988b,659s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 65i,11n,79p,988b,659s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/labia/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/base/8r.enc
 }<C:/Users/labia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/
 cm/cmmi6.pfb><C:/Users/labia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/publ
@@ -2100,9 +2121,9 @@ ppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Users/
 labia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvr8a.pfb><C:
 /Users/labia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvro8a
 .pfb>
-Output written on Main.pdf (48 pages, 1109853 bytes).
+Output written on Main.pdf (49 pages, 1823599 bytes).
 PDF statistics:
- 650 PDF objects out of 1000 (max. 8388607)
- 135 named destinations out of 1000 (max. 500000)
- 368 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 668 PDF objects out of 1000 (max. 8388607)
+ 140 named destinations out of 1000 (max. 500000)
+ 378 words of extra memory for PDF output out of 10000 (max. 10000000)
 

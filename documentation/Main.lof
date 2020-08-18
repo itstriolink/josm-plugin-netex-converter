@@ -12,10 +12,12 @@
 \contentsline {figure}{\numberline {3.4}{\ignorespaces A sneak peek of the GitLab interface\relax }}{21}{figure.caption.41}%
 \contentsline {figure}{\numberline {3.5}{\ignorespaces LaTEx document output example \cite {LaTExExample}\relax }}{22}{figure.caption.43}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces An example of a bus stop in OpenStreetMap (Location - Chur, Switzerland)\relax }}{24}{figure.caption.47}%
-\contentsline {figure}{\numberline {4.2}{\ignorespaces An example of a bus stop tags in OpenStreetMap (Location - Chur, Switzerland)\relax }}{25}{figure.caption.48}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces An example of a bus stop in OpenStreetMap (Location - Chur, Switzerland)\relax }}{24}{figure.caption.48}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces An example of a bus stop tags in OpenStreetMap (Location - Chur, Switzerland)\relax }}{25}{figure.caption.49}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces JOSM Map Layer view before the NeTEx conversion (Location - Chur, Switzerland)\relax }}{27}{figure.caption.51}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces JOSM Map Layer view after the NeTEx conversion (Location - Chur, Switzerland)\relax }}{27}{figure.caption.52}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {C.1}{\ignorespaces Some statistics about GitLab code commits (Commits per day are a little outdated)\relax }}{37}{figure.caption.71}%
-\contentsline {figure}{\numberline {C.2}{\ignorespaces Some statistics about GitLab CI/CD pipelines\relax }}{37}{figure.caption.72}%
+\contentsline {figure}{\numberline {C.1}{\ignorespaces Some statistics about GitLab code commits (Commits per day are a little outdated)\relax }}{38}{figure.caption.75}%
+\contentsline {figure}{\numberline {C.2}{\ignorespaces Some statistics about GitLab CI/CD pipelines\relax }}{38}{figure.caption.76}%

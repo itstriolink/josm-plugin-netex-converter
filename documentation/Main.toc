@@ -35,21 +35,23 @@
 \contentsline {chapter}{\numberline {4}Results}{23}{chapter.44}%
 \contentsline {section}{\numberline {4.1}Achievements}{23}{section.45}%
 \contentsline {section}{\numberline {4.2}Product Results}{24}{section.46}%
-\contentsline {section}{\numberline {4.3}Reflection}{27}{section.49}%
-\contentsline {chapter}{List of Figures}{27}{dummy.50}%
+\contentsline {subsection}{\numberline {4.2.1}XML Results}{24}{subsection.47}%
+\contentsline {subsection}{\numberline {4.2.2}Visual Results}{27}{subsection.50}%
+\contentsline {section}{\numberline {4.3}Reflection}{28}{section.53}%
+\contentsline {chapter}{List of Figures}{28}{dummy.54}%
 \vspace {2em}
-\contentsline {chapter}{\numberline {A}Installation}{29}{appendix.52}%
-\contentsline {paragraph}{Usual, easy method}{29}{section*.53}%
-\contentsline {paragraph}{Manually install JOSM plugins}{30}{section*.59}%
-\contentsline {subsection}{\numberline {A.0.1}Building the .jar file}{30}{subsection.60}%
-\contentsline {chapter}{\numberline {B}NeTEx Data}{31}{appendix.61}%
-\contentsline {section}{\numberline {B.1}Examples of NeTEx Data}{31}{section.62}%
-\contentsline {subsection}{\numberline {B.1.1}Base Schema Example (No Stop Places)}{31}{subsection.63}%
-\contentsline {subsection}{\numberline {B.1.2}Stop Place Example (StopPlace)}{32}{subsection.64}%
-\contentsline {subsection}{\numberline {B.1.3}Platforms Example (Quay)}{33}{subsection.65}%
-\contentsline {subsection}{\numberline {B.1.4}Stairs Example (SitePathLink)}{34}{subsection.66}%
-\contentsline {chapter}{\numberline {C}Project Management}{35}{appendix.67}%
-\contentsline {section}{\numberline {C.1}Organization}{35}{section.68}%
-\contentsline {section}{\numberline {C.2}Planning and Coordination}{36}{section.69}%
-\contentsline {section}{\numberline {C.3}Workflow}{37}{section.70}%
-\contentsline {chapter}{Bibliography}{38}{dummy.73}%
+\contentsline {chapter}{\numberline {A}Installation}{30}{appendix.56}%
+\contentsline {paragraph}{Usual, easy method}{30}{section*.57}%
+\contentsline {paragraph}{Manually install JOSM plugins}{31}{section*.63}%
+\contentsline {subsection}{\numberline {A.0.1}Building the .jar file}{31}{subsection.64}%
+\contentsline {chapter}{\numberline {B}NeTEx Data}{32}{appendix.65}%
+\contentsline {section}{\numberline {B.1}Examples of NeTEx Data}{32}{section.66}%
+\contentsline {subsection}{\numberline {B.1.1}Base Schema Example (No Stop Places)}{32}{subsection.67}%
+\contentsline {subsection}{\numberline {B.1.2}Stop Place Example (StopPlace)}{33}{subsection.68}%
+\contentsline {subsection}{\numberline {B.1.3}Platforms Example (Quay)}{34}{subsection.69}%
+\contentsline {subsection}{\numberline {B.1.4}Stairs Example (SitePathLink)}{35}{subsection.70}%
+\contentsline {chapter}{\numberline {C}Project Management}{36}{appendix.71}%
+\contentsline {section}{\numberline {C.1}Organization}{36}{section.72}%
+\contentsline {section}{\numberline {C.2}Planning and Coordination}{37}{section.73}%
+\contentsline {section}{\numberline {C.3}Workflow}{38}{section.74}%
+\contentsline {chapter}{Bibliography}{39}{dummy.77}%
