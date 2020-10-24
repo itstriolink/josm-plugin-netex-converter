@@ -1,5 +1,8 @@
 # JOSM Plugin based on OpenStreetMap with NeTEx Conversion
 
+Winner of the [DINAcon](https://awards.dinacon.ch/) 2020 _Best Newcomer_ award.
+
+
 Description
 ------
 A JOSM Plugin that converts OpenStreetMap data into the Network Timetable Exchange (NeTEx) format, which is a CEN Technical Standard that is represented using XML, designed for the efficient exchange of complex transport data.
